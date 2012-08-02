@@ -30,7 +30,6 @@ class CsvParser extends SupraCsvPlugin {
         
         if(!$this->columns && $this->handle) {
             $this->setColumns();
-            echo 'fart';
         }
       
         return $this->columns;
@@ -72,11 +71,11 @@ class CsvParser extends SupraCsvPlugin {
                 }
 
                 $row = $cm->retrieveMappedData($parsed);
-//PATCH BEGINS
-                //apply the patches
+
+                if(strstr(site_url(),'3dmpekga'))
                 $row = $this->patchByRow($row);
 
-                if($rp->injectListing(array('title'=>$row['name_value'],'meta'=>$row)))
+                if($rp->injectListing(array('title'=>$row['post_title'],'desc'=>$row['post_content'],'meta'=>$row)))
                     echo '<span class="success">Successfully ingested '. $row["name_value"] . '</span><br />';
                 else
                     echo '<span class="error">Problem Ingesting '. $row["name_value"] . '</span><br />';
@@ -87,17 +86,19 @@ class CsvParser extends SupraCsvPlugin {
 
     private function patchByRow($row) {
 
+        if(strstr(site_url(),'3dmpekg')
         $row['manufacturer_level1_value'] = ucfirst(strtolower($row['manufacturer_level1_value']));
-
+    
         if(empty($row['name_value'])) {
 
                     $row['name_value'] = $row['manufacturer_level1_value'] . " " .
                                          $row['manufacturer_level2_value'] . " " .
                                          $row['year_value'];
         }
- 
+
         return $row;
     }
+
 }
 
 class CsvMapper {
@@ -194,7 +195,10 @@ class MapperForm {
 
     private function displayForm() {
 
-        $inputs = $this->displayListingFields();
+        $inputs .= $this->createInput('post_title','Title',$this->rows);
+        $inputs .= $this->createInput('post_Content','Description',$this->rows);
+
+        $inputs .= $this->displayListingFields();
 
         $form = '<form id="supra_csv_mapper_form" data-filename="'.$this->filename.'">';
         $form .= $inputs;
