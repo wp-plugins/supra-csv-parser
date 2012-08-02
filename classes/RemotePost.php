@@ -1,17 +1,18 @@
 <?php
 require_once('Debug.php');
+require_once('SupraCsvPlugin.php');
 
-class RemotePost {
+class RemotePost extends SupraCsvPlugin {
     private $client;
-    private $ixrPath = 'wp-includes/class-IXR.php';
     private $uname;
     private $pass;
     private $postId;
 
     function __construct() {
-        include ABSPATH . $this->ixrPath;
+        include ABSPATH . 'wp-includes/class-IXR.php';
         $this->setUser();       
-        $pingback = site_url() . "/xmlrpc.php";
+        $pingback = $this->getPluginDirUrl() . "/xmlrpc/supra_xmlrpc.php";
+        var_dump($pingback);
         $this->client = new IXR_Client($pingback);
     }
 

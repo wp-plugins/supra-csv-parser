@@ -18,6 +18,23 @@ if(!empty($_POST['scsv_submit'])) {
 }
 ?>
 <div class="wrap">
+<h2>Supra Csv Importer</h2>
+
+<h3>Description</h3>
+<p>The purpose of this plugin is to parse uploaded csv files into any type of post.
+Some themes or plugin store data in post with custom post_type, thus this plugin
+provides the functionality to upload data from the csv file to the records that 
+the theme or plugin creates. For more infomation on how to obtain the necessary info
+ watch the detailed tutorial</p>
+<h3>Tutorial</h3>
+<p>coming soon...</p>
+            <h3>Contributions</h3>
+            <p>Due to the nature of wordpress and its lack of plugin contribution functionality please fork the following repo.</p>
+            <p><a href="https://github.com/zmijevik/Supra-CSV" target="_blank">https://github.com/zmijevik/Supra-CSV</a></p>
+            <p>Please keep code encapsulated, lets keep this from turning into a procedural mess!</p>
+            <p>You have my guarantee that this project will <u>remain</u> free and open source.</p>
+            <p>Feel free to contact me regarding plugin issues and requests.</p>
+
 <h2>Supra CSV Configuration</h2>
 <form name="scsv_form" method="post"">
         <h4>User Settings</h4>
@@ -34,7 +51,6 @@ if(!empty($_POST['scsv_submit'])) {
             </select>
         </p>
 	<p>
-            <i>Warning: custom post_type may no longer be supported.</i><br />
             Post Type
             <select name="scsv_posttype" value="<?php echo $csvpost['type']; ?>">
                 <option value=""></option>
