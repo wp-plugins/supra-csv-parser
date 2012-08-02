@@ -86,16 +86,16 @@ class CsvParser extends SupraCsvPlugin {
 
     private function patchByRow($row) {
 
-        if(strstr(site_url(),'3dmpekg')
-        $row['manufacturer_level1_value'] = ucfirst(strtolower($row['manufacturer_level1_value']));
+        if(strstr(site_url(),'3dmpekg')) {
+            $row['manufacturer_level1_value'] = ucfirst(strtolower($row['manufacturer_level1_value']));
     
-        if(empty($row['name_value'])) {
+            if(empty($row['name_value'])) {
 
-                    $row['name_value'] = $row['manufacturer_level1_value'] . " " .
-                                         $row['manufacturer_level2_value'] . " " .
-                                         $row['year_value'];
+                        $row['name_value'] = $row['manufacturer_level1_value'] . " " .
+                                             $row['manufacturer_level2_value'] . " " .
+                                             $row['year_value'];
+            }
         }
-
         return $row;
     }
 
