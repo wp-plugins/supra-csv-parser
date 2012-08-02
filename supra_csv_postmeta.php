@@ -4,10 +4,10 @@ require_once('classes/Debug.php');
 
 wp_enqueue_script( 'inputCloner', plugins_url('/js/inputCloner.js', __FILE__) ); 
 
-$postmetas = get_option('sscsv_postmeta');
+$postmetas = get_option('scsv_postmeta');
 
 if(!empty($_POST)) {
-    update_option('sscsv_postmeta',$_POST);
+    update_option('scsv_postmeta',$_POST);
     $postmetas = $_POST;
 }
 
@@ -25,7 +25,7 @@ if(!empty($_POST)) {
     }
 </style>
 
-<form method="post" action="<?php echo $_SERVER['PHP_SELF'] . '?page=supra_csv_postmeta';?>">
+<form method="post">
 <table id="post_meta_form">
     <tr id="labeling">
         <td>Post Meta Key</td>

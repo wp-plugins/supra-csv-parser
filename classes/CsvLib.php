@@ -1,28 +1,21 @@
 <?php
 require_once("Debug.php");
+require_once(dirname(__FILE__) . '/SupraCsvPlugin.php');
 
-class CsvParser {
-    private $dir = "wp-content/plugins/supra_csv/csv/";
+class CsvParser extends SupraCsvPlugin {
     private $file;
+    private $filename;
     private $handle;
     private $columns;
 
-    function __construct($file,$find="",$mapping=null) {
+    function __construct($filename) {
         
-        if(empty($this->handle)) {
-            $this->setFile(ABSPATH . $this->dir . $file);
+        if(empty($this->handle)){
+            $this->setFile($filename);
             $this->setHandle(); 
         }
 
         $this->setColumns();
-
-        switch($find) {
-            case "columns":
-            break;
-            case "ingest":
-                $this->ingestContent($mapping);
-            break;
-        }
     }
 
     private function setHandle() {
@@ -34,22 +27,41 @@ class CsvParser {
     }
 
     public function getColumns() {
+        
+        if(!$this->columns && $this->handle) {
+            $this->setColumns();
+            echo 'fart';
+        }
+      
         return $this->columns;
     }
 
-    public function setFile($file) {
-        $this->file = $file;
+    public function setFile($filename) {
+        $this->filename = $filename;
+        $this->file = $this->getCsvDir() . $filename;
     }
 
     public function getFile() {
         return $this->file;
     }
 
-    private function ingestContent($mapping) {
+    public function getFileName() {
+        return $this->filename;
+    }
+
+
+    public function ingestContent($mapping) {
+
         $rp = new RemotePost();
         $cm = new CsvMapper($mapping);
 
-        $cols = $this->columns;
+        $cols = $this->getColumns();
+
+        //Debug::describe($this);
+        //Debug::describe($cols);
+        //Debug::describe(fgetcsv($this->handle));
+
+        //die();
 
         if($cols) {
             while (($data = fgetcsv($this->handle)) !== FALSE) {
@@ -60,23 +72,41 @@ class CsvParser {
                 }
 
                 $row = $cm->retrieveMappedData($parsed);
+//PATCH BEGINS
+                //apply the patches
+                $row = $this->patchByRow($row);
 
-                Debug::describe($rp->injectListing(array('meta'=>$row)));
+                if($rp->injectListing(array('title'=>$row['name_value'],'meta'=>$row)))
+                    echo '<span class="success">Successfully ingested '. $row["name_value"] . '</span><br />';
+                else
+                    echo '<span class="error">Problem Ingesting '. $row["name_value"] . '</span><br />';
             }
         }
 
+    }
+
+    private function patchByRow($row) {
+
+        $row['manufacturer_level1_value'] = ucfirst(strtolower($row['manufacturer_level1_value']));
+
+        if(empty($row['name_value'])) {
+
+                    $row['name_value'] = $row['manufacturer_level1_value'] . " " .
+                                         $row['manufacturer_level2_value'] . " " .
+                                         $row['year_value'];
+        }
+ 
+        return $row;
     }
 }
 
 class CsvMapper {
 
-    private $mapping;
+    private $mapping = array();
     private $contents;
 
     function __construct($mapping) {
         $this->setMapping($mapping);        
-
-        return $this->retrieveMappedData();        
     }
 
     public function setMapping($mapping) {
@@ -90,7 +120,7 @@ class CsvMapper {
     public function retrieveMappedData($data) {
 
         //map the data with csv named keys to wp_keys
-        foreach($this->mapping as $wp_name=>$csv_name) {
+        foreach((array)$this->mapping as $wp_name=>$csv_name) {
             $row[$wp_name] = $data[$csv_name];
         }
            
@@ -101,11 +131,16 @@ class CsvMapper {
 
 class MapperForm {
 
+    private $filename;
     private $rows;
     private $listing_fields;
 
 
-    function __construct($rows) {
+    function __construct(CsvParser $cp) {
+        $rows = $cp->getColumns();
+        $this->filename = $cp->getFileName();
+        if(!$rows)
+            die('Unable to parse csv.');
 
         $this->rows = $rows;
         $this->setListingFields();
@@ -115,7 +150,7 @@ class MapperForm {
 
     public function setListingFields() {
 
-        $postmetas = get_option('sscsv_postmeta');
+        $postmetas = get_option('scsv_postmeta');
 
         foreach($postmetas['meta_key'] as $i=>$metakey) {
             $displayname = $postmetas['displayname'][$i];
@@ -130,6 +165,8 @@ class MapperForm {
     }
 
     private function displayListingFields() {
+
+        $inputs = null;
 
         foreach($this->getListingFields() as $k=>$v) {
 
@@ -146,7 +183,7 @@ class MapperForm {
 
           $input .= '<option value=""> </option>';
 
-          foreach($rows as $row) {
+          foreach((array)$rows as $row) {
               $input .= '<option value="'.$row.'">'.$row.'</option>';
           }
  
@@ -159,9 +196,9 @@ class MapperForm {
 
         $inputs = $this->displayListingFields();
 
-        $form = '<form action="'.$_SERVER['PHP_SELF'].'?page=supra_csv_ingest" method="post">';
+        $form = '<form id="supra_csv_mapper_form" data-filename="'.$this->filename.'">';
         $form .= $inputs;
-        $form .= '<input type="submit" value="submit" /></form>';
+        $form .= '<button id="supra_csv_ingest_csv">Ingest</button></form>';
 
         return $form;
     }
