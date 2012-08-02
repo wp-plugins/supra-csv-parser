@@ -81,9 +81,9 @@ class CsvParser extends SupraCsvPlugin {
                 unset($row['post_content']);
 
                 if($rp->injectListing(array('title'=>$title,'desc'=>$desc,'meta'=>$row)))
-                    echo '<span class="success">Successfully ingested '. $row["name_value"] . '</span><br />';
+                    echo '<span class="success">Successfully ingested '. $title . '</span><br />';
                 else
-                    echo '<span class="error">Problem Ingesting '. $row["name_value"] . '</span><br />';
+                    echo '<span class="error">Problem Ingesting '. $title . '</span><br />';
             }
         }
 
