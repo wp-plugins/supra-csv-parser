@@ -72,10 +72,15 @@ class CsvParser extends SupraCsvPlugin {
 
                 $row = $cm->retrieveMappedData($parsed);
 
-                if(strstr(site_url(),'3dmpekga'))
-                $row = $this->patchByRow($row);
+                if(strstr(site_url(),'3dmpekga')) 
+                    $row = $this->patchByRow($row);
 
-                if($rp->injectListing(array('title'=>$row['post_title'],'desc'=>$row['post_content'],'meta'=>$row)))
+                $title = $row['post_title'];
+                $desc =  $row['post_content'];
+                unset($row['post_title']);
+                unset($row['post_content']);
+
+                if($rp->injectListing(array('title'=>$title,'desc'=>$desc,'meta'=>$row)))
                     echo '<span class="success">Successfully ingested '. $row["name_value"] . '</span><br />';
                 else
                     echo '<span class="error">Problem Ingesting '. $row["name_value"] . '</span><br />';
@@ -196,7 +201,7 @@ class MapperForm {
     private function displayForm() {
 
         $inputs .= $this->createInput('post_title','Title',$this->rows);
-        $inputs .= $this->createInput('post_Content','Description',$this->rows);
+        $inputs .= $this->createInput('post_content','Description',$this->rows);
 
         $inputs .= $this->displayListingFields();
 
