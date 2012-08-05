@@ -2,7 +2,25 @@
 require_once("Debug.php");
 require_once(dirname(__FILE__) . '/SupraCsvPlugin.php');
 
-class CsvParser extends SupraCsvPlugin {
+class MappingPreset extends SupraCsvPlugin {
+
+    public function doesConform($mapping) {
+        $conform = true;
+
+        $mapping_selected_columns = array_filter(array_values($mapping));
+        $cols = $this->getColumns();
+
+        foreach($mapping_selected_columns as $msc) {
+            if(!in_array($msc,$cols))
+                $conform = false;
+        }
+
+        return $conform;
+    }
+
+}
+
+class CsvParser extends MappingPreset {
     private $file;
     private $filename;
     private $handle;
@@ -48,7 +66,6 @@ class CsvParser extends SupraCsvPlugin {
         return $this->filename;
     }
 
-
     public function ingestContent($mapping) {
 
         $rp = new RemotePost();
@@ -56,8 +73,9 @@ class CsvParser extends SupraCsvPlugin {
 
         $cols = $this->getColumns();
 
+        Debug::describe($mapping);
         //Debug::describe($this);
-        //Debug::describe($cols);
+        Debug::describe($this->doesConform($mapping));
         //Debug::describe(fgetcsv($this->handle));
 
         //die();
@@ -72,7 +90,7 @@ class CsvParser extends SupraCsvPlugin {
 
                 $row = $cm->retrieveMappedData($parsed);
 
-                if(strstr(site_url(),'3dmpekga')) 
+                if(strstr(site_url(),'3dmpekg')) 
                     $row = $this->patchByRow($row);
 
                 $title = $row['post_title'];
@@ -101,6 +119,9 @@ class CsvParser extends SupraCsvPlugin {
                                              $row['year_value'];
             }
         }
+
+        $row['post_title'] = $row['name_value'];
+
         return $row;
     }
 
