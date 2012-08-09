@@ -1,5 +1,5 @@
 === Supra CSV Importer ===
-Contributors: J. Persie
+Contributors: zmijevik
 Author URI: http://profiles.wordpress.org/zmijevik
 Donate link:
 Tags: Csv Importer, Csv Parser, Csv Injector, Custom Post
