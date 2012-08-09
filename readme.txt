@@ -6,8 +6,6 @@ Requires at least: 3.2.1
 Tested up to: 3.2.1
 Stable tag: 2.1
 
-short Description
-
 The purpose of this plugin is to parse uploaded csv files into any type of
 post.
 
