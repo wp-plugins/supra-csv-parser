@@ -6,12 +6,13 @@ require_once('RemotePost.php');
 class IngestCsv {
 
     function ParseAndMap($filename) {
-        $cp = new CsvParser($filename);
-        $mf = new MapperForm($cp);
+        $cp = new SupraCsvParser($filename);
+        $mf = new SupraCsvMapperForm($cp);
+        return $mf->getForm();
     }
 
     function ingest($params) {
-        $cp = new CsvParser($params['filename']);
+        $cp = new SupraCsvParser($params['filename']);
         $cp->ingestContent($params['mapping']);
     }
 }

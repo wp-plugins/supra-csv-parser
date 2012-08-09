@@ -8,6 +8,7 @@ class UploadCsv extends SupraCsvPlugin {
     private $preview_num = 10;
 
     function __construct($file = null) {
+        parent::__construct();
 
         if(!empty($file['uploaded'])) {
             $this->processFile($file['uploaded']);
@@ -92,7 +93,7 @@ class UploadCsv extends SupraCsvPlugin {
     public function deleteFileByKey($key) {
 
         $filename = $this->getFileByKey($key);
- 
+
         $success = unlink($this->getCsvDir() . $filename);
 
         if($success)

@@ -9,10 +9,11 @@ class RemotePost extends SupraCsvPlugin {
     private $postId;
 
     function __construct() {
+        parent::__construct();
+     
         include ABSPATH . 'wp-includes/class-IXR.php';
         $this->setUser();       
         $pingback = $this->getPluginDirUrl() . "/xmlrpc/supra_xmlrpc.php";
-        var_dump($pingback);
         $this->client = new IXR_Client($pingback);
     }
 

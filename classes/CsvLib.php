@@ -2,38 +2,23 @@
 require_once("Debug.php");
 require_once(dirname(__FILE__) . '/SupraCsvPlugin.php');
 
-class MappingPreset extends SupraCsvPlugin {
-
-    public function doesConform($mapping) {
-        $conform = true;
-
-        $mapping_selected_columns = array_filter(array_values($mapping));
-        $cols = $this->getColumns();
-
-        foreach($mapping_selected_columns as $msc) {
-            if(!in_array($msc,$cols))
-                $conform = false;
-        }
-
-        return $conform;
-    }
-
-}
-
-class CsvParser extends MappingPreset {
+class SupraCsvParser extends SupraCsvPlugin {
     private $file;
     private $filename;
     private $handle;
     private $columns;
 
-    function __construct($filename) {
-        
-        if(empty($this->handle)){
-            $this->setFile($filename);
-            $this->setHandle(); 
-        }
+    function __construct($filename = null) {
 
-        $this->setColumns();
+        parent::__construct();
+
+        if($filename) {
+            if(empty($this->handle)){
+                $this->setFile($filename);
+                $this->setHandle(); 
+            }
+            $this->setColumns();
+        }
     }
 
     private function setHandle() {
@@ -49,7 +34,6 @@ class CsvParser extends MappingPreset {
         if(!$this->columns && $this->handle) {
             $this->setColumns();
         }
-      
         return $this->columns;
     }
 
@@ -69,13 +53,11 @@ class CsvParser extends MappingPreset {
     public function ingestContent($mapping) {
 
         $rp = new RemotePost();
-        $cm = new CsvMapper($mapping);
+        $cm = new SupraCsvMapper($mapping);
 
         $cols = $this->getColumns();
 
-        Debug::describe($mapping);
         //Debug::describe($this);
-        Debug::describe($this->doesConform($mapping));
         //Debug::describe(fgetcsv($this->handle));
 
         //die();
@@ -127,7 +109,7 @@ class CsvParser extends MappingPreset {
 
 }
 
-class CsvMapper {
+class SupraCsvMapper {
 
     private $mapping = array();
     private $contents;
@@ -156,14 +138,14 @@ class CsvMapper {
 
 }
 
-class MapperForm {
+class SupraCsvMapperForm {
 
     private $filename;
     private $rows;
     private $listing_fields;
 
 
-    function __construct(CsvParser $cp) {
+    function __construct(SupraCsvParser $cp) {
         $rows = $cp->getColumns();
         $this->filename = $cp->getFileName();
         if(!$rows)
@@ -171,15 +153,13 @@ class MapperForm {
 
         $this->rows = $rows;
         $this->setListingFields();
-
-        echo $this->displayForm();
     }
 
     public function setListingFields() {
 
         $postmetas = get_option('scsv_postmeta');
 
-        foreach($postmetas['meta_key'] as $i=>$metakey) {
+        foreach((array)$postmetas['meta_key'] as $i=>$metakey) {
             $displayname = $postmetas['displayname'][$i];
             $meta[$metakey] = $displayname;
         }
@@ -195,18 +175,18 @@ class MapperForm {
 
         $inputs = null;
 
-        foreach($this->getListingFields() as $k=>$v) {
+        foreach((array)$this->getListingFields() as $k=>$v) {
 
-            $inputs .= $this->createInput($k,$v,$this->rows);
+            $inputs .= self::createInput($k,$v,$this->rows);
 
         }
 
         return $inputs;
     }
 
-    private function createInput($name,$value,$rows) {
+    public static function createInput($name,$value,$rows) {
           $input = '<span id="label">'.$value.'</span>';
-          $input .= '<select name="'.$name.'">';
+          $input .= '<select id="supra_csv_'.$name.'" name="'.$name.'">';
 
           $input .= '<option value=""> </option>';
 
@@ -219,14 +199,14 @@ class MapperForm {
           return '<div id="input">' . $input . "</div>";
     }
 
-    private function displayForm() {
+    public function getForm() {
 
-        $inputs .= $this->createInput('post_title','Title',$this->rows);
-        $inputs .= $this->createInput('post_content','Description',$this->rows);
+        $inputs .= self::createInput('post_title','Title',$this->rows);
+        $inputs .= self::createInput('post_content','Description',$this->rows);
 
         $inputs .= $this->displayListingFields();
 
-        $form = '<form id="supra_csv_mapper_form" data-filename="'.$this->filename.'">';
+        $form = '<form id="supra_csv_mapping_form" data-filename="'.$this->filename.'">';
         $form .= $inputs;
         $form .= '<button id="supra_csv_ingest_csv">Ingest</button></form>';
 

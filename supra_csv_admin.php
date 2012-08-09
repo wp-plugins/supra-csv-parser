@@ -1,4 +1,9 @@
 <?php 
+
+require_once(dirname(__FILE__).'/classes/SupraCsvPlugin.php');
+
+$scp = new SupraCsvPlugin();
+
 if(!empty($_POST['scsv_submit'])) {
     $csvfile= $_POST['scsv_filename'];
     $csvuser['name'] = $_POST['scsv_wpname'];
@@ -24,10 +29,11 @@ if(!empty($_POST['scsv_submit'])) {
 <p>The purpose of this plugin is to parse uploaded csv files into any type of post.
 Some themes or plugin store data in post with custom post_type, thus this plugin
 provides the functionality to upload data from the csv file to the records that 
-the theme or plugin creates. For more infomation on how to obtain the necessary info
- watch the detailed tutorial</p>
+the theme or plugin creates. Manage existing csv files and promote ease of use by 
+creating presets for both postmeta and ingestion mapping. For more infomation on how to obtain the necessary info
+ watch the detailed tutorial. Csv Importer, Csv Parser, Csv Injector, Custom Post.</p>
 <h3>Tutorial</h3>
-<p>coming soon...</p>
+<p>click <a href="<?=$scp->getPluginDirUrl()?>/tutorials/tut.ogv" target="_blank">here</a> to view</p>
             <h3>Contributions</h3>
             <p>Due to the nature of wordpress and its lack of plugin contribution functionality please fork the following repo.</p>
             <p><a href="https://github.com/zmijevik/Supra-CSV" target="_blank">https://github.com/zmijevik/Supra-CSV</a></p>
