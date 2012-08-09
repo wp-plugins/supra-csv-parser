@@ -2,7 +2,7 @@
 Contributors: zmijevik
 Author URI: http://profiles.wordpress.org/zmijevik
 Donate link:
-Tags: Csv Importer, Csv Parser, Csv Injector, Custom Post
+Tags: Csv Importer , Csv Parser , Csv Injector , Custom Post
 Requires at least: 3.2.1
 Tested up to: 3.2.1
 Stable tag: 2.1
@@ -20,6 +20,8 @@ by creating presets for both postmeta and ingestion mapping. For more infomation
 on how to obtain the necessary info watch the detailed tutorial. 
 Csv Importer, Csv Parser, Csv Injector, Custom Post
 
+[youtube http://www.youtube.com/watch?v=reQ3uvBjRuQ]
+
 == Installation ==
 
 
@@ -28,7 +30,6 @@ Csv Importer, Csv Parser, Csv Injector, Custom Post
 This plugin comes with a video tutorial which will answer all your questions.
 
 == Screenshots ==
-
 
 == Changelog ==
 

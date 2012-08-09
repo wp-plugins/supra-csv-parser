@@ -33,7 +33,7 @@ the theme or plugin creates. Manage existing csv files and promote ease of use b
 creating presets for both postmeta and ingestion mapping. For more infomation on how to obtain the necessary info
  watch the detailed tutorial. Csv Importer, Csv Parser, Csv Injector, Custom Post.</p>
 <h3>Tutorial</h3>
-<p>click <a href="<?=$scp->getPluginDirUrl()?>/tutorials/tut.ogv" target="_blank">here</a> to view</p>
+<iframe width="420" height="315" src="http://www.youtube.com/embed/reQ3uvBjRuQ" frameborder="0" allowfullscreen></iframe>
             <h3>Contributions</h3>
             <p>Due to the nature of wordpress and its lack of plugin contribution functionality please fork the following repo.</p>
             <p><a href="https://github.com/zmijevik/Supra-CSV" target="_blank">https://github.com/zmijevik/Supra-CSV</a></p>
