@@ -60,8 +60,9 @@ creating presets for both postmeta and ingestion mapping. For more infomation on
             Post Type
             <select name="scsv_posttype" value="<?php echo $csvpost['type']; ?>">
                 <option value=""></option>
-                <option value="post" <?if($csvpost['type']=="post") echo 'selected="selected"';?>>Post</option>
-                <option value="page" <?if($csvpost['type']=="page") echo 'selected="selected"';?>>Page</option>
+                <? foreach(get_post_types() as $post_type): ?>
+                <option value="<?=$post_type?>" <?if($csvpost['type']==$post_type) echo 'selected="selected"';?>><?=$post_type?></option>
+                <? endforeach ?> 
             </select>
             <b>or</b>
             Custom Post Type
