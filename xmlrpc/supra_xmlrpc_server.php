@@ -3862,7 +3862,10 @@ class wp_xmlrpc_server extends IXR_Server {
 
 			if ( is_array($catnames) ) {
 				foreach ($catnames as $cat) {
-					$post_category[] = get_cat_ID($cat);
+                                        if(is_numeric($cat))
+					    $post_category[] = $cat;
+                                        else 
+					    $post_category[] = get_cat_ID($cat);
 				}
 			}
 		}
