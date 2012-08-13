@@ -5,7 +5,7 @@ Donate link:
 Tags: Csv Importer , Csv Parser , Csv Injector , Custom Post
 Requires at least: 3.2.1
 Tested up to: 3.2.1
-Stable tag: 2.3.7
+Stable tag: 2.3.8
 
 The purpose of this plugin is to parse uploaded csv files into any type of
 post.
@@ -48,5 +48,5 @@ added the ability to provide multiple tags and categories for each post
 revised uploadcsv fopen to use file access instead to prevent chaning php.ini
 = 2.3.6 =
 added the ability to provide category ids instead of names per user request
-= 2.3.7 =
+= 2.3.8 =
 storing uploads outside of plugin direcotry to prevent file deletion during updates
