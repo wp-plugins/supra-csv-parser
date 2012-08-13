@@ -92,7 +92,7 @@ class RemotePost extends SupraCsvPlugin {
 
         $post = get_option('scsv_post');
 
-        $params = array('title','type','desc');
+        $params = array('title','type','desc','cats','tags');
     
         foreach($params as $param) {
             if(empty($args[$param]))
@@ -105,6 +105,8 @@ class RemotePost extends SupraCsvPlugin {
                          'description'=>$desc,
                          'post_type'=>$type,
                          'title'=>$title,
+                         'categories'=>$cats,
+                         'mt_keywords'=>$tags,
                          'custom_fields'=>$meta);
      
         try {
