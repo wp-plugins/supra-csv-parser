@@ -40,7 +40,7 @@ creating presets for both postmeta and ingestion mapping. For more infomation on
 <li>save postmeta and mapping presets wherever necessary</li>
 </ol>
 </p>
-<h3>Importing Categoires and Tags</h3>
+<h3>Importing Categories and Tags</h3>
 <p>be sure to have the tags and categories delimited by a pipe character: | <br />
 Exa: Blog|Auto|Coolness 
 </p>
