@@ -42,7 +42,9 @@ creating presets for both postmeta and ingestion mapping. For more infomation on
 </p>
 <h3>Importing Categories and Tags</h3>
 <p>be sure to have the tags and categories delimited by a pipe character: | <br />
-Exa: Blog|Auto|Coolness 
+Exa: Blog|Auto|Coolness<br />
+You may also provide category ids instead likeso:<br />
+Exa: 1|2|3<br />
 </p>
 
 <h3>Tutorial</h3>

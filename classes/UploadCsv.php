@@ -13,6 +13,10 @@ class UploadCsv extends SupraCsvPlugin {
         if(!empty($file['uploaded'])) {
             $this->processFile($file['uploaded']);
         }
+
+        if(!file_exists($this->getCsvDir())) {
+            mkdir($this->getCsvDir());
+        }
     }
 
     public function renderForms() { 
