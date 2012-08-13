@@ -148,6 +148,7 @@ class SupraCsvMapperForm {
     private $rows;
     private $listing_fields;
 
+    private $predefined_meta = array('post_title'=>'Title','post_content'=>'Description','categories'=>'Categories','tags'=>'Tags');
 
     function __construct(SupraCsvParser $cp) {
         $rows = $cp->getColumns();
@@ -205,10 +206,13 @@ class SupraCsvMapperForm {
 
     public function getForm() {
 
-        $inputs .= self::createInput('post_title','Title',$this->rows);
-        $inputs .= self::createInput('post_content','Description',$this->rows);
-        $inputs .= self::createInput('categories','Categories',$this->rows);
-        $inputs .= self::createInput('tags','Tags',$this->rows);
+        $inputs .= '<h3>Predefined</h3>'; 
+
+        foreach($this->predefined_meta as $k=>$v) {
+            $inputs .= self::createInput($k,$v,$this->rows);
+        }
+ 
+        $inputs .= '<h3>Custom</h3>'; 
 
         $inputs .= $this->displayListingFields();
 
