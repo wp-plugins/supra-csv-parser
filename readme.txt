@@ -5,7 +5,7 @@ Donate link:
 Tags: Csv Importer , Csv Parser , Csv Injector , Custom Post
 Requires at least: 3.2.1
 Tested up to: 3.2.1
-Stable tag: 2.3.2
+Stable tag: 2.3.3
 
 The purpose of this plugin is to parse uploaded csv files into any type of
 post.
@@ -40,3 +40,5 @@ updated the youtube video
 updated mime type validation per user request
 = 2.3.2 =
 fixed a javscript bug of missing key
+= 2.3.3 =
+added the categories and tags import functionality per user request
