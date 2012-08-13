@@ -2,7 +2,7 @@
 require_once(dirname(__FILE__).'/SupraCsvPlugin.php');
 class UploadCsv extends SupraCsvPlugin {
 
-    private $mimes   = array("text/csv","text/comma-separated-values");
+    private $mimes   = array("text/csv","text/comma-separated-values",'application/vnd.ms-excel','text/plain','text/tsv');
     private $success = false;
     private $error;
     private $preview_num = 10;
