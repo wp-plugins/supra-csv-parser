@@ -77,10 +77,14 @@ class SupraCsvParser extends SupraCsvPlugin {
 
                 $title = $row['post_title'];
                 $desc =  $row['post_content'];
+                $categories =  $row['categories'];
+                $tags =  $row['tags'];
                 unset($row['post_title']);
                 unset($row['post_content']);
+                unset($row['categories']);
+                unset($row['tags']);
 
-                if($rp->injectListing(array('title'=>$title,'desc'=>$desc,'meta'=>$row)))
+                if($rp->injectListing(array('title'=>$title,'desc'=>$desc,'cats'=>$categories,'tags'=>$tags,'meta'=>$row)))
                     echo '<span class="success">Successfully ingested '. $title . '</span><br />';
                 else
                     echo '<span class="error">Problem Ingesting '. $title . '</span><br />';
@@ -203,6 +207,8 @@ class SupraCsvMapperForm {
 
         $inputs .= self::createInput('post_title','Title',$this->rows);
         $inputs .= self::createInput('post_content','Description',$this->rows);
+        $inputs .= self::createInput('categories','Categories',$this->rows);
+        $inputs .= self::createInput('tags','Tags',$this->rows);
 
         $inputs .= $this->displayListingFields();
 
