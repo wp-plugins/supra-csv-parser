@@ -77,10 +77,14 @@ class SupraCsvParser extends SupraCsvPlugin {
 
                 $title = $row['post_title'];
                 $desc =  $row['post_content'];
+                $categories =  explode('|', $row['categories']);
+                $tags =  explode('|', $row['tags']);
                 unset($row['post_title']);
                 unset($row['post_content']);
+                unset($row['categories']);
+                unset($row['tags']);
 
-                if($rp->injectListing(array('title'=>$title,'desc'=>$desc,'meta'=>$row)))
+                if($rp->injectListing(array('title'=>$title,'desc'=>$desc,'cats'=>$categories,'tags'=>$tags,'meta'=>$row)))
                     echo '<span class="success">Successfully ingested '. $title . '</span><br />';
                 else
                     echo '<span class="error">Problem Ingesting '. $title . '</span><br />';
@@ -144,6 +148,7 @@ class SupraCsvMapperForm {
     private $rows;
     private $listing_fields;
 
+    private $predefined_meta = array('post_title'=>'Title','post_content'=>'Description','categories'=>'Categories','tags'=>'Tags');
 
     function __construct(SupraCsvParser $cp) {
         $rows = $cp->getColumns();
@@ -201,8 +206,13 @@ class SupraCsvMapperForm {
 
     public function getForm() {
 
-        $inputs .= self::createInput('post_title','Title',$this->rows);
-        $inputs .= self::createInput('post_content','Description',$this->rows);
+        $inputs .= '<h3>Predefined</h3>'; 
+
+        foreach($this->predefined_meta as $k=>$v) {
+            $inputs .= self::createInput($k,$v,$this->rows);
+        }
+ 
+        $inputs .= '<h3>Custom</h3>'; 
 
         $inputs .= $this->displayListingFields();
 

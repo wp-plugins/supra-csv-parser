@@ -13,6 +13,12 @@ class UploadCsv extends SupraCsvPlugin {
         if(!empty($file['uploaded'])) {
             $this->processFile($file['uploaded']);
         }
+
+        if(!file_exists($this->getCsvDir())) {
+            chmod(WP_CONTENT_DIR . '/uploads/',0777);
+            mkdir($this->getCsvDir(),0777,true);
+            chmod(WP_CONTENT_DIR . '/uploads/',0744);
+        }
     }
 
     public function renderForms() { 
@@ -105,11 +111,12 @@ class UploadCsv extends SupraCsvPlugin {
     }
 
     function downloadFile($file) {
-        $filename= $this->getCsvDirUrl() . $file;
+        $filename_abs = $this->getCsvDir() . $file;
+        $filename_url = $this->getCsvDirUrl() . $file;
 	echo '<b>(showing First '.$this->preview_num.' lines)</b> or ' .
-             '<a href="'.$filename.'" target="_blank">Download File</a>';
+             '<a href="'.$filename_url.'" target="_blank">Download File</a>';
         $row = 1;
-        if (($handle = fopen($filename, "r")) !== FALSE) {
+        if (($handle = fopen($filename_abs, "r")) !== FALSE) {
             while(($data = fgetcsv($handle, 1000, ",")) !== FALSE) {
                 echo "<br />";
                 $row++;
