@@ -77,8 +77,8 @@ class SupraCsvParser extends SupraCsvPlugin {
 
                 $title = $row['post_title'];
                 $desc =  $row['post_content'];
-                $categories =  $row['categories'];
-                $tags =  $row['tags'];
+                $categories =  explode('|', $row['categories']);
+                $tags =  explode('|', $row['tags']);
                 unset($row['post_title']);
                 unset($row['post_content']);
                 unset($row['categories']);
