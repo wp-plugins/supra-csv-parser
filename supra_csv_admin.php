@@ -24,7 +24,6 @@ if(!empty($_POST['scsv_submit'])) {
 ?>
 <div class="wrap">
 <h2>Supra Csv Importer</h2>
-
 <h3>Description</h3>
 <p>The purpose of this plugin is to parse uploaded csv files into any type of post.
 Some themes or plugin store data in post with custom post_type, thus this plugin
@@ -32,6 +31,22 @@ provides the functionality to upload data from the csv file to the records that
 the theme or plugin creates. Manage existing csv files and promote ease of use by 
 creating presets for both postmeta and ingestion mapping. For more infomation on how to obtain the necessary info
  watch the detailed tutorial. Csv Importer, Csv Parser, Csv Injector, Custom Post.</p>
+<h3>Steps to Ingest</h3>
+<ol> 
+<li>configure in 'Configuration'</li>
+<li>upload file in 'Upload'</li>
+<li>define postmeta in 'Post Info'</li>
+<li>map the data and import in 'Ingestion'</li>
+<li>save postmeta and mapping presets wherever necessary</li>
+</ol>
+</p>
+<h3>Importing Categories and Tags</h3>
+<p>be sure to have the tags and categories delimited by a pipe character: | <br />
+Exa: Blog|Auto|Coolness<br />
+You may also provide category ids instead likeso:<br />
+Exa: 1|2|3<br />
+</p>
+
 <h3>Tutorial</h3>
 <iframe width="420" height="315" src="http://www.youtube.com/embed/0xKpNw1cT-Q" frameborder="0" allowfullscreen></iframe>
             <h3>Contributions</h3>
