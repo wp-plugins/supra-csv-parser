@@ -79,12 +79,37 @@ class SupraCsvParser extends SupraCsvPlugin {
                 $desc =  $row['post_content'];
                 $categories =  explode('|', $row['categories']);
                 $tags =  explode('|', $row['tags']);
+
+                $post_terms = explode(',',get_option('scsv_custom_terms'));
+
+                $term_names = array();
+
+                $terms = array();
+
+                foreach((array)$post_terms as $pt) {
+                    $wp_terms[$pt] = explode('|', $row['terms_'.$pt]);
+                }
+               
+                $wp_terms['post_tag'] = $tags;
+                $wp_terms['category'] = $categories;
+  
+                foreach((array)$wp_terms as $k=>$v) {
+                    if(is_numeric($v[0]))
+                        $terms[$k] = $v;
+                    else
+                        $term_names[$k] = $v;
+                }      
+         
+                foreach((array)$post_terms as $pt) {
+                    unset($row['terms_'.$pt]);
+                }
+
                 unset($row['post_title']);
                 unset($row['post_content']);
                 unset($row['categories']);
                 unset($row['tags']);
 
-                if($rp->injectListing(array('title'=>$title,'desc'=>$desc,'cats'=>$categories,'tags'=>$tags,'meta'=>$row)))
+                if($rp->injectListing(array('title'=>$title,'desc'=>$desc,'cats'=>$categories,'tags'=>$tags,'termnames'=>$term_names,'terms'=>$terms,'meta'=>$row)))
                     echo '<span class="success">Successfully ingested '. $title . '</span><br />';
                 else
                     echo '<span class="error">Problem Ingesting '. $title . '</span><br />';
@@ -211,8 +236,16 @@ class SupraCsvMapperForm {
         foreach($this->predefined_meta as $k=>$v) {
             $inputs .= self::createInput($k,$v,$this->rows);
         }
+
+        $inputs .= '<h3>Custom Terms</h3>'; 
+
+        $post_terms = explode(',',get_option('scsv_custom_terms'));
+
+        foreach($post_terms as $post_term) {
+            $inputs .= self::createInput('terms_'.$post_term,$post_term,$this->rows);
+        }
  
-        $inputs .= '<h3>Custom</h3>'; 
+        $inputs .= '<h3>Custom Postmeta</h3>'; 
 
         $inputs .= $this->displayListingFields();
 
