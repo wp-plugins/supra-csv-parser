@@ -97,7 +97,7 @@ class SupraCsvParser extends SupraCsvPlugin {
                 $wp_terms['category'] = $categories;
   
                 foreach((array)$wp_terms as $k=>$values) {
-                    if(is_numeric($v[0])) {
+                    if(is_numeric($values[0])) {
                         $terms[$k] = $values;
                     }
                     else {

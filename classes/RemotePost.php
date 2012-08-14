@@ -33,6 +33,8 @@ class RemotePost extends SupraCsvPlugin {
 
         $args = array_merge($default_args, $args);
 
+        //Debug::show($args); 
+
         if($args['function'] == "wp.newPost") {
             if(!$this->client->query($args['function'],$args['post_id'],$this->uname,$this->pass,$args['args']))
                throw new Exception($this->client->getErrorMessage());
