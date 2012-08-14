@@ -27,17 +27,14 @@ class RemotePost extends SupraCsvPlugin {
 
         if(!is_array($args['args'])) throw new Exception('Invalid Argument');
 
-        $post= get_option('scsv_post');
 
         $default_args = array(
-                              'post_id'=>null,
-                              'publish'=>true,
-                             );
+                              'post_id'=>null);
 
         $args = array_merge($default_args, $args);
 
         if($args['function'] == "wp.newPost") {
-            if(!$this->client->query($args['function'],$args['post_id'],$this->uname,$this->pass,$args['args'],$args['publish']))
+            if(!$this->client->query($args['function'],$args['post_id'],$this->uname,$this->pass,$args['args']))
                throw new Exception($this->client->getErrorMessage());
         } else if($args['function'] == "wp.setOptions") {
             if(!$this->client->query($args['function'],$args['post_id'],$this->uname,$this->pass,$args['args']))
@@ -92,7 +89,7 @@ class RemotePost extends SupraCsvPlugin {
 
         $post = get_option('scsv_post');
 
-        $params = array('title','type','desc','cats','tags','termnames','terms');
+        $params = array('title','type','desc','terms');
     
         foreach($params as $param) {
             if(empty($args[$param]))
@@ -101,18 +98,18 @@ class RemotePost extends SupraCsvPlugin {
                 $$param = $args[$param];
         }
 
+        $post= get_option('scsv_post');
+
+        $status = ((bool)$post['publish'])?'publish':'pending';
+
         $content = array(
                          'post_content'=>$desc,
                          'post_type'=>$type,
                          'post_title'=>$title,
-                         //'categories'=>$cats,
-                         'term_names'=>$termnames,
+                         'post_status'=>$status,
                          'terms'=>$terms,
-                         //'mt_keywords'=>$tags,
                          'custom_fields'=>$meta);
     
-        Debug::show($content);
- 
         try {
             $success = $this->postContent($content);
         } catch( Exception $e ) {

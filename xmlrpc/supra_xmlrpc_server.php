@@ -913,6 +913,7 @@ class wp_xmlrpc_server extends IXR_Server {
 
 		do_action( 'xmlrpc_call', 'wp.newPost' );
 
+
 		unset( $content_struct['ID'] );
 
 		return $this->_insert_post( $user, $content_struct );
@@ -939,6 +940,7 @@ class wp_xmlrpc_server extends IXR_Server {
 	 * @param array $content_struct Post data to insert.
 	 */
 	protected function _insert_post( $user, $content_struct ) {
+
 		$defaults = array( 'post_status' => 'draft', 'post_type' => 'post', 'post_author' => 0,
 			'post_password' => '', 'post_excerpt' => '', 'post_content' => '', 'post_title' => '' );
 

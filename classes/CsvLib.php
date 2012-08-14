@@ -80,9 +80,10 @@ class SupraCsvParser extends SupraCsvPlugin {
                 $categories =  explode('|', $row['categories']);
                 $tags =  explode('|', $row['tags']);
 
-                $post_terms = explode(',',get_option('scsv_custom_terms'));
+                $scsv_terms = get_option('scsv_custom_terms');
 
-                $term_names = array();
+                if(!empty($scsv_terms))
+                $post_terms = explode(',',$scsv_terms);
 
                 $terms = array();
 
@@ -90,14 +91,22 @@ class SupraCsvParser extends SupraCsvPlugin {
                     $wp_terms[$pt] = explode('|', $row['terms_'.$pt]);
                 }
                
+                if(!empty($row['tags']))
                 $wp_terms['post_tag'] = $tags;
+                if(!empty($row['categories']))
                 $wp_terms['category'] = $categories;
   
-                foreach((array)$wp_terms as $k=>$v) {
-                    if(is_numeric($v[0]))
-                        $terms[$k] = $v;
-                    else
-                        $term_names[$k] = $v;
+                foreach((array)$wp_terms as $k=>$values) {
+                    if(is_numeric($v[0])) {
+                        $terms[$k] = $values;
+                    }
+                    else {
+                        foreach($values as $v) {
+                            $wp_term = get_term_by('name',$v,$k);
+                            if($wp_term)
+                                $terms[$k][] = $wp_term->term_id;
+                        }
+                    }
                 }      
          
                 foreach((array)$post_terms as $pt) {
@@ -109,7 +118,7 @@ class SupraCsvParser extends SupraCsvPlugin {
                 unset($row['categories']);
                 unset($row['tags']);
 
-                if($rp->injectListing(array('title'=>$title,'desc'=>$desc,'cats'=>$categories,'tags'=>$tags,'termnames'=>$term_names,'terms'=>$terms,'meta'=>$row)))
+                if($rp->injectListing(array('title'=>$title,'desc'=>$desc,'cats'=>$categories,'tags'=>$tags,'terms'=>$terms,'meta'=>$row)))
                     echo '<span class="success">Successfully ingested '. $title . '</span><br />';
                 else
                     echo '<span class="error">Problem Ingesting '. $title . '</span><br />';
@@ -237,14 +246,20 @@ class SupraCsvMapperForm {
             $inputs .= self::createInput($k,$v,$this->rows);
         }
 
-        $inputs .= '<h3>Custom Terms</h3>'; 
+        $post_terms = array();
 
-        $post_terms = explode(',',get_option('scsv_custom_terms'));
+        $scsv_terms = get_option('scsv_custom_terms');
 
-        foreach($post_terms as $post_term) {
-            $inputs .= self::createInput('terms_'.$post_term,$post_term,$this->rows);
-        }
- 
+        if(!empty($scsv_terms)) {
+            $inputs .= '<h3>Custom Terms</h3>'; 
+
+            $post_terms = explode(',',$scsv_terms);
+
+            foreach($post_terms as $post_term) {
+                $inputs .= self::createInput('terms_'.$post_term,$post_term,$this->rows);
+            }
+        } 
+
         $inputs .= '<h3>Custom Postmeta</h3>'; 
 
         $inputs .= $this->displayListingFields();
