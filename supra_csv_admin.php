@@ -12,14 +12,17 @@ if(!empty($_POST['scsv_submit'])) {
     $csvpost['type'] = (empty($_POST['scsv_posttype'])) ? $_POST['scsv_custom_posttype'] : $_POST['scsv_posttype'];
     $csvpost['title'] = $_POST['scsv_defaulttitle'];
     $csvpost['desc'] = $_POST['scsv_defaultdesc'];
+    $post_terms = $_POST['scsv_custom_terms'];
     update_option('scsv_filename', $csvfile);
     update_option('scsv_user', $csvuser);
     update_option('scsv_post', $csvpost);
+    update_option('scsv_custom_terms', $post_terms);
     echo '<div class="updated"><p><strong>Configuration saved</strong></p></div>';
 } else {
     $csvfile = get_option('scsv_filename');
     $csvuser = get_option('scsv_user');
     $csvpost = get_option('scsv_post');
+    $post_terms = get_option('scsv_custom_terms');
 }
 ?>
 <div class="wrap">
@@ -45,6 +48,12 @@ creating presets for both postmeta and ingestion mapping. For more infomation on
 Exa: Blog|Auto|Coolness<br />
 You may also provide category ids instead likeso:<br />
 Exa: 1|2|3<br />
+</p>
+
+<h3>Importing Terms by Taxonomy</h3>
+<p>provide a comma separated value in the <a href="#custom_terms">custom terms</a> input below<br />
+Exa: enginesize,pricerange<br />
+The mapping selecotrs will dynamically appear in the ingest page.
 </p>
 
 <h3>Tutorial</h3>
@@ -82,6 +91,10 @@ Exa: 1|2|3<br />
             <b>or</b>
             Custom Post Type
             <input type="text" name="scsv_custom_posttype" value="<?php if($csvpost['type']!="page"&&$csvpost['type']!="post")echo $csvpost['type']; ?>" size="20">
+        </p>
+        <p id="custom_terms">
+          Custom Terms (<span style="color: red">separate terms with commas</span>)
+            <input type="text" name="scsv_custom_terms" value="<?=$post_terms?>" size="50">
         </p>
 	<p>Default Title<input type="text" name="scsv_defaulttitle" value="<?php echo $csvpost['title']; ?>" size="20"></p>
 	<p>Default Description<textarea name="scsv_defaultdesc"><?php echo $csvpost['desc']; ?></textarea></p>

@@ -36,7 +36,7 @@ class RemotePost extends SupraCsvPlugin {
 
         $args = array_merge($default_args, $args);
 
-        if($args['function'] == "metaWeblog.newPost") {
+        if($args['function'] == "wp.newPost") {
             if(!$this->client->query($args['function'],$args['post_id'],$this->uname,$this->pass,$args['args'],$args['publish']))
                throw new Exception($this->client->getErrorMessage());
         } else if($args['function'] == "wp.setOptions") {
@@ -50,7 +50,7 @@ class RemotePost extends SupraCsvPlugin {
     public function postContent($content) {
 
         $args = array(
-                      'function'=>'metaWeblog.newPost',
+                      'function'=>'wp.newPost',
                       'args'    =>$content, 
                      );
 
@@ -92,7 +92,7 @@ class RemotePost extends SupraCsvPlugin {
 
         $post = get_option('scsv_post');
 
-        $params = array('title','type','desc','cats','tags');
+        $params = array('title','type','desc','cats','tags','termnames','terms');
     
         foreach($params as $param) {
             if(empty($args[$param]))
@@ -102,19 +102,24 @@ class RemotePost extends SupraCsvPlugin {
         }
 
         $content = array(
-                         'description'=>$desc,
+                         'post_content'=>$desc,
                          'post_type'=>$type,
-                         'title'=>$title,
-                         'categories'=>$cats,
-                         'mt_keywords'=>$tags,
+                         'post_title'=>$title,
+                         //'categories'=>$cats,
+                         'term_names'=>$termnames,
+                         'terms'=>$terms,
+                         //'mt_keywords'=>$tags,
                          'custom_fields'=>$meta);
-     
+    
+        Debug::show($content);
+ 
         try {
-            return $this->postContent($content);
+            $success = $this->postContent($content);
         } catch( Exception $e ) {
             echo '<span class="error">'.$e->getMessage().'</span>';
-            return false;
+            $success = false;;
         }
-
+         
+        return $success;
     }
 }
