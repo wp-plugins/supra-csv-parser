@@ -31,7 +31,7 @@ class RemotePost extends SupraCsvPlugin {
 
         $default_args = array(
                               'post_id'=>null,
-                              'publish'=>true,
+                              'publish'=>$post['publish'],
                              );
 
         $args = array_merge($default_args, $args);
@@ -110,6 +110,12 @@ class RemotePost extends SupraCsvPlugin {
                          'terms'=>$terms,
                          //'mt_keywords'=>$tags,
                          'custom_fields'=>$meta);
+
+        if($post['publish'])
+            $content['post_status'] = 'publish';
+        else
+            $content['post_status'] = 'pending';
+
 
         try {
             $success = $this->postContent($content);
