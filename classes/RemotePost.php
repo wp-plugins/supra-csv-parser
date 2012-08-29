@@ -110,9 +110,7 @@ class RemotePost extends SupraCsvPlugin {
                          'terms'=>$terms,
                          //'mt_keywords'=>$tags,
                          'custom_fields'=>$meta);
-    
-        Debug::show($content);
- 
+
         try {
             $success = $this->postContent($content);
         } catch( Exception $e ) {
