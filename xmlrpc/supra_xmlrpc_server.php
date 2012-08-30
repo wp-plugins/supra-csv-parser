@@ -1128,11 +1128,10 @@ class wp_xmlrpc_server extends IXR_Server {
                                                                 $term_parent_info = get_term_by( 'name', $term_name['term_parent'], $taxonomy,'ARRAY_A');
 
                                                             //the term exists and there is no parent
-                                                            if($term_info && !empty($term_name['term_parent'])) {
+                                                            if($term_info && empty($term_name['term_parent'])) {
                                                             }
                                                             //both the term and its parent exists
                                                             else if($term_info && $term_parent_info) {
-
                                                             }
                                                             //the term exists but its parent doesnt
                                                             else if($term_info && !$term_parent_info) {
@@ -1141,6 +1140,21 @@ class wp_xmlrpc_server extends IXR_Server {
 
                                                                     //return new IXR_Error( 500, print_r($args) );
                                                                 $term_info = wp_update_term( $term_info['term_id'],$taxonomy,$args);
+                                                            }
+                                                            //the term doesnt exist and has no parent
+                                                            else if(!$term_info && empty($term_name['term_parent'])) {
+                                                                $term_info = wp_insert_term( $term_name['term_name'],$taxonomy);
+                                                            }
+                                                            //the term doesnt exist but its parent does
+                                                            else if(!$term_info && $term_parent_info) {
+                                                                $args = array(
+                                                                              'description'=>$term_name['term_description'],
+                                                                              'slug'=>$term_name['term_slug'],
+                                                                              'parent'=>$term_parent_info['term_id']
+                                                                             );
+
+                                                                    //return new IXR_Error( 500, print_r($args) );
+                                                                $term_info = wp_insert_term( $term_name['term_name'],$taxonomy,$args);
                                                             }
                                                             //neither the term or its parent exist
                                                             else {
