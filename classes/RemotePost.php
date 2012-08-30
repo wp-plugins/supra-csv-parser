@@ -15,6 +15,7 @@ class RemotePost extends SupraCsvPlugin {
         $this->setUser();       
         $pingback = $this->getPluginDirUrl() . "/xmlrpc/supra_xmlrpc.php";
         $this->client = new IXR_Client($pingback);
+        $this->client->debug = false;
     }
 
     private function setUser() {
@@ -35,6 +36,8 @@ class RemotePost extends SupraCsvPlugin {
                              );
 
         $args = array_merge($default_args, $args);
+
+        //Debug::show($args);
 
         if($args['function'] == "wp.newPost") {
             if(!$this->client->query($args['function'],$args['post_id'],$this->uname,$this->pass,$args['args'],$args['publish']))
@@ -83,16 +86,15 @@ class RemotePost extends SupraCsvPlugin {
         return $response;
     }
 
-
     public function injectListing($args) {
 
-        foreach($args['meta'] as $k=>$v) {
-            $meta[] = array('key'=>$k,'value'=>$v);
+        foreach($args['custom_fields'] as $k=>$v) {
+            $custom_fields[] = array('key'=>$k,'value'=>$v);
         }
 
         $post = get_option('scsv_post');
 
-        $params = array('title','type','desc','cats','tags','termnames','terms');
+        $params = array('post_title','post_type','post_content','terms_names','terms');
     
         foreach($params as $param) {
             if(empty($args[$param]))
@@ -102,14 +104,13 @@ class RemotePost extends SupraCsvPlugin {
         }
 
         $content = array(
-                         'post_content'=>$desc,
-                         'post_type'=>$type,
-                         'post_title'=>$title,
-                         //'categories'=>$cats,
-                         'term_names'=>$termnames,
+                         'post_content'=>$post_content,
+                         'post_type'=>$post_type,
+                         'post_title'=>$post_title,
+                         'terms_names'=>$terms_names,
                          'terms'=>$terms,
-                         //'mt_keywords'=>$tags,
-                         'custom_fields'=>$meta);
+                         'custom_fields'=>$custom_fields
+                        );
 
         if($post['publish'])
             $content['post_status'] = 'publish';

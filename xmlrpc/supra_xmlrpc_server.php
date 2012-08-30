@@ -938,6 +938,7 @@ class wp_xmlrpc_server extends IXR_Server {
 	 * @param array $content_struct Post data to insert.
 	 */
 	protected function _insert_post( $user, $content_struct ) {
+
 		$defaults = array( 'post_status' => 'draft', 'post_type' => 'post', 'post_author' => 0,
 			'post_password' => '', 'post_excerpt' => '', 'post_content' => '', 'post_title' => '' );
 
@@ -1078,10 +1079,14 @@ class wp_xmlrpc_server extends IXR_Server {
 				}
 			}
 
+
 			// now validate terms specified by name
 			if ( isset( $post_data['terms_names'] ) && is_array( $post_data['terms_names'] ) ) {
+
+
 				$taxonomies = array_keys( $post_data['terms_names'] );
 
+                                
 				foreach ( $taxonomies as $taxonomy ) {
 					if ( ! array_key_exists( $taxonomy , $post_type_taxonomies ) )
 						return new IXR_Error( 401, __( 'Sorry, one of the given taxonomies is not supported by the post type.' ) );
@@ -1108,15 +1113,37 @@ class wp_xmlrpc_server extends IXR_Server {
 						if ( in_array( $term_name, $ambiguous_terms ) )
 							return new IXR_Error( 401, __( 'Ambiguous term name used in a hierarchical taxonomy. Please use term ID instead.' ) );
 
-						$term = get_term_by( 'name', $term_name, $taxonomy );
+                                                if(is_string($term_name))
+						    $term = get_term_by( 'name', $term_name, $taxonomy );
+                                                else
+                                                    $term = false;
 
 						if ( ! $term ) {
 							// term doesn't exist, so check that the user is allowed to create new terms
 							if ( ! current_user_can( $post_type_taxonomies[$taxonomy]->cap->edit_terms ) )
 								return new IXR_Error( 401, __( 'Sorry, you are not allowed to add a term to one of the given taxonomies.' ) );
+                                                        if(is_array($term_name)) {
+                                                            //find the term parent by the id
+                                                            if(!is_int($term_name['term_parent']))
+                                                                $term_parent = get_term_by('name',$term_name['term_parent'],$taxonomy,'ARRAY_A');
+                                                            //term parent doesnt exist yet, create it!
+                                                            if(!$term_parent && !empty($term_name['term_parent']))
+                                                                $term_parent = wp_insert_term( $term_name['term_name'],$taxonomy);
+                                                           
+ 
+                                                            $args = array(
+                                                                          'description'=>$term_name['term_description'],
+                                                                          'slug'=>$term_name['term_slug'],
+                                                                          'parent'=>$term_parent['term_id']
+                                                                         );
 
-							// create the new term
-							$term_info = wp_insert_term( $term_name, $taxonomy );
+                                                            $term_info = wp_insert_term( $term_name['term_name'],$taxonomy,$args);
+                                                        }
+                                                        else{
+							    // create the new term
+							    $term_info = wp_insert_term( $term_name, $taxonomy);
+                                                        }
+
 							if ( is_wp_error( $term_info ) )
 								return new IXR_Error( 500, $term_info->get_error_message() );
 
@@ -2286,10 +2313,17 @@ class wp_xmlrpc_server extends IXR_Server {
 		if ( empty($category["description"]) )
 			$category["description"] = "";
 
+                // parent was a string
+                if ( !empty($category['parent'])) {
+                        if(!get_cat_ID($category['parent']))
+		            return(new IXR_Error(500, __('The provided category parent: '.$category['parent'].' doesn\'t exist.')));
+                        $category['parent_id'] = get_cat_ID($category['parent']);
+                }
+
 		$new_category = array(
-			'cat_name'				=> $category['name'],
-			'category_nicename'		=> $category['slug'],
-			'category_parent'		=> $category['parent_id'],
+			'cat_name'		=> $category['name'],
+			'category_nicename'	=> $category['slug'],
+			'category_parent'	=> $category['parent_id'],
 			'category_description'	=> $category['description']
 		);
 
@@ -3861,10 +3895,12 @@ class wp_xmlrpc_server extends IXR_Server {
 
 			if ( is_array($catnames) ) {
 				foreach ($catnames as $cat) {
-                                        if(is_numeric($cat))
+                                        if(is_numeric($cat)) {
 					    $post_category[] = $cat;
-                                        else 
+                                        }
+                                        else if(get_cat_ID($cat)) { 
 					    $post_category[] = get_cat_ID($cat);
+                                        }
 				}
 			}
 		}

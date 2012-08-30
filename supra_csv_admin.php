@@ -13,16 +13,19 @@ if(!empty($_POST['scsv_submit'])) {
     $csvpost['title'] = $_POST['scsv_defaulttitle'];
     $csvpost['desc'] = $_POST['scsv_defaultdesc'];
     $post_terms = $_POST['scsv_custom_terms'];
+    $parse_terms = $_POST['scsv_parse_terms'];
     update_option('scsv_filename', $csvfile);
     update_option('scsv_user', $csvuser);
     update_option('scsv_post', $csvpost);
     update_option('scsv_custom_terms', $post_terms);
+    update_option('scsv_parse_terms', $parse_terms);
     echo '<div class="updated"><p><strong>Configuration saved</strong></p></div>';
 } else {
     $csvfile = get_option('scsv_filename');
     $csvuser = get_option('scsv_user');
     $csvpost = get_option('scsv_post');
     $post_terms = get_option('scsv_custom_terms');
+    $parse_terms = get_option('scsv_parse_terms');
 }
 ?>
 <div class="wrap">
@@ -42,12 +45,6 @@ creating presets for both postmeta and ingestion mapping. For more infomation on
 <li>map the data and import in 'Ingestion'</li>
 <li>save postmeta and mapping presets wherever necessary</li>
 </ol>
-</p>
-<h3>Importing Categories and Tags</h3>
-<p>be sure to have the tags and categories delimited by a pipe character: | <br />
-Exa: Blog|Auto|Coolness<br />
-You may also provide category ids instead likeso:<br />
-Exa: 1|2|3<br />
 </p>
 
 <h3>Importing Terms by Taxonomy</h3>
@@ -95,6 +92,9 @@ The mapping selecotrs will dynamically appear in the ingest page.
         <p id="custom_terms">
           Custom Terms (<span style="color: red">separate terms with commas</span>)
             <input type="text" name="scsv_custom_terms" value="<?=$post_terms?>" size="50">
+        </p>
+        <p id="compex_categories">
+            Parse complex categories: <input type="checkbox" name="scsv_parse_terms" value="true" <?=($parse_terms)?'checked="checked"':''?>>
         </p>
 	<p>Default Title<input type="text" name="scsv_defaulttitle" value="<?php echo $csvpost['title']; ?>" size="20"></p>
 	<p>Default Description<textarea name="scsv_defaultdesc"><?php echo $csvpost['desc']; ?></textarea></p>
