@@ -241,7 +241,10 @@ class SupraCsvMapperForm {
 
     private function displayListingFields() {
         $inputs = null;
-        if(!count($this->getListingFields())) {
+
+        $fields = $this->getListingFields();
+
+        if(count($fields) == 1 && !empty($fields[0]) || count($fields) > 1) {
             $inputs .= '<h3>Custom Postmeta</h3>'; 
             foreach((array)$this->getListingFields() as $k=>$v) {
                 $inputs .= self::createInput($k,$v,$this->rows);
