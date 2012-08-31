@@ -95,8 +95,7 @@ The mapping selecotrs will dynamically appear in the ingest page.
         </p>
         <p id="custom_terms">
           Custom Terms (<span style="color: red">separate terms with commas</span>)
-            <input type="text" name="scsv_custom_terms" value="<?=$post_terms?>" size="50" <?=($parse_terms)?'disabled="disabled"':'';?>>
-            Parse terms instead: <input type="checkbox" name="scsv_parse_terms" value="<?=$parse_terms?>">
+            <input type="text" name="scsv_custom_terms" value="<?=$post_terms?>" size="50">
         </p>
         <p id="compex_categories">
             Parse complex categories: <input type="checkbox" name="scsv_parse_terms" value="true" <?=($parse_terms)?'checked="checked"':''?>>

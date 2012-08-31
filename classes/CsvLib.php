@@ -94,7 +94,8 @@ class SupraCsvParser extends SupraCsvPlugin {
                     $wp_parse_cats = compact('term_name','term_slug','term_parent','term_description');
                     foreach($fields as $field)
                         unset($row[$field]);
-                    $wp_terms['category'][] = $wp_parse_cats;
+                    if(count($wp_parse_cats))
+                        $wp_terms['category'][] = $wp_parse_cats;
                 }
 
                 $post_terms = array();
@@ -211,7 +212,7 @@ class SupraCsvMapperForm {
     private $rows;
     private $listing_fields;
 
-    private $predefined_meta = array('post_title'=>'Title','post_content'=>'Description','categories'=>'Categories','mt_keywords'=>'Keywords');
+    private $predefined_meta = array('post_title'=>'Title','post_content'=>'Description','category'=>'Categories','post_tag'=>'Tags');
 
     function __construct(SupraCsvParser $cp) {
         $rows = $cp->getColumns();
@@ -221,6 +222,10 @@ class SupraCsvMapperForm {
 
         $this->rows = $rows;
         $this->setListingFields();
+
+        $csvpost = get_option('scsv_post');
+        $post_type = $csvpost['type'];
+        $this->post_type_taxonomies = get_object_taxonomies( $post_type, 'objects' );
     }
 
     public function setListingFields() {
@@ -245,6 +250,7 @@ class SupraCsvMapperForm {
         $fields = $this->getListingFields();
 
         if(count($fields) == 1 && !empty($fields[0]) || count($fields) > 1) {
+
             $inputs .= '<h3>Custom Postmeta</h3>'; 
             foreach((array)$this->getListingFields() as $k=>$v) {
                 $inputs .= self::createInput($k,$v,$this->rows);
@@ -273,7 +279,8 @@ class SupraCsvMapperForm {
         $inputs .= '<h3>Predefined</h3>'; 
 
         foreach($this->predefined_meta as $k=>$v) {
-            $inputs .= self::createInput($k,$v,$this->rows);
+            if( array_key_exists($k,$this->post_type_taxonomies) || $k == 'post_title' || $k == 'post_content' )
+                $inputs .= self::createInput($k,$v,$this->rows);
         }
 
         $parse_terms = get_option('scsv_parse_terms');
@@ -282,18 +289,23 @@ class SupraCsvMapperForm {
         if($parse_terms || !empty($custom_terms))
               $inputs .= '<h3>Custom Terms</h3>'; 
 
+
+        
         if($parse_terms) {
-              $inputs .= self::createInput('term_name','Term Name',$this->rows);
-              $inputs .= self::createInput('term_slug','Term Slug',$this->rows);
-              $inputs .= self::createInput('term_parent','Term Parent',$this->rows);
-              $inputs .= self::createInput('term_description','Term Description',$this->rows);
+              if ( array_key_exists( 'category' , $this->post_type_taxonomies ) ) {
+                  $inputs .= self::createInput('term_name','Term Name',$this->rows);
+                  $inputs .= self::createInput('term_slug','Term Slug',$this->rows);
+                  $inputs .= self::createInput('term_parent','Term Parent',$this->rows);
+                  $inputs .= self::createInput('term_description','Term Description',$this->rows);
+              }
         } 
 
         if(!empty($custom_terms)) {
               $post_terms = explode(',',get_option('scsv_custom_terms'));
 
               foreach($post_terms as $post_term) {
-                  $inputs .= self::createInput('terms_'.$post_term,$post_term,$this->rows);
+                  if ( array_key_exists( $post_term , $this->post_type_taxonomies ) )
+                      $inputs .= self::createInput('terms_'.$post_term,$post_term,$this->rows);
               }
         } 
 
