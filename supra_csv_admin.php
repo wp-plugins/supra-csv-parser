@@ -34,6 +34,7 @@ if(!empty($_POST['scsv_submit'])) {
 ?>
 <div class="wrap">
 
+  <div style="width: 630px">
   <h2>Supra Csv Importer</h2>
   <div style="float: left; width: 300px;">
     <h3>Description</h3>
@@ -51,8 +52,6 @@ if(!empty($_POST['scsv_submit'])) {
       <li>map the data and import in 'Ingestion'</li>
       <li>save postmeta and mapping presets wherever necessary</li>
     </ol>
-  </div>
-  <div style="float: right;width: 300px;">
     <h3>Importing Terms by Taxonomy</h3>
     <p>provide a comma separated value in the <a href="#custom_terms">custom terms</a> input below<br />
   Exa: enginesize,pricerange<br />
@@ -61,9 +60,10 @@ if(!empty($_POST['scsv_submit'])) {
  
     <h3>Importing complex categories</h3>
     <p>If you desire to import subcategories and deatiled info about the category such
-       as the slug, description and parent mark the checkbox in the <a href="compex_categories">complex categories</a>
+       as the slug, description and parent mark the checkbox in the <a href="#compex_categories">complex categories</a>
     </p>
-
+  </div>
+  <div style="float: right;width: 300px;">
     <h3>Rapid Releases</h3>
     <p>There are times when new releases are available and may contain bugs. if you encounter any issues with the plugin ingestion be sure to toggle ingestion debugging by checking the <a href="#ingestion_debugging">box</a> and provide the debug output in the support forum to get the problem solved quickly.</p>
 
@@ -88,7 +88,7 @@ if(!empty($_POST['scsv_submit'])) {
     <p>Feel free to contact me regarding plugin issues and requests.</p>
   </div>
   <div style="clear: both"></div>
-
+  </div>
 
 <h2>Supra CSV Configuration</h2>
 <form name="scsv_form" method="post"">
