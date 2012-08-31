@@ -55,7 +55,7 @@ if(!empty($_POST['scsv_submit'])) {
     <h3>Importing Terms by Taxonomy</h3>
     <p>provide a comma separated value in the <a href="#custom_terms">custom terms</a> input below<br />
   Exa: enginesize,pricerange<br />
-  The mapping selecotrs will dynamically appear in the ingest page.
+  The mapping selectors will dynamically appear in the ingest page.
     </p>
  
     <h3>Importing complex categories</h3>
@@ -68,7 +68,7 @@ if(!empty($_POST['scsv_submit'])) {
     <p>There are times when new releases are available and may contain bugs. if you encounter any issues with the plugin ingestion be sure to toggle ingestion debugging by checking the <a href="#ingestion_debugging">box</a> and provide the debug output in the support forum to get the problem solved quickly.</p>
 
     <h2>Donations</h2>
-    <p>Additional requests or felling generous, feel free to donate!</p>
+    <p>Additional requests or feeling generous, feel free to donate!</p>
     <form action="https://www.paypal.com/cgi-bin/webscr" method="post">
     <input type="hidden" name="cmd" value="_s-xclick">
     <input type="hidden" name="hosted_button_id" value="CLC8GNV7TRGDU">
@@ -93,6 +93,7 @@ if(!empty($_POST['scsv_submit'])) {
 <h2>Supra CSV Configuration</h2>
 <form name="scsv_form" method="post"">
         <h4>User Settings</h4>
+        <hr />
 	<p>Username<input type="text" name="scsv_wpname" value="<?php echo $csvuser['name']; ?>" size="20"></p>
 	<p>Pasword<input type="password" name="scsv_wppass" value="<?php echo $csvuser['pass']; ?>" size="20"></p>
 
@@ -117,6 +118,13 @@ if(!empty($_POST['scsv_submit'])) {
             Custom Post Type
             <input type="text" name="scsv_custom_posttype" value="<?php if($csvpost['type']!="page"&&$csvpost['type']!="post")echo $csvpost['type']; ?>" size="20">
         </p>
+	<p>Default Title<input type="text" name="scsv_defaulttitle" value="<?php echo $csvpost['title']; ?>" size="20"></p>
+	<p>Default Description<textarea name="scsv_defaultdesc"><?php echo $csvpost['desc']; ?></textarea></p>
+	<p class="submit">
+	<input type="submit" name="scsv_submit" value="Update Options" />
+	</p>
+        <hr />
+        <h4>Ingestion Settings</h4>
         <p id="custom_terms">
           Custom Terms (<span style="color: red">separate terms with commas</span>)
             <input type="text" name="scsv_custom_terms" value="<?=$post_terms?>" size="50">
@@ -127,10 +135,6 @@ if(!empty($_POST['scsv_submit'])) {
         <p id="ingestion_debugging">
             Debug Ingestion: <input type="checkbox" name="scsv_ingest_debugger" value="true" <?=($ingest_debugger)?'checked="checked"':''?>>
         </p>
-	<p>Default Title<input type="text" name="scsv_defaulttitle" value="<?php echo $csvpost['title']; ?>" size="20"></p>
-	<p>Default Description<textarea name="scsv_defaultdesc"><?php echo $csvpost['desc']; ?></textarea></p>
-	<p class="submit">
-	<input type="submit" name="scsv_submit" value="Update Options" />
-	</p>
+        <hr />
 </form>
 </div>
