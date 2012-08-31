@@ -14,11 +14,13 @@ if(!empty($_POST['scsv_submit'])) {
     $csvpost['desc'] = $_POST['scsv_defaultdesc'];
     $post_terms = $_POST['scsv_custom_terms'];
     $parse_terms = $_POST['scsv_parse_terms'];
+    $ingest_debugger = $_POST['scsv_ingest_debugger'];
     update_option('scsv_filename', $csvfile);
     update_option('scsv_user', $csvuser);
     update_option('scsv_post', $csvpost);
     update_option('scsv_custom_terms', $post_terms);
     update_option('scsv_parse_terms', $parse_terms);
+    update_option('scsv_ingest_debugger', $ingest_debugger);
     echo '<div class="updated"><p><strong>Configuration saved</strong></p></div>';
 } else {
     $csvfile = get_option('scsv_filename');
@@ -26,7 +28,9 @@ if(!empty($_POST['scsv_submit'])) {
     $csvpost = get_option('scsv_post');
     $post_terms = get_option('scsv_custom_terms');
     $parse_terms = get_option('scsv_parse_terms');
+    $ingest_debugger = get_option('scsv_ingest_debugger');
 }
+
 ?>
 <div class="wrap">
 <h2>Supra Csv Importer</h2>
@@ -95,6 +99,9 @@ The mapping selecotrs will dynamically appear in the ingest page.
         </p>
         <p id="compex_categories">
             Parse complex categories: <input type="checkbox" name="scsv_parse_terms" value="true" <?=($parse_terms)?'checked="checked"':''?>>
+        </p>
+        <p id="ingestion_debugging">
+            Debug Ingestion: <input type="checkbox" name="scsv_ingest_debugger" value="true" <?=($ingest_debugger)?'checked="checked"':''?>>
         </p>
 	<p>Default Title<input type="text" name="scsv_defaulttitle" value="<?php echo $csvpost['title']; ?>" size="20"></p>
 	<p>Default Description<textarea name="scsv_defaultdesc"><?php echo $csvpost['desc']; ?></textarea></p>
