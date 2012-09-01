@@ -1123,21 +1123,56 @@ class wp_xmlrpc_server extends IXR_Server {
 							if ( ! current_user_can( $post_type_taxonomies[$taxonomy]->cap->edit_terms ) )
 								return new IXR_Error( 401, __( 'Sorry, you are not allowed to add a term to one of the given taxonomies.' ) );
                                                         if(is_array($term_name)) {
-                                                            //find the term parent by the id
-                                                            if(!is_int($term_name['term_parent']))
-                                                                $term_parent = get_term_by('name',$term_name['term_parent'],$taxonomy,'ARRAY_A');
-                                                            //term parent doesnt exist yet, create it!
-                                                            if(!$term_parent && !empty($term_name['term_parent']))
-                                                                $term_parent = wp_insert_term( $term_name['term_name'],$taxonomy);
-                                                           
- 
-                                                            $args = array(
-                                                                          'description'=>$term_name['term_description'],
-                                                                          'slug'=>$term_name['term_slug'],
-                                                                          'parent'=>$term_parent['term_id']
-                                                                         );
+                                                            $term_info = get_term_by( 'name', $term_name['term_name'], $taxonomy,'ARRAY_A');
+                                                            if(!empty($term_name['term_parent']))
+                                                                $term_parent_info = get_term_by( 'name', $term_name['term_parent'], $taxonomy,'ARRAY_A');
 
-                                                            $term_info = wp_insert_term( $term_name['term_name'],$taxonomy,$args);
+                                                            //the term exists and there is no parent
+                                                            if($term_info && empty($term_name['term_parent'])) {
+                                                            }
+                                                            //both the term and its parent exists
+                                                            else if($term_info && $term_parent_info) {
+                                                            }
+                                                            //the term exists but its parent doesnt
+                                                            else if($term_info && !$term_parent_info) {
+                                                                $term_parent_info = wp_insert_term( $term_name['term_parent'],$taxonomy);
+                                                                $args = array('parent'=>$term_parent_info['term_id']);
+
+                                                                    //return new IXR_Error( 500, print_r($args) );
+                                                                $term_info = wp_update_term( $term_info['term_id'],$taxonomy,$args);
+                                                            }
+                                                            //the term doesnt exist and has no parent
+                                                            else if(!$term_info && empty($term_name['term_parent'])) {
+                                                                $term_info = wp_insert_term( $term_name['term_name'],$taxonomy);
+                                                            }
+                                                            //the term doesnt exist but its parent does
+                                                            else if(!$term_info && $term_parent_info) {
+                                                                $args = array(
+                                                                              'description'=>$term_name['term_description'],
+                                                                              'slug'=>$term_name['term_slug'],
+                                                                              'parent'=>$term_parent_info['term_id']
+                                                                             );
+
+                                                                    //return new IXR_Error( 500, print_r($args) );
+                                                                $term_info = wp_insert_term( $term_name['term_name'],$taxonomy,$args);
+                                                            }
+                                                            //neither the term or its parent exist
+                                                            else {
+
+                                                                $term_parent_info = wp_insert_term( $term_name['term_parent'],$taxonomy);
+                                                                if ( is_wp_error( $term_parent_info ) )
+                                                                    return new IXR_Error( 500, $term_parent_info->get_error_message() );
+
+                                                                $args = array(
+                                                                              'description'=>$term_name['term_description'],
+                                                                              'slug'=>$term_name['term_slug'],
+                                                                              'parent'=>$term_parent_info['term_id']
+                                                                             );
+
+                                                                    //return new IXR_Error( 500, print_r($args) );
+                                                                $term_info = wp_insert_term( $term_name['term_name'],$taxonomy,$args);
+                                                            }
+
                                                         }
                                                         else{
 							    // create the new term

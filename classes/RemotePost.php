@@ -7,6 +7,7 @@ class RemotePost extends SupraCsvPlugin {
     private $uname;
     private $pass;
     private $postId;
+    private $debugging;
 
     function __construct() {
         parent::__construct();
@@ -15,7 +16,8 @@ class RemotePost extends SupraCsvPlugin {
         $this->setUser();       
         $pingback = $this->getPluginDirUrl() . "/xmlrpc/supra_xmlrpc.php";
         $this->client = new IXR_Client($pingback);
-        $this->client->debug = false;
+        $this->debugging = get_option('scsv_ingest_debugger');
+        $this->client->debug = $this->debugging;;
     }
 
     private function setUser() {
@@ -37,7 +39,8 @@ class RemotePost extends SupraCsvPlugin {
 
         $args = array_merge($default_args, $args);
 
-        //Debug::show($args);
+        if($this->debugging)
+            Debug::show($args);
 
         if($args['function'] == "wp.newPost") {
             if(!$this->client->query($args['function'],$args['post_id'],$this->uname,$this->pass,$args['args'],$args['publish']))
