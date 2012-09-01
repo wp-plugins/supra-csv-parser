@@ -140,7 +140,7 @@ if(!empty($_POST['scsv_submit'])) {
         <p id="csv_settings">
             <? $settings_keys = array('delimiter'=>',','enclosure'=>'"','escape'=>'\\'); ?>
             <? foreach($settings_keys as $k=>$v): ?>
-                <?=$k?>:<input type='text' name='scsv_csv_settings[<?=$k?>]' value='<?=($csv_settings[$k])?$csv_settings[$k]:$v;?>' size='2' maxlength='2' /><br />
+                <?=$k?>:<input type='text' name='scsv_csv_settings[<?=$k?>]' value='<?=($csv_settings[$k])?stripslashes($csv_settings[$k]):$v;?>' size='2' maxlength='2' /><br />
             <? endforeach; ?>
         </p>
         <hr />
