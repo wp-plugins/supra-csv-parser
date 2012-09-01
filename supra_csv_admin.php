@@ -15,12 +15,14 @@ if(!empty($_POST['scsv_submit'])) {
     $post_terms = $_POST['scsv_custom_terms'];
     $parse_terms = $_POST['scsv_parse_terms'];
     $ingest_debugger = $_POST['scsv_ingest_debugger'];
+    $csv_settings = $_POST['scsv_csv_settings'];
     update_option('scsv_filename', $csvfile);
     update_option('scsv_user', $csvuser);
     update_option('scsv_post', $csvpost);
     update_option('scsv_custom_terms', $post_terms);
     update_option('scsv_parse_terms', $parse_terms);
     update_option('scsv_ingest_debugger', $ingest_debugger);
+    update_option('scsv_csv_settings', $csv_settings);
     echo '<div class="updated"><p><strong>Configuration saved</strong></p></div>';
 } else {
     $csvfile = get_option('scsv_filename');
@@ -29,6 +31,7 @@ if(!empty($_POST['scsv_submit'])) {
     $post_terms = get_option('scsv_custom_terms');
     $parse_terms = get_option('scsv_parse_terms');
     $ingest_debugger = get_option('scsv_ingest_debugger');
+    $csv_settings = get_option('scsv_csv_settings');
 }
 
 ?>
@@ -92,8 +95,8 @@ if(!empty($_POST['scsv_submit'])) {
 
 <h2>Supra CSV Configuration</h2>
 <form name="scsv_form" method="post"">
-        <h4>User Settings</h4>
         <hr />
+        <h4>User Settings</h4>
 	<p>Username<input type="text" name="scsv_wpname" value="<?php echo $csvuser['name']; ?>" size="20"></p>
 	<p>Pasword<input type="password" name="scsv_wppass" value="<?php echo $csvuser['pass']; ?>" size="20"></p>
 
@@ -134,6 +137,14 @@ if(!empty($_POST['scsv_submit'])) {
         </p>
         <p id="ingestion_debugging">
             Debug Ingestion: <input type="checkbox" name="scsv_ingest_debugger" value="true" <?=($ingest_debugger)?'checked="checked"':''?>>
+        </p>
+        <hr />
+        <h4>CSV Settings</h4>
+        <p id="csv_settings">
+            <? $settings_keys = array('delimiter'=>',','enclosure'=>'"','escape'=>'\\'); ?>
+            <? foreach($settings_keys as $k=>$v): ?>
+                <input type="text" name="scsv_csv_settings[<?=$sk?>]" value="<?=($csv_settings[$k])?$csv_settings[$k]:$v;?>" size="2" maxlength="2" />
+            <? endforeach; ?>
         </p>
         <hr />
 </form>

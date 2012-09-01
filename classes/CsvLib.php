@@ -62,8 +62,10 @@ class SupraCsvParser extends SupraCsvPlugin {
 
         //die();
 
+        $csv_settings = get_option('scsv_csv_settings');
+
         if($cols) {
-            while (($data = fgetcsv($this->handle)) !== FALSE) {
+            while (($data = fgetcsv($this->handle,0,$csv_settings['delimiter'],$csv_settings['enclosure'],$csv_settings['escape'])) !== FALSE) {
 
                 //loop through the columns
                 foreach($data as $i=>$d) {
