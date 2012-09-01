@@ -123,9 +123,6 @@ if(!empty($_POST['scsv_submit'])) {
         </p>
 	<p>Default Title<input type="text" name="scsv_defaulttitle" value="<?php echo $csvpost['title']; ?>" size="20"></p>
 	<p>Default Description<textarea name="scsv_defaultdesc"><?php echo $csvpost['desc']; ?></textarea></p>
-	<p class="submit">
-	<input type="submit" name="scsv_submit" value="Update Options" />
-	</p>
         <hr />
         <h4>Ingestion Settings</h4>
         <p id="custom_terms">
@@ -143,9 +140,12 @@ if(!empty($_POST['scsv_submit'])) {
         <p id="csv_settings">
             <? $settings_keys = array('delimiter'=>',','enclosure'=>'\"','escape'=>'\\'); ?>
             <? foreach($settings_keys as $k=>$v): ?>
-                <?=$k?>:<input type="text" name="scsv_csv_settings[<?=$k?>]" value="<?=($csv_settings[$k])?$csv_settings[$k]:$v;?>" size="2" maxlength="2" />
+                <?=$k?>:<input type="text" name="scsv_csv_settings[<?=$k?>]" value="<?=($csv_settings[$k])?$csv_settings[$k]:$v;?>" size="2" maxlength="2" /><br />
             <? endforeach; ?>
         </p>
         <hr />
+        <p class="submit">
+            <input type="submit" name="scsv_submit" value="Update Options" />
+        </p>
 </form>
 </div>
