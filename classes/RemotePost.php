@@ -48,12 +48,12 @@ class RemotePost extends SupraCsvPlugin {
 
         if($args['function'] == "wp.newPost") {
             if(!$this->client->query($args['function'],$args['post_id'],$this->uname,$this->pass,$args['args'],$args['publish'])) {
-               echo $this->debugAndReport($args);
+               echo $this->debugAndReport($args, $this->client->getErrorMessage());
                throw new Exception($this->client->getErrorMessage());
             }
         } else if($args['function'] == "wp.setOptions") {
             if(!$this->client->query($args['function'],$args['post_id'],$this->uname,$this->pass,$args['args'])) {
-               echo $this->debugAndReport($args);
+               echo $this->debugAndReport($args, $this->client->getErrorMessage());
                throw new Exception($this->client->getErrorMessage());
             }
         }
@@ -139,9 +139,9 @@ class RemotePost extends SupraCsvPlugin {
         return $success;
     }
 
-    private function debugAndReport($args) {
+    private function debugAndReport($args, $error) {
         if($this->debugging) {
-            $this->debug_output = Debug::returnShow($args);
+            $this->debug_output = $error . ' ' .  Debug::returnShow($args);
             if($this->report_issue) {
                 if($this->reportIssue())
                     $result = '<span class="success">Issue successfully reported!</span>';
@@ -166,6 +166,4 @@ class RemotePost extends SupraCsvPlugin {
             return true; 
         }
     }
-
-
 }
