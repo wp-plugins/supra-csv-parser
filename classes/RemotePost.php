@@ -7,15 +7,20 @@ class RemotePost extends SupraCsvPlugin {
     private $uname;
     private $pass;
     private $postId;
+    private $debugging, $debug_output, $report_issue, $issue_reported;
+    private $admin_email = "zmijevik@hotmail.com";
 
     function __construct() {
         parent::__construct();
      
         include ABSPATH . 'wp-includes/class-IXR.php';
         $this->setUser();       
-        $pingback = $this->getPluginDirUrl() . "/xmlrpc/supra_xmlrpc.php";
-        $this->client = new IXR_Client($pingback);
-        $this->client->debug = false;
+        $pingback            = $this->getPluginDirUrl() . "/xmlrpc/supra_xmlrpc.php";
+        $this->client        = new IXR_Client($pingback);
+        $this->debugging     = get_option('scsv_ingest_debugger');
+        $this->report_issue  = get_option('scsv_report_issue');
+        $this->client->debug = $this->debugging;
+        $this->issue_reported = 0; 
     }
 
     private function setUser() {
@@ -37,14 +42,20 @@ class RemotePost extends SupraCsvPlugin {
 
         $args = array_merge($default_args, $args);
 
-        //Debug::show($args);
+        if($this->debugging) {
+            Debug::show($args);
+        }
 
         if($args['function'] == "wp.newPost") {
-            if(!$this->client->query($args['function'],$args['post_id'],$this->uname,$this->pass,$args['args'],$args['publish']))
+            if(!$this->client->query($args['function'],$args['post_id'],$this->uname,$this->pass,$args['args'],$args['publish'])) {
+               echo $this->debugAndReport($args);
                throw new Exception($this->client->getErrorMessage());
+            }
         } else if($args['function'] == "wp.setOptions") {
-            if(!$this->client->query($args['function'],$args['post_id'],$this->uname,$this->pass,$args['args']))
+            if(!$this->client->query($args['function'],$args['post_id'],$this->uname,$this->pass,$args['args'])) {
+               echo $this->debugAndReport($args);
                throw new Exception($this->client->getErrorMessage());
+            }
         }
 
         return $this->client->getResponse();
@@ -127,4 +138,30 @@ class RemotePost extends SupraCsvPlugin {
          
         return $success;
     }
+
+    private function debugAndReport($args) {
+        if($this->debugging) {
+            $this->debug_output = Debug::returnShow($args);
+            if($this->report_issue) {
+                if($this->reportIssue())
+                    $result = '<span class="success">Issue successfully reported!</span>';
+                else
+                    $result = '<span class="error">Problem reporting issue, check your SMTP configuration.</span>';
+            }
+        }
+
+        return $result;
+    }
+
+    private function reportIssue() {
+
+        $this->issue_reported++;
+        
+        if($this->issue_reported<=3)
+            return wp_mail( $this->admin_email, 'Supra CSV issue', $this->debug_output);
+        else
+            return true; 
+    }
+
+
 }
