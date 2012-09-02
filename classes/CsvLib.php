@@ -1,6 +1,7 @@
 <?php
 require_once("Debug.php");
 require_once(dirname(__FILE__) . '/SupraCsvPlugin.php');
+require_once(dirname(__FILE__) . '/SupraCsvPostTaxonomy.php');
 
 class SupraCsvParser extends SupraCsvPlugin {
     private $file;
@@ -52,8 +53,9 @@ class SupraCsvParser extends SupraCsvPlugin {
 
     public function ingestContent($mapping) {
 
-        $rp = new RemotePost();
-        $cm = new SupraCsvMapper($mapping);
+        $rp   = new RemotePost();
+        $cm   = new SupraCsvMapper($mapping);
+        $ptax = new SupraCsvPostTaxonomy();
 
         $cols = $this->getColumns();
 
@@ -88,7 +90,7 @@ class SupraCsvParser extends SupraCsvPlugin {
 
                 $wp_terms = array();
 
-                if($parse_terms) {
+                if($parse_terms  && $ptax->validTaxonomyByPostType('category')) {
                     $fields = array('term_name','term_slug','term_parent','term_description');
                     foreach($fields as $field) 
                         if(!empty($row[$field]))
@@ -96,7 +98,8 @@ class SupraCsvParser extends SupraCsvPlugin {
                     $wp_parse_cats = compact('term_name','term_slug','term_parent','term_description');
                     foreach($fields as $field)
                         unset($row[$field]);
-                    if(count($wp_parse_cats))
+                    $count = count($wp_parse_cats); 
+                    if(!empty($count))
                         $wp_terms['category'][] = $wp_parse_cats;
                 }
 
@@ -111,10 +114,12 @@ class SupraCsvParser extends SupraCsvPlugin {
 
                 //parse the cutom term to its taxonomy
                 foreach((array)$post_terms as $pt) {
-                    $wp_terms[$pt] = explode('|', $row['terms_'.$pt]);
+                    if($ptax->validTaxonomyByPostType($pt) )
+                        $wp_terms[$pt] = explode('|', $row['terms_'.$pt]);
                 }
 
                 //categories must be resolved by terms
+             
                 if(!empty( $row['categories'] )) {
                     if($wp_parse_cats) die('<span class="error">You must either parse complexy or simplistic categoires but not both.</span>');
                     $wp_terms['category'] = explode('|', $row['categories']);
@@ -224,10 +229,7 @@ class SupraCsvMapperForm {
 
         $this->rows = $rows;
         $this->setListingFields();
-
-        $csvpost = get_option('scsv_post');
-        $post_type = $csvpost['type'];
-        $this->post_type_taxonomies = get_object_taxonomies( $post_type, 'objects' );
+        $this->ptax = new SupraCsvPostTaxonomy();
     }
 
     public function setListingFields() {
@@ -281,7 +283,7 @@ class SupraCsvMapperForm {
         $inputs .= '<h3>Predefined</h3>'; 
 
         foreach($this->predefined_meta as $k=>$v) {
-            if( array_key_exists($k,$this->post_type_taxonomies) || $k == 'post_title' || $k == 'post_content' )
+            if( $this->ptax->validTaxonomyByPostType($k) || $k == 'post_title' || $k == 'post_content' )
                 $inputs .= self::createInput($k,$v,$this->rows);
         }
 
@@ -294,7 +296,7 @@ class SupraCsvMapperForm {
 
         
         if($parse_terms) {
-              if ( array_key_exists( 'category' , $this->post_type_taxonomies ) ) {
+              if ( $this->ptax->validTaxonomyByPostType('category') ) {
                   $inputs .= self::createInput('term_name','Term Name',$this->rows);
                   $inputs .= self::createInput('term_slug','Term Slug',$this->rows);
                   $inputs .= self::createInput('term_parent','Term Parent',$this->rows);
@@ -306,7 +308,7 @@ class SupraCsvMapperForm {
               $post_terms = explode(',',get_option('scsv_custom_terms'));
 
               foreach($post_terms as $post_term) {
-                  if ( array_key_exists( $post_term , $this->post_type_taxonomies ) )
+                  if ( $this->ptax->validTaxonomyByPostType($post_term) )
                       $inputs .= self::createInput('terms_'.$post_term,$post_term,$this->rows);
               }
         } 
@@ -319,5 +321,4 @@ class SupraCsvMapperForm {
 
         return $form;
     }
-
 }

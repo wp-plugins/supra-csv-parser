@@ -71,7 +71,7 @@ if(!empty($_POST['scsv_submit'])) {
   </div>
   <div style="float: right;width: 300px;">
     <h3>Rapid Releases</h3>
-    <p>There are times when new releases are available and may contain bugs. if you encounter any issues with the plugin ingestion be sure to toggle ingestion debugging by checking the <a href="#ingestion_debugging">box</a> and provide the debug output in the support forum to get the problem solved quickly.</p>
+    <p>There are times when new releases are available and may contain bugs. if you encounter any issues with the plugin ingestion be sure to toggle ingestion debugging by checking the <a href="#ingestion_debugging">box</a> and provide the debug output in the <a href="http://http://wordpress.org/support/plugin/supra-csv-parser" target="_blank">support forum</a> to get the problem solved quickly.</p>
     <h3>Issue Reporting</h3>
      <p>If you are experiencing issues be sure to turn the ingestion debugger on as mentioned above and toggle the <a href="#issue_reporting">issue reporting</a> checkbox.
       This will send en email directly to the admin to debug the issue if something went wrong in the ingestion.
