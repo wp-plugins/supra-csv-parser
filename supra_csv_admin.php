@@ -39,11 +39,9 @@ if(!empty($_POST['scsv_submit'])) {
 ?>
 <div style="width: 630px">
 <h2>Supra CSV Configuration</h2>
-<div style="float: left; width: 300px;">
-
-<form name="scsv_form" method="post">
-
         <hr />
+<div style="float: left; width: 300px;">
+<form name="scsv_form" method="post">
         <h4>User Settings</h4>
         <p>Username<input type="text" name="scsv_wpname" value="<?php echo $csvuser['name']; ?>" size="20"></p>
         <p>Pasword<input type="password" name="scsv_wppass" value="<?php echo $csvuser['pass']; ?>" size="20"></p>
@@ -71,7 +69,6 @@ if(!empty($_POST['scsv_submit'])) {
         </p>
         <p>Default Title<input type="text" name="scsv_defaulttitle" value="<?php echo $csvpost['title']; ?>" size="20"></p>
         <p>Default Description<textarea name="scsv_defaultdesc"><?php echo $csvpost['desc']; ?></textarea></p>
-        <hr />
 </div>
 <div style="float: right; width: 300px;">
         <h4>Ingestion Settings</h4>
@@ -96,11 +93,11 @@ if(!empty($_POST['scsv_submit'])) {
                 <?=$k?>:<input type='text' name='scsv_csv_settings[<?=$k?>]' value='<?=($csv_settings[$k])?stripslashes($csv_settings[$k]):$v;?>' size='2' maxlength='2' /><br />
             <? endforeach; ?>
         </p>
-        <hr />
+</div>
+<hr />
         <p class="submit">
             <input type="submit" name="scsv_submit" value="Update Options" />
         </p>
 </form>
-</div>
 </div>
 
