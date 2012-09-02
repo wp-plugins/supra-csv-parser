@@ -115,8 +115,10 @@ class SupraCsvParser extends SupraCsvPlugin {
                 //parse the cutom term to its taxonomy
                 foreach((array)$post_terms as $pt) {
                     if($ptax->validTaxonomyByPostType($pt) )
-                        $wp_terms[$pt] = explode('|', $row['terms_'.$pt]);
+                        if(!empty($row['terms_'.$pt]))
+                            $wp_terms[$pt] = explode('|', $row['terms_'.$pt]);
                 }
+
 
                 //categories must be resolved by terms
              
