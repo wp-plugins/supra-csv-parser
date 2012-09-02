@@ -77,6 +77,26 @@ class SupraCsvParser_Plugin extends SupraCsvParser_LifeCycle {
     public function upgrade() {
     }
 
+
+    //page-factory
+    public function __call($name, $arguments)
+    {
+        $callable = array('home','admin','ingest','postmeta','upload');
+ 
+        foreach($callable as $called) {
+            if( substr($name,0,5) == "scsv_" && strstr($name,$called)) {
+                require_once(dirname(__FILE__) . '/supra_csv_' . $called . '.php');
+            }
+            else {
+                die('calling non-existent method '.$called);
+            }
+        }
+    }
+/*
+    public function scsv_home() {
+        require_once(dirname(__FILE__).'/supra_csv_home.php');
+    }
+
     public function scsv_admin() {
         require_once(dirname(__FILE__).'/supra_csv_admin.php');
     }
@@ -92,9 +112,10 @@ class SupraCsvParser_Plugin extends SupraCsvParser_LifeCycle {
     public function scsv_upload() {
         require_once(dirname(__FILE__).'/supra_csv_upload.php');
     }
-
+*/
     public function callAdminActions() {
         add_menu_page("Supra CSV", "Supra CSV", "manage_options", "supra_csv", array(&$this,"scsv_admin"));
+        add_submenu_page("supra_csv", "Home", "Home", "manage_options", "supra_csv", array(&$this,"scsv_home"));
         add_submenu_page("supra_csv", "Configuration", "Configuration", "manage_options", "supra_csv", array(&$this,"scsv_admin"));
         add_submenu_page("supra_csv", "Upload", "Upload", "manage_options", "supra_csv_upload", array(&$this,"scsv_upload"));
         add_submenu_page("supra_csv", "Post Info", "Post Info", "manage_options", "supra_csv_postmeta", array(&$this,"scsv_postmeta"));
