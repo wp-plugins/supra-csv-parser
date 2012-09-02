@@ -17,7 +17,6 @@ class UploadCsv extends SupraCsvPlugin {
         if(!file_exists($this->getCsvDir())) {
             chmod(WP_CONTENT_DIR . '/uploads/',0777);
             mkdir($this->getCsvDir(),0777,true);
-            chmod(WP_CONTENT_DIR . '/uploads/',0744);
         }
     }
 

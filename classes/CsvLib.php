@@ -76,9 +76,9 @@ class SupraCsvParser extends SupraCsvPlugin {
                 $post_args = $this->getPostArgs($row);               
 
                 if($rp->injectListing($post_args))
-                    echo '<span class="success">Successfully ingested '. $post_title . '</span><br />';
+                    echo '<span class="success">Successfully ingested '. $post_args['post_title'] . '</span><br />';
                 else
-                    echo '<span class="error">Problem Ingesting '. $post_title . '</span><br />';
+                    echo '<span class="error">Problem Ingesting '. $post_args['post_title'] . '</span><br />';
             }
         }
 
