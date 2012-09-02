@@ -16,12 +16,14 @@ if(!empty($_POST['scsv_submit'])) {
     $parse_terms = $_POST['scsv_parse_terms'];
     $ingest_debugger = $_POST['scsv_ingest_debugger'];
     $csv_settings = $_POST['scsv_csv_settings'];
+    $report_issue = $_POST['scsv_report_issue'];
     update_option('scsv_filename', $csvfile);
     update_option('scsv_user', $csvuser);
     update_option('scsv_post', $csvpost);
     update_option('scsv_custom_terms', $post_terms);
     update_option('scsv_parse_terms', $parse_terms);
     update_option('scsv_ingest_debugger', $ingest_debugger);
+    update_option('scsv_report_issue', $report_issue);
     update_option('scsv_csv_settings', $csv_settings);
     echo '<div class="updated"><p><strong>Configuration saved</strong></p></div>';
 } else {
@@ -31,6 +33,7 @@ if(!empty($_POST['scsv_submit'])) {
     $post_terms = get_option('scsv_custom_terms');
     $parse_terms = get_option('scsv_parse_terms');
     $ingest_debugger = get_option('scsv_ingest_debugger');
+    $report_issue = get_option('scsv_report_issue');
     $csv_settings = get_option('scsv_csv_settings');
 }
 
@@ -69,8 +72,11 @@ if(!empty($_POST['scsv_submit'])) {
   <div style="float: right;width: 300px;">
     <h3>Rapid Releases</h3>
     <p>There are times when new releases are available and may contain bugs. if you encounter any issues with the plugin ingestion be sure to toggle ingestion debugging by checking the <a href="#ingestion_debugging">box</a> and provide the debug output in the support forum to get the problem solved quickly.</p>
-
-    <h2>Donations</h2>
+    <h3>Issue Reporting</h3>
+     <p>If you are experiencing issues be sure to turn the ingestion debugger on as mentioned above and toggle the <a href="#issue_reporting">issue reporting</a> checkbox.
+      This will send en email directly to the admin to debug the issue if something went wrong in the ingestion.
+     </p>
+    <h3>Donations</h3>
     <p>Additional requests or feeling generous, feel free to donate!</p>
     <form action="https://www.paypal.com/cgi-bin/webscr" method="post">
     <input type="hidden" name="cmd" value="_s-xclick">
@@ -134,6 +140,9 @@ if(!empty($_POST['scsv_submit'])) {
         </p>
         <p id="ingestion_debugging">
             Debug Ingestion: <input type="checkbox" name="scsv_ingest_debugger" value="true" <?=($ingest_debugger)?'checked="checked"':''?>>
+        </p>
+        <p id="issue_reporting">
+            Report Issues: <input type="checkbox" name="scsv_report_issue" value="true" <?=($report_issue)?'checked="checked"':''?>>
         </p>
         <hr />
         <h4>CSV Settings</h4>
