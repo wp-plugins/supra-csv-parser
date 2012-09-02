@@ -7,6 +7,10 @@ class Debug {
         echo "</pre>";
     }
 
+    public static function returnShow($data) {
+        return print_r($data, true);
+    }
+
     public static function describe($data) {
         echo "<pre>";
         var_dump($data);
