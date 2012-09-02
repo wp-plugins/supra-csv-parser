@@ -1,4 +1,4 @@
-<?php 
+<?php
 require_once(dirname(__FILE__).'/classes/SupraCsvPlugin.php');
 
 $scp = new SupraCsvPlugin();
@@ -42,34 +42,35 @@ if(!empty($_POST['scsv_submit'])) {
 <div style="float: left; width: 300px;">
 
 <form name="scsv_form" method="post">
+
         <hr />
         <h4>User Settings</h4>
-	<p>Username<input type="text" name="scsv_wpname" value="<?php echo $csvuser['name']; ?>" size="20"></p>
-	<p>Pasword<input type="password" name="scsv_wppass" value="<?php echo $csvuser['pass']; ?>" size="20"></p>
+        <p>Username<input type="text" name="scsv_wpname" value="<?php echo $csvuser['name']; ?>" size="20"></p>
+        <p>Pasword<input type="password" name="scsv_wppass" value="<?php echo $csvuser['pass']; ?>" size="20"></p>
 
         <hr />
         <h4>Post Settings</h4>
-	<p>
+        <p>
             Auto Publish
             <select name="scsv_autopub">
                 <option value="0">false</option>
                 <option value="1" <?php if($csvpost['publish']) echo 'selected="selected"';?>>true</option>
             </select>
         </p>
-	<p>
+        <p>
             Post Type
             <select name="scsv_posttype" value="<?php echo $csvpost['type']; ?>">
                 <option value=""></option>
                 <? foreach(get_post_types() as $post_type): ?>
                 <option value="<?=$post_type?>" <?if($csvpost['type']==$post_type) echo 'selected="selected"';?>><?=$post_type?></option>
-                <? endforeach ?> 
+                <? endforeach ?>
             </select>
             <b>or</b>
             Custom Post Type
             <input type="text" name="scsv_custom_posttype" value="<?php if($csvpost['type']!="page"&&$csvpost['type']!="post")echo $csvpost['type']; ?>" size="20">
         </p>
-	<p>Default Title<input type="text" name="scsv_defaulttitle" value="<?php echo $csvpost['title']; ?>" size="20"></p>
-	<p>Default Description<textarea name="scsv_defaultdesc"><?php echo $csvpost['desc']; ?></textarea></p>
+        <p>Default Title<input type="text" name="scsv_defaulttitle" value="<?php echo $csvpost['title']; ?>" size="20"></p>
+        <p>Default Description<textarea name="scsv_defaultdesc"><?php echo $csvpost['desc']; ?></textarea></p>
         <hr />
 </div>
 <div style="float: right; width: 300px;">
@@ -102,3 +103,4 @@ if(!empty($_POST['scsv_submit'])) {
 </form>
 </div>
 </div>
+
