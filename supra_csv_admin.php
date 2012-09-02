@@ -94,6 +94,7 @@ if(!empty($_POST['scsv_submit'])) {
             <? endforeach; ?>
         </p>
 </div>
+<div style="clear: both"></div>
 <hr />
         <p class="submit">
             <input type="submit" name="scsv_submit" value="Update Options" />
