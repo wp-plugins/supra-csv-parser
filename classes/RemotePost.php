@@ -156,11 +156,15 @@ class RemotePost extends SupraCsvPlugin {
     private function reportIssue() {
 
         $this->issue_reported++;
-        
-        if($this->issue_reported<=3)
-            return wp_mail( $this->admin_email, 'Supra CSV issue', $this->debug_output);
-        else
+
+        if($this->issue_reported<=3){
+            $admin_email = get_option('admin_email');
+            $header = 'From: "Blog Admin" <'.$admin_email.'>';
+            return wp_mail( $this->admin_email, 'Supra CSV issue', $this->debug_output,$header);
+        }
+        else {
             return true; 
+        }
     }
 
 
