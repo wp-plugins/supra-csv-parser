@@ -131,11 +131,14 @@ class SupraCsvParser extends SupraCsvPlugin {
                 if(!empty( $row['mt_keywords'] )) 
                     $wp_terms['post_tag'] = explode('|', $row['mt_keywords']);
 
+                //parse and load remaining postmeta
                 foreach((array)$wp_terms as $k=>$v) {
-                    if(is_int($v[0]))
-                        $terms[$k] = $v;
-                    else
-                        $terms_names[$k] = $v;
+                    if(!empty($k) && !empty($v)) {
+                        if(is_int($v[0]))
+                            $terms[$k] = $v;
+                        else
+                            $terms_names[$k] = $v;
+                    }
                 }
 
                 //these unsetters confine the array to custom_fields
