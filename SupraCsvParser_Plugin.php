@@ -86,11 +86,12 @@ class SupraCsvParser_Plugin extends SupraCsvParser_LifeCycle {
         foreach($callable as $called) {
             if( substr($name,0,5) == "scsv_" && strstr($name,$called)) {
                 require_once(dirname(__FILE__) . '/supra_csv_' . $called . '.php');
+                break;
             }
         }
     }
     public function callAdminActions() {
-        add_menu_page("Supra CSV", "Supra CSV", "manage_options", "supra_csv_home", array(&$this,"scsv_admin"));
+        add_menu_page("Supra CSV", "Supra CSV", "manage_options", "supra_csv_home", array(&$this,"scsv_home"));
         add_submenu_page("supra_csv", "Home", "Home", "manage_options", "supra_csv_home", array(&$this,"scsv_home"));
         add_submenu_page("supra_csv", "Configuration", "Configuration", "manage_options", "supra_csv_admin", array(&$this,"scsv_admin"));
         add_submenu_page("supra_csv", "Upload", "Upload", "manage_options", "supra_csv_upload", array(&$this,"scsv_upload"));
