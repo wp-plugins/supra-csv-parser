@@ -117,13 +117,13 @@ class UploadCsv extends SupraCsvPlugin {
              '<a href="'.$filename_url.'" target="_blank">Download File</a>';
         $row = 1;
         $csv_settings = get_option('scsv_csv_settings');
+
         if (($handle = fopen($filename_abs, "r")) !== FALSE) {
 
-        if($cols) {
-            while (($data = fgetcsv($handle,10,$csv_settings['delimiter'],$csv_settings['enclosure'],$csv_settings['escape'])) !== FALSE) 
+            while (($data = fgetcsv($handle,1000,stripslashes($csv_settings['delimiter']),stripslashes($csv_settings['enclosure']),stripslashes($csv_settings['escape']))) !== FALSE) {
                 echo "<br />";
                 $row++;
-                    echo implode(',',$data);
+                    echo implode(stripslashes($csv_settings['delimiter']),$data);
                 if($row==10) break;
             }
             fclose($handle);
