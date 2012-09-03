@@ -51,6 +51,16 @@ class SupraCsvParser extends SupraCsvPlugin {
         return $this->filename;
     }
 
+    private function parseNextLine($handle,$csv_settings) {
+        if (strnatcmp(phpversion(),'5.3') >= 0) {    
+            return fgetcsv($handle,1000,stripslashes($csv_settings['delimiter']),stripslashes($csv_settings['enclosure']),stripslashes($csv_settings['escape']));
+        
+        } 
+        else { 
+            return fgetcsv($handle,1000,stripslashes($csv_settings['delimiter']),stripslashes($csv_settings['enclosure']));
+        }  
+    }
+
     public function ingestContent($mapping) {
 
         $rp   = new RemotePost();
@@ -61,7 +71,7 @@ class SupraCsvParser extends SupraCsvPlugin {
         $csv_settings = get_option('scsv_csv_settings');
 
         if($cols) {
-            while (($data = fgetcsv($this->handle,0,$csv_settings['delimiter'],$csv_settings['enclosure'],$csv_settings['escape'])) !== FALSE) {
+            while (($data = $this->parseNextLine($this->handle,$csv_settings)) !== FALSE) {
 
                 //loop through the columns
                 foreach($data as $i=>$d) {
