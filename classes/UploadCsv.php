@@ -17,7 +17,6 @@ class UploadCsv extends SupraCsvPlugin {
         if(!file_exists($this->getCsvDir())) {
             chmod(WP_CONTENT_DIR . '/uploads/',0777);
             mkdir($this->getCsvDir(),0777,true);
-            chmod(WP_CONTENT_DIR . '/uploads/',0744);
         }
     }
 
@@ -120,7 +119,7 @@ class UploadCsv extends SupraCsvPlugin {
 
         if (($handle = fopen($filename_abs, "r")) !== FALSE) {
 
-            while (($data = fgetcsv($handle,1000,stripslashes($csv_settings['delimiter']),stripslashes($csv_settings['enclosure']),stripslashes($csv_settings['escape']))) !== FALSE) {
+            while (($data = $this->parseNextLine($handle,$csv_settings)) !== FALSE) {
                 echo "<br />";
                 $row++;
                     echo implode(stripslashes($csv_settings['delimiter']),$data);
@@ -128,6 +127,16 @@ class UploadCsv extends SupraCsvPlugin {
             }
             fclose($handle);
         }
+    }
+
+    private function parseNextLine($handle,$csv_settings) {
+        if (strnatcmp(phpversion(),'5.3') >= 0) { 
+            return fgetcsv($handle,1000,stripslashes($csv_settings['delimiter']),stripslashes($csv_settings['enclosure']),stripslashes($csv_settings['escape']));
+ 
+        } 
+        else { 
+            return fgetcsv($handle,1000,stripslashes($csv_settings['delimiter']),stripslashes($csv_settings['enclosure']));
+        } 
     }
 
     public function displayFileSelector() {
