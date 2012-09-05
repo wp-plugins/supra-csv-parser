@@ -81,7 +81,7 @@ class SupraCsvParser_Plugin extends SupraCsvParser_LifeCycle {
     //page-factory
     public function __call($name, $arguments)
     {
-        $callable = array('home','admin','ingest','postmeta','upload');
+        $callable = array('home','admin','ingest','postmeta','upload','docs');
  
         foreach($callable as $called) {
             if( substr($name,0,5) == "scsv_" && strstr($name,$called)) {
