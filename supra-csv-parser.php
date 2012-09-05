@@ -2,7 +2,7 @@
 /*
    Plugin Name: Supra CSV Importer
    Plugin URI: http://wordpress.org/extend/plugins/supra-csv-parser/
-   Version: 2.6.3
+   Version: 2.7.5
    Description: Plugin for parsing a csv files into posts.
    Author: zmijevik
    Text Domain: supracsvparser
