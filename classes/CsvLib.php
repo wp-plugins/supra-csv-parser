@@ -99,8 +99,8 @@ class SupraCsvParser extends SupraCsvPlugin {
 
                 $csvpost = get_option('scsv_post');
 
-                $post_title = $row['post_title'];
-                $post_content =  $row['post_content'];
+                $post_title = !empty($row['post_title'])?$row['post_title']:$csvpost['title'];
+                $post_content =  !empty($row['post_content'])?$row['post_content']:$csvpost['desc'];
 
                 $parse_terms = get_option('scsv_parse_terms');
 

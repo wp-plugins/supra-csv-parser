@@ -5,7 +5,7 @@ Donate link:
 Tags: Csv Importer , Csv Parser , Csv Injector , Custom Post
 Requires at least: 3.2.1
 Tested up to: 3.2.1
-Stable tag: 2.7.5
+Stable tag: 2.7.6
 
 The purpose of this plugin is to parse uploaded csv files into any type of
 post.
@@ -80,4 +80,5 @@ fixed uploads folder permission bug
 fixed php compatability with fgetcsv
 = 2.7.5 =
 added documentation to the plugin
-
+= 2.7.6 =
+fixed blank description/title bug
