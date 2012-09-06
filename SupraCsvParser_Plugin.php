@@ -81,42 +81,19 @@ class SupraCsvParser_Plugin extends SupraCsvParser_LifeCycle {
     //page-factory
     public function __call($name, $arguments)
     {
-        $callable = array('home','admin','ingest','postmeta','upload');
+        $callable = array('home','admin','ingest','postmeta','upload','docs');
  
         foreach($callable as $called) {
             if( substr($name,0,5) == "scsv_" && strstr($name,$called)) {
                 require_once(dirname(__FILE__) . '/supra_csv_' . $called . '.php');
-            }
-            else {
-                die('calling non-existent method '.$called);
+                break;
             }
         }
     }
-/*
-    public function scsv_home() {
-        require_once(dirname(__FILE__).'/supra_csv_home.php');
-    }
-
-    public function scsv_admin() {
-        require_once(dirname(__FILE__).'/supra_csv_admin.php');
-    }
-
-    public function scsv_ingest() {
-        require_once(dirname(__FILE__).'/supra_csv_ingest.php');
-    }
-
-    public function scsv_postmeta() {
-        require_once(dirname(__FILE__).'/supra_csv_postmeta.php');
-    }
-
-    public function scsv_upload() {
-        require_once(dirname(__FILE__).'/supra_csv_upload.php');
-    }
-*/
     public function callAdminActions() {
-        add_menu_page("Supra CSV", "Supra CSV", "manage_options", "supra_csv", array(&$this,"scsv_admin"));
-        add_submenu_page("supra_csv", "Home", "Home", "manage_options", "supra_csv", array(&$this,"scsv_home"));
-        add_submenu_page("supra_csv", "Configuration", "Configuration", "manage_options", "supra_csv", array(&$this,"scsv_admin"));
+        add_menu_page("Supra CSV", "Supra CSV", "manage_options", "supra_csv", array(&$this,"scsv_home"));
+        add_submenu_page("supra_csv", "Docs", "Docs", "manage_options", "supra_csv_docs", array(&$this,"scsv_docs"));
+        add_submenu_page("supra_csv", "Configuration", "Configuration", "manage_options", "supra_csv_admin", array(&$this,"scsv_admin"));
         add_submenu_page("supra_csv", "Upload", "Upload", "manage_options", "supra_csv_upload", array(&$this,"scsv_upload"));
         add_submenu_page("supra_csv", "Post Info", "Post Info", "manage_options", "supra_csv_postmeta", array(&$this,"scsv_postmeta"));
         add_submenu_page("supra_csv", "Ingestion", "Ingestion", "manage_options", "supra_csv_ingest", array(&$this,"scsv_ingest"));
