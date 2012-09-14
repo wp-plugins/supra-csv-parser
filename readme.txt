@@ -1,11 +1,11 @@
-=== Supra CSV Importer ===
+=== Supra CSV ===
 Contributors: zmijevik
 Author URI: http://profiles.wordpress.org/zmijevik
 Donate link:
-Tags: Csv Importer , Csv Parser , Csv Injector , Custom Post
+Tags: Csv Importer , Csv Parser , Csv Injector , Custom Post, csv, Csv Extractor, Csc Exporter
 Requires at least: 3.2.1
 Tested up to: 3.2.1
-Stable tag: 2.7.6
+Stable tag: 2.7.7
 
 The purpose of this plugin is to parse uploaded csv files into any type of
 post.
@@ -13,7 +13,8 @@ post.
 == Description ==
 
 The purpose of this plugin is to parse uploaded csv files into any type of
-post.Some themes or plugin store data in post with custom post_type, thus this
+post. The plugin also provides the functioanlity to extract and export post
+into csv files. Some themes or plugin store data in post with custom post_type, thus this
 plugin provides the functionality to upload data from the csv file to the records
 that the theme or plugin creates. Manage existing csv files and promote ease of use
 by creating presets for both postmeta and ingestion mapping. For more infomation
@@ -82,3 +83,5 @@ fixed php compatability with fgetcsv
 added documentation to the plugin
 = 2.7.6 =
 fixed blank description/title bug
+= 2.7.7 = 
+added the post extractor/csv exporter base functionality
