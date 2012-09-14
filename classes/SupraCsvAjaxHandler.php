@@ -5,6 +5,7 @@ require_once(dirname(__FILE__).'/IngestCsv.php');
 require_once(dirname(__FILE__).'/Debug.php');
 require_once(dirname(__FILE__).'/Presets.php');
 require_once(dirname(__FILE__).'/SupraCsvPostMeta.php');
+require_once(dirname(__FILE__).'/SupraCsvExtractor.php');
 class SupraCsvAjaxHandler {
 
     //an instance of IngestCsv for the ingestion commands to share
@@ -84,6 +85,19 @@ class SupraCsvAjaxHandler {
                                                        'preset_name'=>$request['args']['preset_name'],
                                                        'preset'=>$mapping
                                                        )));
+            break;
+            case "extract_and_preview":
+                parse_str($_POST['data'], $query_args);
+                $sce = new SupraCsvExtractor($query_args);
+                echo $sce->displayExtractedPosts();
+            break;
+            case "extract_and_export":
+                parse_str($_POST['data'], $query_args);
+                $sce = new SupraCsvExtractor($query_args);
+                $posts = $sce->getPostsAndDetails(); 
+                $scex = new SupraCsvExporter($posts,$query_args);
+                $scex->addToSession();
+                echo $sce->displayExtractedPosts();
             break;
         }
     }
