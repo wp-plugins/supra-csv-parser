@@ -5,7 +5,7 @@ Donate link:
 Tags: Csv Importer , Csv Parser , Csv Injector , Custom Post, csv, Csv Extractor, Csc Exporter
 Requires at least: 3.2.1
 Tested up to: 3.2.1
-Stable tag: 2.7.7
+Stable tag: 2.7.8
 
 The purpose of this plugin is to parse uploaded csv files into any type of
 post.
@@ -85,3 +85,5 @@ added documentation to the plugin
 fixed blank description/title bug
 = 2.7.7 = 
 added the post extractor/csv exporter base functionality
+= 2.7.8 =
+fixed the ingestion form when deviating from csv settings
