@@ -27,7 +27,7 @@ class SupraCsvParser extends SupraCsvPlugin {
     }
 
     private function setColumns() {
-        $this->columns = fgetcsv($this->handle);
+        $this->columns = $this->parseNextLine($this->handle,$csv_settings);
     }
 
     public function getColumns() {
@@ -51,7 +51,8 @@ class SupraCsvParser extends SupraCsvPlugin {
         return $this->filename;
     }
 
-    private function parseNextLine($handle,$csv_settings) {
+    private function parseNextLine($handle) {
+        $csv_settings = get_option('scsv_csv_settings');
         if (strnatcmp(phpversion(),'5.3') >= 0) {    
             return fgetcsv($handle,1000,stripslashes($csv_settings['delimiter']),stripslashes($csv_settings['enclosure']),stripslashes($csv_settings['escape']));
         
@@ -68,10 +69,8 @@ class SupraCsvParser extends SupraCsvPlugin {
 
         $cols = $this->getColumns();
 
-        $csv_settings = get_option('scsv_csv_settings');
-
         if($cols) {
-            while (($data = $this->parseNextLine($this->handle,$csv_settings)) !== FALSE) {
+            while (($data = $this->parseNextLine($this->handle)) !== FALSE) {
 
                 //loop through the columns
                 foreach($data as $i=>$d) {

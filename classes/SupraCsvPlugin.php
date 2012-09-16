@@ -1,4 +1,4 @@
-<?
+<?php
 require_once(dirname(__FILE__).'/SupraCsvDBAL.php');
 require_once(dirname(__FILE__).'/../SupraCsvParser_Plugin.php');
 
