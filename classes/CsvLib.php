@@ -162,14 +162,14 @@ class SupraCsvParser extends SupraCsvPlugin {
 
                 //categories must be resolved by terms
 
-                if(!empty( $row['categories'] )) {
+                if(!empty( $row['category'] )) {
                     if($wp_parse_cats) die('<span class="error">You must either parse complexy or simplistic categoires but not both.</span>');
-                    $wp_terms['category'] = explode('|', $row['categories']);
+                    $wp_terms['category'] = explode('|', $row['category']);
                 }
 
                 //keywords must be resolved by terms
-                if(!empty( $row['mt_keywords'] ))
-                    $wp_terms['post_tag'] = explode('|', $row['mt_keywords']);
+                if(!empty( $row['post_tag'] ))
+                    $wp_terms['post_tag'] = explode('|', $row['post_tag']);
 
                 //parse and load remaining postmeta
                 foreach((array)$wp_terms as $k=>$v) {
@@ -188,8 +188,8 @@ class SupraCsvParser extends SupraCsvPlugin {
 
                 unset($row['post_title']);
                 unset($row['post_content']);
-                unset($row['categories']);
-                unset($row['mt_keywords']);
+                unset($row['category']);
+                unset($row['post_tag']);
 
                 foreach($row as $k=>$v) {
                     if(!empty($k) && !empty($v)) {
