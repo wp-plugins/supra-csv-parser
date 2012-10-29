@@ -1,11 +1,11 @@
 === Supra CSV ===
 Contributors: zmijevik
 Author URI: http://profiles.wordpress.org/zmijevik
-Donate link:
+Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=CLC8GNV7TRGDU
 Tags: Csv Importer , Csv Parser , Csv Injector , Custom Post, csv, Csv Extractor, Csc Exporter
 Requires at least: 3.2.1
 Tested up to: 3.2.1
-Stable tag: 2.7.9
+Stable tag: 2.8
 
 The purpose of this plugin is to parse uploaded csv files into any type of
 post.
@@ -27,7 +27,15 @@ on how to obtain the necessary info watch the detailed tutorial.
 
 == Frequently Asked Questions ==
 
-This plugin comes with a video tutorial which will answer all your questions.
+= How do I ingest mutiple taxonomy for a post?  =
+Provide a pipe symbol | as a delimiter for the custom terms. more info is provide in the docs at III.a.a
+
+= transport error - could not open socketProblem Ingesting? =
+First make sure you have xmlrpc enabled. Secondly make sure your hosting has port 111 open.
+
+= parse error. not well formed =
+Make sure there are no special characters in the csv values. The will show as question marks in your debug output 
+ 
 
 == Screenshots ==
 
@@ -89,3 +97,5 @@ added the post extractor/csv exporter base functionality
 fixed the ingestion form when deviating from csv settings
 = 2.7.9 =
 fixed the predefined categories and tags bug
+= 2.8 =
+added the donate link and the FAQ
