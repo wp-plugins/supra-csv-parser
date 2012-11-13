@@ -115,13 +115,16 @@ class RemotePost extends SupraCsvPlugin {
         }
 
         $content = array(
-                         'post_content'=>$post_content,
                          'post_type'=>$post_type,
                          'post_title'=>$post_title,
                          'terms_names'=>$terms_names,
                          'terms'=>$terms,
                          'custom_fields'=>$custom_fields
                         );
+
+        if(!empty($post_content)) {
+            $content['post_content'] = $post_content;
+        }
 
         if($post['publish'])
             $content['post_status'] = 'publish';
