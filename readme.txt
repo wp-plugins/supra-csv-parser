@@ -5,7 +5,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: Csv Importer , Csv Parser , Csv Injector , Custom Post, csv, Csv Extractor, Csc Exporter
 Requires at least: 3.2.1
 Tested up to: 3.2.1
-Stable tag: 2.8
+Stable tag: 2.8.1
 
 The purpose of this plugin is to parse uploaded csv files into any type of
 post.
@@ -99,3 +99,5 @@ fixed the ingestion form when deviating from csv settings
 fixed the predefined categories and tags bug
 = 2.8 =
 added the donate link and the FAQ
+= 2.8.1 =
+provided the ability for omitting the post_content field
