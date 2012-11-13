@@ -46,3 +46,22 @@ span.error {
     background-color: #F9F9F9;
 }
 
+.scsv_predefined_mapper {
+    float: left;
+}
+
+#supra_csv_ingestion_mapper #input span {
+    display: block;
+    float: left;
+}
+
+#supra_csv_ingestion_mapper #input select {
+    float: right;
+}
+
+.scsv_custom_mapper {
+    float: right;
+    margin-right: 20%;
+}
+
+
