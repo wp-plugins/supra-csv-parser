@@ -5,10 +5,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: Csv Importer , Csv Parser , Csv Injector , Custom Post, csv, Csv Extractor, Csc Exporter
 Requires at least: 3.2.1
 Tested up to: 3.2.1
-Stable tag: 2.8.1
-
-The purpose of this plugin is to parse uploaded csv files into any type of
-post.
+Stable tag: 2.8.4
 
 == Description ==
 
@@ -22,9 +19,6 @@ on how to obtain the necessary info watch the detailed tutorial.
 
 [youtube http://www.youtube.com/watch?v=0xKpNw1cT-Q]
 
-== Installation ==
-
-
 == Frequently Asked Questions ==
 
 = How do I ingest mutiple taxonomy for a post?  =
@@ -37,7 +31,20 @@ First make sure you have xmlrpc enabled. Secondly make sure your hosting has por
 Make sure there are no special characters in the csv values. The will show as question marks in your debug output 
  
 
+= transport error - could not open socketProblem Ingesting? =
+First make sure you have xmlrpc enabled. Secondly make sure your hosting has port 111 open.
+
+= parse error. not well formed =
+Make sure there are no special characters in the csv values. The will show as question marks in your debug output 
+ 
+
 == Screenshots ==
+
+1. Ajax Real-Time ingestion interface
+
+2. PostMeta Identifier Via Post Type
+
+3. Easily debug issues
 
 == Changelog ==
 
@@ -101,3 +108,9 @@ fixed the predefined categories and tags bug
 added the donate link and the FAQ
 = 2.8.1 =
 provided the ability for omitting the post_content field
+= 2.8.2 = 
+added more predfined fields and added styling to the ingestion page
+= 2.8.3 =
+fixed the fcsv bug again..
+= 2.8.4 =
+adding the screenshots
