@@ -37,7 +37,6 @@ class RemotePost extends SupraCsvPlugin {
 
         $default_args = array(
                               'post_id'=>null,
-                              'publish'=>$post['publish'],
                              );
 
         $args = array_merge($default_args, $args);
@@ -47,7 +46,7 @@ class RemotePost extends SupraCsvPlugin {
         }
 
         if($args['function'] == "wp.newPost") {
-            if(!$this->client->query($args['function'],$args['post_id'],$this->uname,$this->pass,$args['args'],$args['publish'])) {
+            if(!$this->client->query($args['function'],$args['post_id'],$this->uname,$this->pass,$args['args'])) {
                echo $this->debugAndReport($args, $this->client->getErrorMessage());
                throw new Exception($this->client->getErrorMessage());
             }
@@ -105,8 +104,27 @@ class RemotePost extends SupraCsvPlugin {
 
         $post = get_option('scsv_post');
 
-        $params = array('post_title','post_type','post_content','terms_names','terms');
-    
+        //the keys to filter by
+        $params = array(
+                        'post_title',
+                        'post_type',
+                        'post_content',
+                        'terms_names',
+                        'terms',
+                        'post_status',
+                        'post_author',
+                        'post_password',
+                        'post_excerpt',
+                        'post_date',
+                        'post_date_gmt',
+                        'post_thumbnail',
+                        'comment_status',
+                        'ping_status',
+                        'post_format',
+                        'enclosure' 
+                       );
+   
+        //filter the args into valiables 
         foreach($params as $param) {
             if(empty($args[$param]))
                 $$param = $post[$param];
@@ -114,23 +132,62 @@ class RemotePost extends SupraCsvPlugin {
                 $$param = $args[$param];
         }
 
-        $content = array(
-                         'post_type'=>$post_type,
-                         'post_title'=>$post_title,
-                         'terms_names'=>$terms_names,
-                         'terms'=>$terms,
-                         'custom_fields'=>$custom_fields
-                        );
+        //compact the variables
+        $content = compact(
+                        'post_title',
+                        'post_type',
+                        'terms_names',
+                        'terms',
+                        'custom_fields',
+                        'post_status',
+                        'post_author',
+                        'post_password',
+                        'post_excerpt',
+                        'post_date',
+                        'post_date_gmt',
+                        'post_thumbnail',
+                        'comment_status',
+                        'ping_status',
+                        'post_format',
+                        'enclosure'
+        );
 
+        //if the argument isnt empty than set it
         if(!empty($post_content)) {
             $content['post_content'] = $post_content;
         }
+        //if the argument was empty but the configuration isnt
+        else if(!empty($post['desc'])) {
+            $content['post_content'] = $post['desc'];
+        }
 
-        if($post['publish'])
+        //set the title to the specified configuration if its empty
+        if(empty($content['post_title'])) {
+            $content['post_content'] = $post['title'];
+        }
+
+        //add the custom terms
+        
+
+        if($post['publish'] && empty($content['post_status'])) {
             $content['post_status'] = 'publish';
-        else
+            
+        }
+        else {
             $content['post_status'] = 'pending';
+        }
 
+        if(empty($content['post_type'])) {
+            $content['post_type'] = $post['type'];
+        }
+
+        //set the IXR Dates
+        $date_keys = array('post_date','post_date_key');
+        foreach($date_keys as $date_key) { 
+            if(!empty($content[$date_key])) {
+                $content[$date_key] = new IXR_Date($content[$date_key]);
+            }
+        }
 
         try {
             $success = $this->postContent($content);
