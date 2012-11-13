@@ -27,7 +27,7 @@ class SupraCsvParser extends SupraCsvPlugin {
     }
 
     private function setColumns() {
-        $this->columns = $this->parseNextLine($this->handle,$csv_settings);
+        $this->columns = fgetcsv($this->handle);
     }
 
     public function getColumns() {
@@ -51,6 +51,7 @@ class SupraCsvParser extends SupraCsvPlugin {
         return $this->filename;
     }
 
+
     private function parseNextLine($handle) {
         $csv_settings = get_option('scsv_csv_settings');
         if (strnatcmp(phpversion(),'5.3') >= 0) {    
@@ -62,6 +63,7 @@ class SupraCsvParser extends SupraCsvPlugin {
         }  
     }
 
+
     public function ingestContent($mapping) {
 
         $rp   = new RemotePost();
@@ -70,7 +72,7 @@ class SupraCsvParser extends SupraCsvPlugin {
         $cols = $this->getColumns();
 
         if($cols) {
-            while (($data = $this->parseNextLine($this->handle)) !== FALSE) {
+            while (($data = $this->parseNextLine($this->handle))!== FALSE) {
 
                 //loop through the columns
                 foreach($data as $i=>$d) {
@@ -78,9 +80,6 @@ class SupraCsvParser extends SupraCsvPlugin {
                 }
 
                 $row = $cm->retrieveMappedData($parsed);
-
-                if(strstr(site_url(),'3dmpekg')) 
-                    $row = $this->patchByRow($row);
 
                 $post_args = $this->getPostArgs($row);               
 
@@ -98,8 +97,8 @@ class SupraCsvParser extends SupraCsvPlugin {
 
                 $csvpost = get_option('scsv_post');
 
-                $post_title = !empty($row['post_title'])?$row['post_title']:$csvpost['title'];
-                $post_content =  !empty($row['post_content'])?$row['post_content']:$csvpost['desc'];
+                $post_title = $row['post_title'];
+                $post_content =  $row['post_content'];
 
                 $parse_terms = get_option('scsv_parse_terms');
 
@@ -126,26 +125,6 @@ class SupraCsvParser extends SupraCsvPlugin {
 
                 $parse_terms = get_option('scsv_parse_terms');
 
-                $wp_parse_cats = false;
-
-                $wp_terms = array();
-
-                if($parse_terms  && $ptax->validTaxonomyByPostType('category')) {
-                    $fields = array('term_name','term_slug','term_parent','term_description');
-                    foreach($fields as $field)
-                        if(!empty($row[$field]))
-                            $$field = $row[$field];
-                    $wp_parse_cats = compact('term_name','term_slug','term_parent','term_description');
-                    foreach($fields as $field)
-                        unset($row[$field]);
-                    $count = count($wp_parse_cats);
-                    if(!empty($count))
-                        $wp_terms['category'][] = $wp_parse_cats;
-                }
-
-                $post_terms = array();
-                $term_names = array();
-                $terms = array();
 
                 $custom_terms = get_option('scsv_custom_terms');
 
@@ -161,7 +140,6 @@ class SupraCsvParser extends SupraCsvPlugin {
 
 
                 //categories must be resolved by terms
-
                 if(!empty( $row['category'] )) {
                     if($wp_parse_cats) die('<span class="error">You must either parse complexy or simplistic categoires but not both.</span>');
                     $wp_terms['category'] = explode('|', $row['category']);
@@ -186,10 +164,30 @@ class SupraCsvParser extends SupraCsvPlugin {
                     unset($row['terms_'.$pt]);
                 }
 
-                unset($row['post_title']);
-                unset($row['post_content']);
                 unset($row['category']);
                 unset($row['post_tag']);
+
+                $predefined = array(
+                    'post_title',
+                    'post_content',
+                    'post_type',
+                    'post_status',
+                    'post_author',
+                    'post_password',
+                    'post_excerpt',
+                    'post_date',
+                    'post_date_gmt',
+                    'post_thumbnail',
+                    'comment_status',
+                    'ping_status',
+                    'post_format',
+                    'enclosure'
+                );
+
+                foreach($predefined as $key) {
+                    $$key = $row[$key];
+                    unset($row[$key]);
+                }
 
                 foreach($row as $k=>$v) {
                     if(!empty($k) && !empty($v)) {
@@ -197,20 +195,33 @@ class SupraCsvParser extends SupraCsvPlugin {
                     }
                 }
 
-                $post_args = array(
-                                   'post_title'=>$post_title,
-                                   'post_content'=>$post_content,
-                                   'post_type'=>$csvpost['type'],
-                                   'terms_names'=>$terms_names,
-                                   'terms'=>$terms,
-                                   'custom_fields'=>$custom_fields
-                                  );
+                $post_args = compact(
+                    'post_title',
+                    'post_content',
+                    'post_type',
+                    'post_status',
+                    'post_author',
+                    'post_password',
+                    'post_excerpt',
+                    'post_date',
+                    'post_date_gmt',
+                    'post_thumbnail',
+                    'comment_status',
+                    'ping_status',
+                    'post_format',
+                    'enclosure'
+                );
 
+                $post_args['terms'] = $terms;
+                $post_args['term_names'] = $term_names;
+                $post_args['custom_fields'] = $custom_fields;
 
+        Debug::show($post_args);
+ 
         return $post_args;
 
     }
-
+   
     private function patchByRow($row) {
 
         if(strstr(site_url(),'3dmpekg')) {
@@ -266,7 +277,24 @@ class SupraCsvMapperForm {
     private $rows;
     private $listing_fields;
 
-    private $predefined_meta = array('post_title'=>'Title','post_content'=>'Description','category'=>'Categories','post_tag'=>'Tags');
+    private $predefined_meta = array(
+        'post_title'=>'Title',
+        'post_content'=>'Description',
+        'category'=>'Categories',
+        'post_tag'=>'Tags',
+        'post_type'=>'Post Type',
+        'post_status'=>'Post Status',
+        'post_author'=>'Post Author',
+        'post_password'=>'Post Password',
+        'post_excerpt'=>'Post Excerpt',
+        'post_date'=>'Post Date',
+        'post_date_gmt'=>'Post Date GMT',
+        'post_thumbnail'=>'Post Thumbnail',
+        'comment_status'=>'Comment Status',
+        'ping_status'=>'Ping Status',
+        'post_format'=>'Post Format',
+        'enclosure'=>'Enclosure',
+    );
 
     function __construct(SupraCsvParser $cp) {
         $rows = $cp->getColumns();
@@ -321,24 +349,32 @@ class SupraCsvMapperForm {
           }
  
           $input .= '</select>';
+          $input .= '<div class="clear"></div>';
 
           return '<div id="input">' . $input . "</div>";
     }
 
+
     public function getForm() {
 
-        $inputs .= '<h3>Predefined</h3>'; 
+        $inputs .= '<h3>Predefined</h3>';
+
+        $inputs .= '<div class="scsv_predefined_mapper">';
 
         foreach($this->predefined_meta as $k=>$v) {
-            if( $this->ptax->validTaxonomyByPostType($k) || $k == 'post_title' || $k == 'post_content' )
                 $inputs .= self::createInput($k,$v,$this->rows);
         }
+
+        $inputs .= '</div>';
 
         $parse_terms = get_option('scsv_parse_terms');
         $custom_terms = get_option('scsv_custom_terms');
 
+
+        $inputs .= '<div class="scsv_custom_mapper">';
+
         if($parse_terms || !empty($custom_terms))
-              $inputs .= '<h3>Custom Terms</h3>'; 
+              $inputs .= '<h3>Custom Terms</h3>';
 
 
         
@@ -349,7 +385,7 @@ class SupraCsvMapperForm {
                   $inputs .= self::createInput('term_parent','Term Parent',$this->rows);
                   $inputs .= self::createInput('term_description','Term Description',$this->rows);
               }
-        } 
+        }
 
         if(!empty($custom_terms)) {
               $post_terms = explode(',',get_option('scsv_custom_terms'));
@@ -358,13 +394,17 @@ class SupraCsvMapperForm {
                   if ( $this->ptax->validTaxonomyByPostType($post_term) )
                       $inputs .= self::createInput('terms_'.$post_term,$post_term,$this->rows);
               }
-        } 
+        }
 
         $inputs .= $this->displayListingFields();
 
+        $inputs .= '<button id="supra_csv_ingest_csv">Ingest</button>';
+        $inputs .= '</div><div class="clear"></div>';
+        $inputs .= '</div>';
+
         $form = '<form id="supra_csv_mapping_form" data-filename="'.$this->filename.'">';
         $form .= $inputs;
-        $form .= '<button id="supra_csv_ingest_csv">Ingest</button></form>';
+        $form .= '</form>';
 
         return $form;
     }
