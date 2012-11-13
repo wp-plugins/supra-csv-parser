@@ -5,7 +5,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: Csv Importer , Csv Parser , Csv Injector , Custom Post, csv, Csv Extractor, Csc Exporter
 Requires at least: 3.2.1
 Tested up to: 3.2.1
-Stable tag: 2.8.4
+Stable tag: 2.8.5
 
 == Description ==
 
@@ -29,14 +29,6 @@ First make sure you have xmlrpc enabled. Secondly make sure your hosting has por
 
 = parse error. not well formed =
 Make sure there are no special characters in the csv values. The will show as question marks in your debug output 
- 
-
-= transport error - could not open socketProblem Ingesting? =
-First make sure you have xmlrpc enabled. Secondly make sure your hosting has port 111 open.
-
-= parse error. not well formed =
-Make sure there are no special characters in the csv values. The will show as question marks in your debug output 
- 
 
 == Screenshots ==
 
@@ -112,5 +104,5 @@ provided the ability for omitting the post_content field
 added more predfined fields and added styling to the ingestion page
 = 2.8.3 =
 fixed the fcsv bug again..
-= 2.8.4 =
+= 2.8.5 =
 adding the screenshots
