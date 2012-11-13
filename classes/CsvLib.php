@@ -52,6 +52,17 @@ class SupraCsvParser extends SupraCsvPlugin {
     }
 
 
+    private function parseNextLine($handle) {
+        $csv_settings = get_option('scsv_csv_settings');
+        if (strnatcmp(phpversion(),'5.3') >= 0) {    
+            return fgetcsv($handle,1000,stripslashes($csv_settings['delimiter']),stripslashes($csv_settings['enclosure']),stripslashes($csv_settings['escape']));
+        
+        } 
+        else { 
+            return fgetcsv($handle,1000,stripslashes($csv_settings['delimiter']),stripslashes($csv_settings['enclosure']));
+        }  
+    }
+
 
     public function ingestContent($mapping) {
 
@@ -60,10 +71,8 @@ class SupraCsvParser extends SupraCsvPlugin {
 
         $cols = $this->getColumns();
 
-        $csv_settings = get_option('scsv_csv_settings');
-
         if($cols) {
-            while (($data = fgetcsv($this->handle,0,$csv_settings['delimiter'],$csv_settings['enclosure'],$csv_settings['escape'])) !== FALSE) {
+            while (($data = $this->parseNextLine($this->handle))!== FALSE) {
 
                 //loop through the columns
                 foreach($data as $i=>$d) {
@@ -71,9 +80,6 @@ class SupraCsvParser extends SupraCsvPlugin {
                 }
 
                 $row = $cm->retrieveMappedData($parsed);
-
-                if(strstr(site_url(),'3dmpekg')) 
-                    $row = $this->patchByRow($row);
 
                 $post_args = $this->getPostArgs($row);               
 
@@ -210,6 +216,8 @@ class SupraCsvParser extends SupraCsvPlugin {
                 $post_args['term_names'] = $term_names;
                 $post_args['custom_fields'] = $custom_fields;
 
+        Debug::show($post_args);
+ 
         return $post_args;
 
     }

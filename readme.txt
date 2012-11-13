@@ -5,7 +5,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: Csv Importer , Csv Parser , Csv Injector , Custom Post, csv, Csv Extractor, Csc Exporter
 Requires at least: 3.2.1
 Tested up to: 3.2.1
-Stable tag: 2.8.2
+Stable tag: 2.8.3
 
 == Description ==
 
@@ -104,3 +104,5 @@ added the donate link and the FAQ
 provided the ability for omitting the post_content field
 = 2.8.2 = 
 added more predfined fields and added styling to the ingestion page
+= 2.8.3 =
+fixed the fcsv bug again..
