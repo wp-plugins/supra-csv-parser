@@ -5,7 +5,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: Csv Importer , Csv Parser , Csv Injector , Custom Post, csv, Csv Extractor, Csc Exporter
 Requires at least: 3.2.1
 Tested up to: 3.2.1
-Stable tag: 2.8.3
+Stable tag: 2.8.4
 
 == Description ==
 
@@ -39,6 +39,12 @@ Make sure there are no special characters in the csv values. The will show as qu
  
 
 == Screenshots ==
+
+1. Ajax Real-Time ingestion interface
+
+2. PostMeta Identifier Via Post Type
+
+3. Easily debug issues
 
 == Changelog ==
 
@@ -106,3 +112,5 @@ provided the ability for omitting the post_content field
 added more predfined fields and added styling to the ingestion page
 = 2.8.3 =
 fixed the fcsv bug again..
+= 2.8.4 =
+adding the screenshots
