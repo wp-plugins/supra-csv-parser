@@ -213,13 +213,10 @@ class SupraCsvParser extends SupraCsvPlugin {
                 );
 
                 $post_args['terms'] = $terms;
-                $post_args['term_names'] = $term_names;
+                $post_args['terms_names'] = $terms_names;
                 $post_args['custom_fields'] = $custom_fields;
-
-        Debug::show($post_args);
  
         return $post_args;
-
     }
    
     private function patchByRow($row) {

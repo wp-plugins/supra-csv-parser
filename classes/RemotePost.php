@@ -98,7 +98,7 @@ class RemotePost extends SupraCsvPlugin {
 
     public function injectListing($args) {
 
-        foreach($args['custom_fields'] as $k=>$v) {
+        foreach((array)$args['custom_fields'] as $k=>$v) {
             $custom_fields[] = array('key'=>$k,'value'=>$v);
         }
 

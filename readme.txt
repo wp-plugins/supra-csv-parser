@@ -5,7 +5,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: Csv Importer , Csv Parser , Csv Injector , Custom Post, csv, Csv Extractor, Csc Exporter
 Requires at least: 3.2.1
 Tested up to: 3.2.1
-Stable tag: 2.8.5
+Stable tag: 2.8.6
 
 == Description ==
 
@@ -106,3 +106,5 @@ added more predfined fields and added styling to the ingestion page
 fixed the fcsv bug again..
 = 2.8.5 =
 adding the screenshots
+= 2.8.6 = 
+fixed the category ingestion bug
