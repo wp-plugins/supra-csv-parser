@@ -8,13 +8,13 @@ wp_enqueue_script( 'postmeta_preset', plugins_url('/js/mapping_preset.js', __FIL
 wp_enqueue_script( 'misc', plugins_url('/js/misc.js', __FILE__) ); 
 ?>
 <div id="flash"></div>
-<? $uc->displayFileSelector();?>
+<?php $uc->displayFileSelector();?>
 <div id="preset_container">
   <div id="supra_csv_ingestion_mapper"></div>
   <div id="supra_csv_mapping_preset"></div>
   <div class="clear"></div>
 </div>
 <div id="supra_csv_ingestion_log">
-   <img id="patience" src="<?=$uc->getPluginDirUrl()?>/img/patience.gif" style="display:none"/>
+   <img id="patience" src="<?php echo $uc->getPluginDirUrl()?>/img/patience.gif" style="display:none"/>
 </div>
 
