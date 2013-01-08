@@ -5,7 +5,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: Csv Importer , Csv Parser , Csv Injector , Custom Post, csv, Csv Extractor, Csc Exporter
 Requires at least: 3.2.1
 Tested up to: 3.2.1
-Stable tag: 2.8.7
+Stable tag: 2.8.8
 
 == Description ==
 
@@ -110,3 +110,5 @@ adding the screenshots
 fixed the category ingestion bug
 = 2.8.7 =
 fixed an issue with 3.5 deprecating enablexmlrpc
+= 2.8.8 = 
+no more open_short_tag

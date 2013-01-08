@@ -4,6 +4,6 @@ $uc = new UploadCsv($_FILES);
 wp_enqueue_script( 'misc', plugins_url('/js/misc.js', __FILE__) );
 ?>
 <div id="supra_csv_upload_forms">
-    <?$uc->renderForms();?>
+    <?php $uc->renderForms();?>
 </div>
 
