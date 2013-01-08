@@ -59,9 +59,9 @@ if(!empty($_POST['scsv_submit'])) {
             Post Type
             <select name="scsv_posttype" value="<?php echo $csvpost['type']; ?>">
                 <option value=""></option>
-                <? foreach(get_post_types() as $post_type): ?>
-                <option value="<?=$post_type?>" <?if($csvpost['type']==$post_type) echo 'selected="selected"';?>><?=$post_type?></option>
-                <? endforeach ?>
+                <?php foreach(get_post_types() as $post_type): ?>
+                <option value="<?php echo $post_type?>" <?php if($csvpost['type']==$post_type) echo 'selected="selected"';?>><?php echo $post_type?></option>
+                <?php endforeach ?>
             </select>
             <b>or</b>
             Custom Post Type
@@ -74,24 +74,24 @@ if(!empty($_POST['scsv_submit'])) {
         <h4>Ingestion Settings</h4>
         <p id="custom_terms">
           Custom Terms (<span style="color: red">separate terms with commas</span>)
-            <input type="text" name="scsv_custom_terms" value="<?=$post_terms?>" size="50">
+            <input type="text" name="scsv_custom_terms" value="<?php echo $post_terms?>" size="50">
         </p>
         <p id="compex_categories">
-            Parse complex categories: <input type="checkbox" name="scsv_parse_terms" value="true" <?=($parse_terms)?'checked="checked"':''?>>
+            Parse complex categories: <input type="checkbox" name="scsv_parse_terms" value="true" <?php echo ($parse_terms)?'checked="checked"':''?>>
         </p>
         <p id="ingestion_debugging">
-            Debug Ingestion: <input type="checkbox" name="scsv_ingest_debugger" value="true" <?=($ingest_debugger)?'checked="checked"':''?>>
+            Debug Ingestion: <input type="checkbox" name="scsv_ingest_debugger" value="true" <?php echo ($ingest_debugger)?'checked="checked"':''?>>
         </p>
         <p id="issue_reporting">
-            Report Issues: <input type="checkbox" name="scsv_report_issue" value="true" <?=($report_issue)?'checked="checked"':''?>>
+            Report Issues: <input type="checkbox" name="scsv_report_issue" value="true" <?php echo ($report_issue)?'checked="checked"':''?>>
         </p>
         <hr />
         <h4>CSV Settings</h4>
         <p id="csv_settings">
-            <? $settings_keys = array('delimiter'=>',','enclosure'=>'"','escape'=>'\\'); ?>
-            <? foreach($settings_keys as $k=>$v): ?>
-                <?=$k?>:<input type='text' name='scsv_csv_settings[<?=$k?>]' value='<?=($csv_settings[$k])?stripslashes($csv_settings[$k]):$v;?>' size='2' maxlength='2' /><br />
-            <? endforeach; ?>
+            <?php $settings_keys = array('delimiter'=>',','enclosure'=>'"','escape'=>'\\'); ?>
+            <?php foreach($settings_keys as $k=>$v): ?>
+                <?php echo $k?>:<input type='text' name='scsv_csv_settings[<?php echo $k?>]' value='<?php echo($csv_settings[$k])?stripslashes($csv_settings[$k]):$v;?>' size='2' maxlength='2' /><br />
+            <?php endforeach; ?>
         </p>
 </div>
 <div style="clear: both"></div>
