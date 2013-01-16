@@ -24,9 +24,9 @@ wp_enqueue_script( 'extractor', plugins_url('/js/export.js', __FILE__) );
         <div id="input">
             <label for="post_type">Post Type</label>
             <select name="post_type" id="post_type">
-            <? foreach(get_post_types() as $post_type): ?>
-                <option value="<?=$post_type?>"><?=$post_type?></option>
-            <? endforeach ?>
+            <?php foreach(get_post_types() as $post_type): ?>
+                <option value="<?php echo $post_type?>"><?php echo $post_type?></option>
+            <?php endforeach ?>
             </select>
         </div>
 
