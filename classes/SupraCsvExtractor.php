@@ -71,24 +71,26 @@ class SupraCsvExtractor extends ExtractorArgumentParser {
     **/   
 
     private function getPosts() {
+
         return get_posts($this->properties);
     }
 
     public function getPostsAndDetails() {
  
         $posts = false;
-   
+  
         foreach($this->getPosts() as $i=>$this->post) {
             $this->getCustomFields()->getKeywords();
-            $posts[$i] = $this->post;
-        }
-   
+            $posts[$i]['post'] = $this->post;
+            $posts[$i]['postinfo'] = $this->postinfo;
+        }  
+ 
         return $posts;        
     }
 
     public function displayExtractedPosts() {
 
-        $posts = $this->getPostsAndDetails();
+        $posts = (array) $this->getPostsAndDetails();
 
         if(count($posts) && !empty($posts[0]))
             $string = '<span class="success">Found '.count($posts).' posts matching the criteria.</span>';
@@ -96,6 +98,7 @@ class SupraCsvExtractor extends ExtractorArgumentParser {
             $string = '<span class="error">No results found matching the creteria</span>';
 
         foreach($posts as $post) {
+            $post = $post['post'];
             $string .= '<p id="extracted_post"><a href="'.$post->guid.'">'.$post->post_title.'</a></p>';
         }
 
@@ -106,7 +109,7 @@ class SupraCsvExtractor extends ExtractorArgumentParser {
         if(!empty($this->properties['meta_keys'])) {
             foreach($this->properties['meta_keys'] as $mk) {
                 $post_meta = get_post_meta($this->post->ID,$mk,true);
-                if(!empty($post_meta)) $this->post->custom_fields[$mk] = $post_meta;
+                if(!empty($post_meta)) $this->postinfo['custom_fields'][$mk] = $post_meta;
             }
         }
         else {
@@ -120,8 +123,8 @@ class SupraCsvExtractor extends ExtractorArgumentParser {
         if(!empty($this->properties['post_taxonomies'])) {
             foreach($this->properties['post_taxonomies'] as $pt) {
                 $post_terms = get_the_terms($this->post->ID,$pt);
-                foreach($post_terms as $post_term) {
-                    $this->post->terms[$pt] = $post_term->name;
+                foreach((array)$post_terms as $post_term) {
+                    $this->postinfo['terms'][$pt] = $post_term->name;
                 }
             }
         }
@@ -155,16 +158,17 @@ class SupraCsvExporter extends ExporterArgumentParser {
     private function parseRecords() {
         $records = false;
 
-        foreach($this->posts as $i=>$post) {
-            foreach($this->parsable_keys as $key=>$pk) {
-                if(!in_array($key,array('custom_fields','terms')) && !is_array($key) || empty($key)) {
-                    $this->records[$i][$pk] = $post->$pk;
-                }
-                else { 
-                    foreach((array)$pk as $p) {
-                        $post_termkey_key = $post->$key;
-                        $this->records[$i][$p] = $post_termkey_key[$p];
-                    }
+        $post = $this->posts[0];
+
+        foreach($this->parsable_keys as $key=>$pk) {
+  
+            if(!in_array($key,array('custom_fields','terms')) && !is_array($key) || empty($key)) {
+                $this->records[0][$pk] = $post['post']->$pk;
+
+            }
+            else { 
+                foreach((array)$pk as $p) {
+                    $this->records[0][$p] = $post['postinfo'][$key][$p];
                 }
             }
         }
@@ -185,40 +189,25 @@ class SupraCsvExporter extends ExporterArgumentParser {
     private function buildCsv() {
         extract($this->getSettings());
 
-        foreach($this->records as $record) {
-            $val_array = array();
-            $key_array = array();
-            foreach($record AS $key => $val) {
-                    $key_array[] = $key;
-                    if(!empty($escape)) {
-                        $val = str_replace($enclosure, $escape.$enclosure, $val);
-                        $val = str_replace($delimeter, $escape.$delimiter, $val);
-                    }
-                    $val_array[] = $enclosure.$val.$enclosure;
+        $record = $this->records[0];
+        $val_array = array();
+        $key_array = array();
+        foreach($record AS $key => $val) {
+            $key_array[] = $key;
+            if(!empty($escape)) {
+                $val = str_replace($enclosure, $escape.$enclosure, $val);
+                $val = str_replace($delimeter, $escape.$delimiter, $val);
             }
-            if($c == 0) {
-                $this->csvstring .= implode($delimiter, $key_array)."\n";
-            }
-            $this->csvstring .= implode($delimiter, $val_array)."\n";
-            $c++;                
-        }     
-
+            $val_array[] = $enclosure.$val.$enclosure;
+        }
+        $this->csvstring = implode($delimiter, $key_array)."\n";
+        $this->csvstring .= implode($delimiter, $val_array)."\n";
         return $this;
     }
 
     public function download() {
         if(empty($this->csvstring)) $this->parseRecords()->buildCsv();
-
-        //echo $this->csvstring; die();
-
-        header("Pragma: public");
-        header("Expires: 0");
-        header("Cache-Control: private");
-        header("Content-type: text/csv");
-        header("Content-Disposition: attachment; filename=$this->filename");
-        header("Accept-Ranges: bytes");
-        echo $this->csvstring;
-        exit;
+        return $this->csvstring;
     }
 
     public function createFile() {
