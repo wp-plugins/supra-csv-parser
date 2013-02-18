@@ -19,8 +19,9 @@ $suggestions = $pm->getSuggestions($csvpost['type']);
 
 if(!empty($option)) $postmetas = get_option('scsv_postmeta');
 ?>
+<div class="wrap_scsv">
 <div id="flash"></div>
-    <div id="postmeta_preset"><?php echo $pmp->getForm();?></div>
+    <div id="postmeta_preset"><div id="scsv_form" style="width: 300px;"><?php echo $pmp->getForm();?></div></div>
     <form id="supra_csv_postmeta_form"><?php echo $pm->getFormContents($postmetas)?></form>
     <h3>Post Meta Suggestions for Post Type '<?php echo $csvpost['type']?>'</h3>
 
@@ -41,3 +42,4 @@ if(!empty($option)) $postmetas = get_option('scsv_postmeta');
           ?>
           </tbody>
         </table>
+</div>

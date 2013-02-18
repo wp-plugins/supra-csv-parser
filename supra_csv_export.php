@@ -5,15 +5,15 @@ wp_enqueue_script( 'inputCloner', plugins_url('/js/inputCloner.js', __FILE__) );
 wp_enqueue_script( 'extractor', plugins_url('/js/export.js', __FILE__) );
 
 ?>
-
 <div id="supra_csv_extractor_form">
  
     <form id="extraction_form"> 
+<div class="wrap_scsv" style="width: 230px;">
         <h3>Extract Settings</h3>
 
         <div id="input">
             <label for="posts_per_page">Post Per Page</label>
-            <input type="text" id="posts_per_page" name="posts_per_page" maxlength="3" size="3" />
+            <input type="text" id="posts_per_page" name="posts_per_page" maxlength="3" size="3" value="5" />
         </div>
 
         <div id="input">
@@ -71,33 +71,33 @@ wp_enqueue_script( 'extractor', plugins_url('/js/export.js', __FILE__) );
         <div id="input">
             <button id="extract_and_preview">Extract</button>
         </div>
-
+</div>
+<div class="wrap_scsv" style="width: 400px;">
         <h3>Export Settings</h3>
-
+        <span class="help">provide comma-separated-values</span>
         <div id="input">
-            <label for="filename">Filename</label>
-            <input type="text" id="filename" name="filename" size="50" />
+            <label for="post_fields">Post Fields</label>
+            <input type="text" id="post_fields" name="post_fields" size="50" value="post_title,post_content,post_date,post_author,post_status" />
         </div>
 
         <div id="input">
-            <label for="post_fields">Post Fields <span class="help">provide a comma separated value</span></label>
-            <input type="text" id="post_fields" name="post_fields" size="50" value="post_title,post_content" />
+            <label for="post_taxonomies">Taxonomies</label>
+            <input type="text" id="post_taxonomies" name="post_taxonomies" value="category,post_tag" size="50" />
         </div>
 
         <div id="input">
-            <label for="post_taxonomies">Taxonomies <span class="help">provide a comma separated value</span></label>
-            <input type="text" id="post_taxonomies" name="post_taxonomies" size="50" />
-        </div>
-
-        <div id="input">
-            <label for="meta_keys">Meta Keys <span class="help">provide a comma separated value</span></label>
-            <input type="text" id="meta_keys" name="meta_keys" size="50" />
+            <label for="meta_keys">Meta Keys</label>
+            <input type="text" id="meta_keys" name="meta_keys" value="<?php
+            $postmetas = get_option('scsv_postmeta');
+            $values = implode(',',$postmetas['meta_key']);
+            echo $values;
+            ?>" size="50" />
         </div>
 
         <div id="input">
             <button id="extract_and_export">Extract And Export</button>
         </div>
-
-    </form>
 </div>
+    </form>
 <div id="extracted_results"></div>
+</div>

@@ -64,4 +64,76 @@ span.error {
     margin-right: 20%;
 }
 
+.wrap_scsv {
+    font-weight: bold;
+}
 
+.wrap_scsv input, .wrap_scsv select {
+    float: right
+}
+
+.wrap_scsv input:after, .wrap_scsv select:after {
+    clear: both;
+}
+
+.wrap_scsv select {
+    min-width: 50%;
+}
+
+
+.wrap_scsv button, .wrap_scsv input[type=submit] {
+            margin: 7px;
+            padding: 10px;
+            -moz-border-radius: 12px/*{cornerRadius}*/;
+            -webkit-border-radius: 12px/*{cornerRadius}*/;
+            -khtml-border-radius: 12px/*{cornerRadius}*/;
+            border-radius: 12px/*{cornerRadius}*/;
+}
+
+.wrap_scsv select, .wrap_scsv input, .wrap_scsv textarea, .wrap_scsv button {
+    border: 1px solid #FFA500 !important;
+}
+
+.wrap_scsv select, .wrap_scsv input, .wrap_scsv textarea {
+    font-weight: normal !important;
+}
+
+.wrap_scsv button:hover, .wrap_scsv input[type=submit]:hover {
+
+    border: 1px solid #FF6600 !important;
+    background-color: #E0EEEE;
+}
+
+.wrap_scsv #input, .wrap_scsv .input {
+    min-height: 30px; 
+}
+
+.premium_only {
+    font-weight: bold;
+    color: #FF0000;
+}
+
+#supra_csv_mapping_preset {
+
+width: 300px;
+
+}
+
+#file_selector {
+    width: 300px;
+}
+
+.help {
+    white-space: no-wrap !important;
+    color:grey;
+    font-size: 10px;
+    display: block; 
+}
+
+#uploaded_files {
+    margin-top: 50px;
+}
+
+#uploaded_files li {
+    min-height: 80px;
+}
