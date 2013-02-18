@@ -37,17 +37,17 @@ if(!empty($_POST['scsv_submit'])) {
 }
 
 ?>
-<div style="width: 630px">
+<div class="wrap_scsv" style="width: 630px">
 <h2>Supra CSV Configuration</h2>
         <hr />
 <div style="float: left; width: 300px;">
 <form name="scsv_form" method="post">
-        <h4>User Settings</h4>
+        <h3>User Settings</h3>
         <p>Username<input type="text" name="scsv_wpname" value="<?php echo $csvuser['name']; ?>" size="20"></p>
         <p>Pasword<input type="password" name="scsv_wppass" value="<?php echo $csvuser['pass']; ?>" size="20"></p>
 
         <hr />
-        <h4>Post Settings</h4>
+        <h3>Post Settings</h3>
         <p>
             Auto Publish
             <select name="scsv_autopub">
@@ -59,22 +59,27 @@ if(!empty($_POST['scsv_submit'])) {
             Post Type
             <select name="scsv_posttype" value="<?php echo $csvpost['type']; ?>">
                 <option value=""></option>
-                <?php foreach(get_post_types() as $post_type): ?>
-                <option value="<?php echo $post_type?>" <?php if($csvpost['type']==$post_type) echo 'selected="selected"';?>><?php echo $post_type?></option>
-                <?php endforeach ?>
+                <option value="post" value="post" selected>post</option>
+                <option value="page" value="page">page</option>
+                <option value="attachment" value="attachment">attachment</option>
+                <option value="nav_menu_item" value"nav_menu_item">nav_menu_item</option>
             </select>
-            <b>or</b>
-            Custom Post Type
-            <input type="text" name="scsv_custom_posttype" value="<?php if($csvpost['type']!="page"&&$csvpost['type']!="post")echo $csvpost['type']; ?>" size="20">
+        </p>
+        <p style="text-align: center">
+            <h3>or</h3>
+        </p>
+        <p>
+            Custom Post Type <span class="premium_only">(Premium Only)</span>
+            <input type="text" name="scsv_custom_posttype" value="" size="5" style="background-color: #FDEEF4" disabled>
         </p>
         <p>Default Title<input type="text" name="scsv_defaulttitle" value="<?php echo $csvpost['title']; ?>" size="20"></p>
-        <p>Default Description<textarea name="scsv_defaultdesc"><?php echo $csvpost['desc']; ?></textarea></p>
+        <p>Default Description<textarea name="scsv_defaultdesc" cols="50"><?php echo $csvpost['desc']; ?></textarea></p>
 </div>
 <div style="float: right; width: 300px;">
-        <h4>Ingestion Settings</h4>
-        <p id="custom_terms">
+        <h3>Ingestion Settings</h3>
+        <p id="custom_terms" class="input">
           Custom Terms (<span style="color: red">separate terms with commas</span>)
-            <input type="text" name="scsv_custom_terms" value="<?php echo $post_terms?>" size="50">
+            <input type="text" name="scsv_custom_terms" value="<?php echo $post_terms?>" style="width: 240px;">
         </p>
         <p id="compex_categories">
             Parse complex categories: <input type="checkbox" name="scsv_parse_terms" value="true" <?php echo ($parse_terms)?'checked="checked"':''?>>
@@ -83,14 +88,14 @@ if(!empty($_POST['scsv_submit'])) {
             Debug Ingestion: <input type="checkbox" name="scsv_ingest_debugger" value="true" <?php echo ($ingest_debugger)?'checked="checked"':''?>>
         </p>
         <p id="issue_reporting">
-            Report Issues: <input type="checkbox" name="scsv_report_issue" value="true" <?php echo ($report_issue)?'checked="checked"':''?>>
+            Report Issues: <span class="premium_only">(Premium Only)</span><input type="checkbox" name="scsv_report_issue" value="true" <?php echo ($report_issue)?'checked="checked"':''?> disabled>
         </p>
         <hr />
-        <h4>CSV Settings</h4>
+        <h3>CSV Settings</h3>
         <p id="csv_settings">
             <?php $settings_keys = array('delimiter'=>',','enclosure'=>'"','escape'=>'\\'); ?>
             <?php foreach($settings_keys as $k=>$v): ?>
-                <?php echo $k?>:<input type='text' name='scsv_csv_settings[<?php echo $k?>]' value='<?php echo($csv_settings[$k])?stripslashes($csv_settings[$k]):$v;?>' size='2' maxlength='2' /><br />
+                <p class="scsv_input"><?php echo $k?>:<input type='text' name='scsv_csv_settings[<?php echo $k?>]' value='<?php echo($csv_settings[$k])?stripslashes($csv_settings[$k]):$v;?>' size='2' maxlength='2' /></p>
             <?php endforeach; ?>
         </p>
 </div>

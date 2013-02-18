@@ -28,8 +28,9 @@ $(function() {
           data: {'action':'supra_csv','command':'extract_and_export','data':data},
           url: ajaxurl,
           success: function(msg){
-              $('#extracted_results').html(msg);
-              document.location.href = '../wp-content/plugins/supra-csv-parser/export_csv.php';
+              msg = $.parseJSON(msg);
+              console.log(msg);
+              $('#extracted_results').html('<h3>'+msg.premium+'</h3><textarea cols="200" rows="10">'+msg.exported+'</textarea>');
           }
         });
     });

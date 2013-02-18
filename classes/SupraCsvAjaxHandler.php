@@ -4,13 +4,16 @@ require_once(dirname(__FILE__).'/UploadCsv.php');
 require_once(dirname(__FILE__).'/IngestCsv.php');
 require_once(dirname(__FILE__).'/Debug.php');
 require_once(dirname(__FILE__).'/Presets.php');
+require_once(dirname(__FILE__).'/SupraCsvPlugin.php');
 require_once(dirname(__FILE__).'/SupraCsvPostMeta.php');
 require_once(dirname(__FILE__).'/SupraCsvExtractor.php');
-class SupraCsvAjaxHandler {
+class SupraCsvAjaxHandler extends SupraCsvPlugin {
 
     //an instance of IngestCsv for the ingestion commands to share
 
     function __construct($request) {
+
+        error_reporting(0);
         $uc = new UploadCsv();
         $ic = new IngestCsv();
         switch($request['command']) {
@@ -95,9 +98,9 @@ class SupraCsvAjaxHandler {
                 parse_str($_POST['data'], $query_args);
                 $sce = new SupraCsvExtractor($query_args);
                 $posts = $sce->getPostsAndDetails(); 
+                //var_dump($query_args);
                 $scex = new SupraCsvExporter($posts,$query_args);
-                $scex->addToSession();
-                echo $sce->displayExtractedPosts();
+                echo json_encode(array('extracted'=>$sce->displayExtractedPosts(),'exported'=>$scex->download(),'premium'=>$this->upgradeToPremiumMsg('export more than 1 row')));
             break;
         }
     }

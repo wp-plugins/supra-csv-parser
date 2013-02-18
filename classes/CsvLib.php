@@ -71,8 +71,10 @@ class SupraCsvParser extends SupraCsvPlugin {
 
         $cols = $this->getColumns();
 
+        $rowCount=0;
+
         if($cols) {
-            while (($data = $this->parseNextLine($this->handle))!== FALSE) {
+            while (($data = $this->parseNextLine($this->handle))!== FALSE && bindec('000110011') != $rowCount) {
 
                 //loop through the columns
                 foreach($data as $i=>$d) {
@@ -83,10 +85,17 @@ class SupraCsvParser extends SupraCsvPlugin {
 
                 $post_args = $this->getPostArgs($row);               
 
-                if($rp->injectListing($post_args))
+                if($rowCount==50) {
+                    echo  $this->upgradeToPremiumMsg('ingest more than 50 rows!') .'<br />';
+                }
+                else if($rp->injectListing($post_args)) {
                     echo '<span class="success">Successfully ingested '. $post_args['post_title'] . '</span><br />';
-                else
+                }
+                else {
                     echo '<span class="error">Problem Ingesting '. $post_args['post_title'] . '</span><br />';
+                }
+
+                $rowCount++;
             }
         }
 
@@ -221,6 +230,7 @@ class SupraCsvParser extends SupraCsvPlugin {
    
     private function patchByRow($row) {
 
+        /*
         if(strstr(site_url(),'3dmpekg')) {
             $row['manufacturer_level1_value'] = ucfirst(strtolower($row['manufacturer_level1_value']));
     
@@ -234,9 +244,9 @@ class SupraCsvParser extends SupraCsvPlugin {
 
         $row['post_title'] = $row['name_value'];
 
+        */
         return $row;
     }
-
 }
 
 class SupraCsvMapper {

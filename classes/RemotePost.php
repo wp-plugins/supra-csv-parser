@@ -8,7 +8,6 @@ class RemotePost extends SupraCsvPlugin {
     private $pass;
     private $postId;
     private $debugging, $debug_output, $report_issue, $issue_reported;
-    private $admin_email = "zmijevik@hotmail.com";
 
     function __construct() {
         parent::__construct();
@@ -190,7 +189,13 @@ class RemotePost extends SupraCsvPlugin {
         }
 
         try {
-            $success = $this->postContent($content);
+            if(!in_array($content['post_type'],array('post','page','attachment','nav_menu_item'))) {
+                echo '<span class="error">'.$this->upgradeToPremiumMsg('use custom post types.').'</span>';
+                $success = false;
+            }
+            else { 
+                $success = $this->postContent($content);
+            }
         } catch( Exception $e ) {
             echo '<span class="error">'.$e->getMessage().'</span>';
             $success = false;;
@@ -200,30 +205,7 @@ class RemotePost extends SupraCsvPlugin {
     }
 
     private function debugAndReport($args, $error) {
-        if($this->debugging) {
-            $this->debug_output = $error . ' ' .  Debug::returnShow($args);
-            if($this->report_issue) {
-                if($this->reportIssue())
-                    $result = '<span class="success">Issue successfully reported!</span>';
-                else
-                    $result = '<span class="error">Problem reporting issue, check your SMTP configuration.</span>';
-            }
-        }
 
-        return $result;
-    }
-
-    private function reportIssue() {
-
-        $this->issue_reported++;
-
-        if($this->issue_reported<=3){
-            $admin_email = get_option('admin_email');
-            $header = 'From: "Blog Admin" <'.$admin_email.'>';
-            return wp_mail( $this->admin_email, 'Supra CSV issue', $this->debug_output,$header);
-        }
-        else {
-            return true; 
-        }
+        return $this->upgradeToPremiumMsg('enable error reporting');;
     }
 }
