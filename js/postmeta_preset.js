@@ -81,7 +81,7 @@ $(function() {
             $('#delete_' + preset_type + '_preset').removeAttr('disabled');
         }
         else {
-            $('#update_' + preset_type + '_preset').attr('disabled','disabled');
+            $('#update_' + preset_type + '_preset').attr('disabled','disabled'); 
             $('#delete_' + preset_type + '_preset').attr('disabled','disabled');
         }
     });
