@@ -74,20 +74,24 @@ wp_enqueue_script( 'extractor', plugins_url('/js/export.js', __FILE__) );
 </div>
 <div class="wrap_scsv" style="width: 400px;">
         <h3>Export Settings</h3>
-
+        <span class="help">provide comma-separated-values</span>
         <div id="input">
-            <label for="post_fields">Post Fields <span class="help">provide a comma separated value (post_category,post_date,post_author,post_status)</span></label>
-            <input type="text" id="post_fields" name="post_fields" size="50" value="post_title,post_content" />
+            <label for="post_fields">Post Fields</label>
+            <input type="text" id="post_fields" name="post_fields" size="50" value="post_title,post_content,post_date,post_author,post_status" />
         </div>
 
         <div id="input">
-            <label for="post_taxonomies">Taxonomies <span class="help">provide a comma separated value (category,post_tag)</span></label>
-            <input type="text" id="post_taxonomies" name="post_taxonomies" size="50" />
+            <label for="post_taxonomies">Taxonomies</label>
+            <input type="text" id="post_taxonomies" name="post_taxonomies" value="category,post_tag" size="50" />
         </div>
 
         <div id="input">
-            <label for="meta_keys">Meta Keys <span class="help">provide a comma separated value (These are the keys provided in the Post Info)</span></label>
-            <input type="text" id="meta_keys" name="meta_keys" size="50" />
+            <label for="meta_keys">Meta Keys</label>
+            <input type="text" id="meta_keys" name="meta_keys" value="<?php
+            $postmetas = get_option('scsv_postmeta');
+            $values = implode(',',$postmetas['meta_key']);
+            echo $values;
+            ?>" size="50" />
         </div>
 
         <div id="input">

@@ -5,7 +5,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: Csv Importer , Csv Parser , Csv Injector , Custom Post, csv, Csv Extractor, Csc Exporter
 Requires at least: 3.2.1
 Tested up to: 3.2.1
-Stable tag: 2.9.1
+Stable tag: 2.9.2
 
 == Description ==
 
@@ -35,6 +35,8 @@ Make sure there are no special characters in the csv values. The will show as qu
 
 == Changelog ==
 
+= 2.9.2 = 
+auto populate export meta keys
 = 2.9.1 = 
 plugin split into premium and free version
 = 2.8.9 =
