@@ -4,7 +4,7 @@ require_once(dirname(__FILE__).'/../SupraCsvParser_Plugin.php');
 
 class SupraCsvPlugin {
 
-    private $plugin_name = 'supra-csv-parser';
+    private $plugin_name = 'supraCsvFree';
     public $dbal = false;
     private $download_link = 'www.supraliminalsolutions.com/blog/downloads/supra-csv-premium/';
 
