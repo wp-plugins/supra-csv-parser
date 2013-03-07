@@ -2,10 +2,10 @@
 Contributors: zmijevik
 Author URI: http://www.supraliminalsolutions.com/blog/downloads/supra-csv-premium/
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=CLC8GNV7TRGDU
-Tags: csv, csv importer, csv parser, csv ingestor , custom post csv, csv extractor, csv exporter
+Tags: csv,import,parse,ingest,custom post,extract,export
 Requires at least: 3.2.1
 Tested up to: 3.5.1
-Stable tag: 2.9.5
+Stable tag: 2.9.6
 
 A plugin to ingest and extract posts from csv files. 
 
@@ -43,7 +43,7 @@ Make sure there are no special characters in the csv values. The will show as qu
 
 == Changelog ==
 
-= 2.9.5 = 
+= 2.9.6 = 
 auto populate export meta keys
 = 2.9.1 = 
 plugin split into premium and free version

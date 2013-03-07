@@ -8,7 +8,7 @@
 }
 
 #supra_csv_ingestion_mapper {
-    width: 50%;
+    width: 66%;
     float: left;
 }
 
@@ -48,6 +48,7 @@ span.error {
 
 .scsv_predefined_mapper {
     float: left;
+    width: 45%;
 }
 
 #supra_csv_ingestion_mapper #input span {
@@ -60,8 +61,9 @@ span.error {
 }
 
 .scsv_custom_mapper {
-    float: right;
-    margin-right: 20%;
+    float: left;
+    margin-left: 10%;
+    width: 40px;
 }
 
 .wrap_scsv {
@@ -115,7 +117,7 @@ span.error {
 
 #supra_csv_mapping_preset {
 
-width: 300px;
+width: 30%;
 
 }
 

@@ -98,6 +98,11 @@ if(!empty($_POST['scsv_submit'])) {
                 <p class="scsv_input"><?php echo $k?>:<input type='text' name='scsv_csv_settings[<?php echo $k?>]' value='<?php echo($csv_settings[$k])?stripslashes($csv_settings[$k]):$v;?>' size='2' maxlength='2' /></p>
             <?php endforeach; ?>
         </p>
+        <h3>Go Premium</h3>
+        <p>
+            Take advantage of premium features such as ingesting more than 50 posts, using custom post types and extracting csv from posts.
+            <a href="http://www.supraliminalsolutions.com/blog/listings/supra-csv/" target="_blank">upgrade here!</a>
+        </p>
 </div>
 <div style="clear: both"></div>
 <hr />
