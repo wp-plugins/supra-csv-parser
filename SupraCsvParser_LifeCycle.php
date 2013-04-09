@@ -39,6 +39,8 @@ class SupraCsvParser_LifeCycle extends SupraCsvParser_InstallIndicator {
 
         // To avoid running install() more then once
         $this->markAsInstalled();
+
+        $this->createFileSystem(); 
     }
 
     public function uninstall() {
@@ -60,6 +62,7 @@ class SupraCsvParser_LifeCycle extends SupraCsvParser_InstallIndicator {
      * @return void
      */
     public function activate() {
+        $this->createFileSystem(); 
     }
 
     /**

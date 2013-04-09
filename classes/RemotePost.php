@@ -14,7 +14,7 @@ class RemotePost extends SupraCsvPlugin {
      
         include ABSPATH . 'wp-includes/class-IXR.php';
         $this->setUser();       
-        $pingback            = $this->getPluginDirUrl() . "/xmlrpc/supra_xmlrpc.php";
+        $pingback            = $this->getPluginDirUrl() . "xmlrpc/supra_xmlrpc.php";
         $this->client        = new IXR_Client($pingback);
         $this->debugging     = get_option('scsv_ingest_debugger');
         $this->report_issue  = get_option('scsv_report_issue');
@@ -163,6 +163,10 @@ class RemotePost extends SupraCsvPlugin {
         //set the title to the specified configuration if its empty
         if(empty($content['post_title'])) {
             $content['post_content'] = $post['title'];
+        }
+
+        if(!empty($content['post_thumbnail']) && !is_numeric($content['post_thumbnail'])) {
+            echo $this->upgradeToPremiumMsg('attach external images to post!') .'<br />';
         }
 
         //add the custom terms

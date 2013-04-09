@@ -4,7 +4,7 @@ require_once(dirname(__FILE__).'/../SupraCsvParser_Plugin.php');
 
 class SupraCsvPlugin {
 
-    private $plugin_name = 'supraCsvFree';
+    private $plugin_name = 'supra-csv-parser';
     public $dbal = false;
     private $download_link = 'www.supraliminalsolutions.com/blog/downloads/supra-csv-premium/';
 
@@ -23,11 +23,15 @@ class SupraCsvPlugin {
     }
 
     public function getCsvDir() {
-        return WP_CONTENT_DIR . '/uploads/' . $this->plugin_name .'/'. 'csv' . '/';
+        return $this->plugin->getCsvDir();
+    }
+
+    public function getImgDir() {
+        return $this->plugin->getImgDir();
     }
 
     public function getCsvDirUrl() {
-        return WP_CONTENT_URL . '/uploads/' . $this->plugin_name .'/'. 'csv' . '/';
+        return $this->plugin->getCsvDirUrl();
     }
 
     public function getPremiumLink($target,$text) {
