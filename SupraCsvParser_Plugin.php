@@ -23,6 +23,10 @@ class SupraCsvParser_Plugin extends SupraCsvParser_LifeCycle {
         return 'supra-csv-parser.php';
     }
 
+    public function getPluginNameDehumanized() {
+        return 'supra-csv-parser';
+    }
+
     public function getPresetsTable() {
 
         if(empty($this->preset_table)) 
@@ -53,6 +57,27 @@ class SupraCsvParser_Plugin extends SupraCsvParser_LifeCycle {
                 );";
 
                 $wpdb->query($presetsSql);
+    }
+
+    public function getCsvDir() {
+        return WP_CONTENT_DIR . '/uploads/' . $this->getPluginNameDehumanized() .'/csv/';
+    }
+
+    public function getImgDir() {
+        return WP_CONTENT_DIR . '/uploads/' . $this->getPluginNameDehumanized() .'/img/';
+    }
+  
+    public function getCsvDirUrl() {
+        return WP_CONTENT_URL . '/uploads/' . $this->getPluginNameDehumanized() .'/csv/';
+    }
+
+    protected function createFileSystem() {
+
+        chmod(WP_CONTENT_DIR . '/uploads/',0777);
+
+        if(!file_exists($this->getCsvDir())) {
+            mkdir($this->getCsvDir(),0777,true);
+        }
     }
 
     /**
@@ -118,6 +143,7 @@ class SupraCsvParser_Plugin extends SupraCsvParser_LifeCycle {
         wp_enqueue_style('my-style', plugins_url('/css/style.css', __FILE__));
         wp_enqueue_script('supra_csv_globals', plugins_url('/js/global.js', __FILE__));
 
+        add_action('activated_plugin',array(&$this,'save_error'));
 
         // Register short codes
         // http://plugin.michael-simpson.com/?page_id=39
@@ -128,5 +154,7 @@ class SupraCsvParser_Plugin extends SupraCsvParser_LifeCycle {
 
     }
 
-
+    function save_error(){
+        update_option('supracsvplugin_error',  ob_get_contents());
+    }
 }
