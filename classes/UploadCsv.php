@@ -13,11 +13,6 @@ class UploadCsv extends SupraCsvPlugin {
         if(!empty($file['uploaded'])) {
             $this->processFile($file['uploaded']);
         }
-
-        if(!file_exists($this->getCsvDir())) {
-            chmod(WP_CONTENT_DIR . '/uploads/',0777);
-            mkdir($this->getCsvDir(),0777,true);
-        }
     }
 
     public function renderForms() { 
