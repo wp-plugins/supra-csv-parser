@@ -120,7 +120,8 @@ class RemotePost extends SupraCsvPlugin {
                         'comment_status',
                         'ping_status',
                         'post_format',
-                        'enclosure' 
+                        'enclosure',
+                        'post_parent' 
                        );
    
         //filter the args into valiables 
@@ -148,7 +149,8 @@ class RemotePost extends SupraCsvPlugin {
                         'comment_status',
                         'ping_status',
                         'post_format',
-                        'enclosure'
+                        'enclosure',
+                        'post_parent' 
         );
 
         //if the argument isnt empty than set it

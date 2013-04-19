@@ -190,7 +190,8 @@ class SupraCsvParser extends SupraCsvPlugin {
                     'comment_status',
                     'ping_status',
                     'post_format',
-                    'enclosure'
+                    'enclosure',
+                    'post_parent' 
                 );
 
                 foreach($predefined as $key) {
@@ -218,7 +219,8 @@ class SupraCsvParser extends SupraCsvPlugin {
                     'comment_status',
                     'ping_status',
                     'post_format',
-                    'enclosure'
+                    'enclosure',
+                    'post_parent' 
                 );
 
                 $post_args['terms'] = $terms;
@@ -301,6 +303,7 @@ class SupraCsvMapperForm {
         'ping_status'=>'Ping Status',
         'post_format'=>'Post Format',
         'enclosure'=>'Enclosure',
+        'post_parent'=>'Post Parent',
     );
 
     function __construct(SupraCsvParser $cp) {
