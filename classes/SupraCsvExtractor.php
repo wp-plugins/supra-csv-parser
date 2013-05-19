@@ -196,7 +196,7 @@ class SupraCsvExporter extends ExporterArgumentParser {
             $key_array[] = $key;
             if(!empty($escape)) {
                 $val = str_replace($enclosure, $escape.$enclosure, $val);
-                $val = str_replace($delimeter, $escape.$delimiter, $val);
+                $val = str_replace($delimiter, $escape.$delimiter, $val);
             }
             $val_array[] = $enclosure.$val.$enclosure;
         }
