@@ -26,6 +26,11 @@ class SupraCsvPlugin {
         return WP_CONTENT_DIR . '/uploads/' . $this->plugin_name .'/'. 'csv' . '/';
     }
 
+    public function getSampleCsvDir() {
+
+        return $this->plugin->getSampleCsvDir();
+    }
+
     public function getCsvDirUrl() {
         return WP_CONTENT_URL . '/uploads/' . $this->plugin_name .'/'. 'csv' . '/';
     }

@@ -63,6 +63,11 @@ class SupraCsvParser_Plugin extends SupraCsvParser_LifeCycle {
         return WP_CONTENT_DIR . '/uploads/' . $this->getPluginNameDehumanized() .'/csv/';
     }
 
+    public function getSampleCsvDir() {
+
+        return dirname(__FILE__) . '/samplecsvs/';
+    }
+
     public function getImgDir() {
         return WP_CONTENT_DIR . '/uploads/' . $this->getPluginNameDehumanized() .'/img/';
     }
@@ -77,6 +82,32 @@ class SupraCsvParser_Plugin extends SupraCsvParser_LifeCycle {
 
         if(!file_exists($this->getCsvDir())) {
             mkdir($this->getCsvDir(),0777,true);
+        }
+
+        $this->createSampleFiles();
+    }
+
+    public function createSampleFiles() {
+
+        $source = $this->getSampleCsvDir();
+        $dest = $this->getCsvDir();
+
+        if(is_dir($source)) {
+            $dir_handle=opendir($source);
+            $sourcefolder = basename($source);
+            while($file=readdir($dir_handle)){
+                if($file!="." && $file!=".."){
+                    if(is_dir($source."/".$file)){
+                        self::copyr($source."/".$file, $dest."/".$sourcefolder);
+                    } else {
+                        copy($source."/".$file, $dest."/".$file);
+                    }
+                }
+            }
+            closedir($dir_handle);
+        } else {
+            // can also handle simple copy commands
+            copy($source, $dest);
         }
     }
 
