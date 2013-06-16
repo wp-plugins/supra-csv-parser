@@ -16,6 +16,7 @@ if(!empty($_POST['scsv_submit'])) {
     $ingest_debugger = $_POST['scsv_ingest_debugger'];
     $csv_settings = $_POST['scsv_csv_settings'];
     $report_issue = $_POST['scsv_report_issue'];
+    $encode_chars = $_POST['scsv_encode_special_chars'];
     update_option('scsv_filename', $csvfile);
     update_option('scsv_user', $csvuser);
     update_option('scsv_post', $csvpost);
@@ -24,6 +25,7 @@ if(!empty($_POST['scsv_submit'])) {
     update_option('scsv_ingest_debugger', $ingest_debugger);
     update_option('scsv_report_issue', $report_issue);
     update_option('scsv_csv_settings', $csv_settings);
+    update_option('scsv_encode_special_chars',$encode_chars);
     echo '<div class="updated"><p><strong>Configuration saved</strong></p></div>';
 } else {
     $csvfile = get_option('scsv_filename');
@@ -34,6 +36,7 @@ if(!empty($_POST['scsv_submit'])) {
     $ingest_debugger = get_option('scsv_ingest_debugger');
     $report_issue = get_option('scsv_report_issue');
     $csv_settings = get_option('scsv_csv_settings');
+    $encode_chars = get_option('scsv_encode_special_chars');
 }
 
 ?>
@@ -89,6 +92,9 @@ if(!empty($_POST['scsv_submit'])) {
         </p>
         <p id="issue_reporting">
             Report Issues: <span class="premium_only">(Premium Only)</span><input type="checkbox" name="scsv_report_issue" value="true" <?php echo ($report_issue)?'checked="checked"':''?> disabled>
+        </p>
+        <p id="encode_char">
+            Encode Special Characters: <input type="checkbox" name="scsv_encode_special_chars" value="true" <?php echo($encode_chars)?'checked="checked"':''?>>
         </p>
         <hr />
         <h3>CSV Settings</h3>
