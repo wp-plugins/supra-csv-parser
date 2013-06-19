@@ -43,6 +43,8 @@ Make sure there are no special characters in the csv values. CSV Values Must be 
 
 == Changelog ==
 
+= 3.0.1
+fixing bug with menu_order and post_parent
 = 3.0.0 =
 autopopulated suggestions as postmeta keys with enable feature.
 added post_status and menu_order to predefined in ingestion.
