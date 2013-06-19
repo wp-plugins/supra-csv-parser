@@ -190,9 +190,7 @@ class SupraCsvParser extends SupraCsvPlugin {
                     'comment_status',
                     'ping_status',
                     'post_format',
-                    'enclosure',
-                    'post_parent',
-                    'menu_order'
+                    'enclosure'
                 );
 
                 foreach($predefined as $key) {
@@ -220,9 +218,7 @@ class SupraCsvParser extends SupraCsvPlugin {
                     'comment_status',
                     'ping_status',
                     'post_format',
-                    'enclosure',
-                    'post_parent',
-                    'menu_order'
+                    'enclosure'
                 );
 
                 $post_args['terms'] = $terms;
@@ -305,9 +301,6 @@ class SupraCsvMapperForm {
         'ping_status'=>'Ping Status',
         'post_format'=>'Post Format',
         'enclosure'=>'Enclosure',
-        'post_status'=>'Post Status',
-        'post_parent'=>'Post Parent',
-        'menu_order'=>'Menu Order'
     );
 
     function __construct(SupraCsvParser $cp) {
@@ -325,12 +318,9 @@ class SupraCsvMapperForm {
 
         $postmetas = get_option('scsv_postmeta');
 
-        //Debug::show($postmetas);
-
-        foreach((array)$postmetas['meta_key'] as $i=>$meta_key) {
+        foreach((array)$postmetas['meta_key'] as $i=>$metakey) {
             $displayname = $postmetas['displayname'][$i];
-            if(in_array($i,$postmetas['use_metakey']))
-                $meta[$meta_key] = $displayname;
+            $meta[$metakey] = $displayname;
         }
 
         $this->listing_fields = $meta;

@@ -13,6 +13,7 @@ class SupraCsvAjaxHandler extends SupraCsvPlugin {
 
     function __construct($request) {
 
+        error_reporting(0);
         $uc = new UploadCsv();
         $ic = new IngestCsv();
         switch($request['command']) {
@@ -64,9 +65,7 @@ class SupraCsvAjaxHandler extends SupraCsvPlugin {
                 $preset = $pmp->getPreset($request['args']);
                 $postMetas = $preset['preset'];
                 update_option('scsv_postmeta',$postMetas);
-                $csvpost = get_option('scsv_post');
-                $suggestions = $pm->getSuggestions($csvpost['type']);
-                $preset = array_merge($preset,array('form'=>$pm->getFormContents($postMetas,$suggestions)));
+                $preset = array_merge($preset,array('form'=>$pm->getFormContents($postMetas)));
                 echo json_encode($preset);
             break;
             case "delete_mapping_preset":

@@ -120,9 +120,7 @@ class RemotePost extends SupraCsvPlugin {
                         'comment_status',
                         'ping_status',
                         'post_format',
-                        'enclosure',
-                        'post_parent',
-                        'menu_order' 
+                        'enclosure' 
                        );
    
         //filter the args into valiables 
@@ -150,23 +148,21 @@ class RemotePost extends SupraCsvPlugin {
                         'comment_status',
                         'ping_status',
                         'post_format',
-                        'enclosure',
-                        'post_parent',
-                        'menu_order'
+                        'enclosure'
         );
 
         //if the argument isnt empty than set it
         if(!empty($post_content)) {
-            $content['post_content'] = $this->xmlencode($post_content);
+            $content['post_content'] = $post_content;
         }
         //if the argument was empty but the configuration isnt
         else if(!empty($post['desc'])) {
-            $content['post_content'] = $this->xmlencode($post['desc']);
+            $content['post_content'] = $post['desc'];
         }
 
         //set the title to the specified configuration if its empty
         if(empty($content['post_title'])) {
-            $content['post_content'] = $this->xmlencode($post['title']);
+            $content['post_content'] = $post['title'];
         }
 
         //add the custom terms
@@ -211,16 +207,5 @@ class RemotePost extends SupraCsvPlugin {
     private function debugAndReport($args, $error) {
 
         return $this->upgradeToPremiumMsg('enable error reporting');;
-    }
-
-    private function xmlencode($data) {
-
-        if(get_option('scsv_encode_special_chars')) {
-
-            $data = utf8_encode($data);
-            $data = htmlentities($data);
-        }
-
-        return $data;
     }
 }
