@@ -155,6 +155,11 @@ class RemotePost extends SupraCsvPlugin {
                         'menu_order'
         );
 
+        if($this->debugging) {
+                ini_set('display_errors', 1); // set to 0 when not debugging
+                error_reporting(E_ALL);
+        }
+
         //if the argument isnt empty than set it
         if(!empty($post_content)) {
             $content['post_content'] = $this->xmlencode($post_content);

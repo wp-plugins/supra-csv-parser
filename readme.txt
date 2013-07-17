@@ -5,7 +5,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: csv,import,parse,ingest,custom post,extract,export,attachment,thumbnail
 Requires at least: 3.2.1
 Tested up to: 3.5.1
-Stable tag: 3.0.1
+Stable tag: 3.0.2
 
 A plugin to ingest and extract posts from csv files. 
 
@@ -43,8 +43,9 @@ Make sure there are no special characters in the csv values. CSV Values Must be 
 
 == Changelog ==
 
-= 3.0.1
-fixing bug with menu_order and post_parent
+
+= 3.0.2 =
+added more verbose and detailed debugging ouput
 = 3.0.0 =
 autopopulated suggestions as postmeta keys with enable feature.
 added post_status and menu_order to predefined in ingestion.
