@@ -5,7 +5,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: csv,import,parse,ingest,custom post,extract,export,attachment,thumbnail
 Requires at least: 3.2.1
 Tested up to: 3.5.1
-Stable tag: 3.0.3
+Stable tag: 3.0.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -17,11 +17,14 @@ The purpose of this plugin is to parse uploaded csv files into any type of
 post. Themes or plugin store data in posts and this plugin provides the functionality 
 to upload data from the csv file to the records that the theme or plugin creates. The plugin also provides the ability to import images and associate them to post as attachment in the premium version.
 Manage existing csv files and promote ease of use by creating presets for both postmeta 
-and ingestion mapping. 
-*	For general information regarding the plugin visit <http://www.supraliminalsolutions.com/blog/listings/supra-csv/> . 
-*	For more infomation on how to obtain the necessary info watch the 
+and ingestion mapping.
+
+For general information regarding the plugin visit <http://www.supraliminalsolutions.com/blog/listings/supra-csv/> .
+
+For more infomation on how to obtain the necessary info watch the 
 detailed tutorials <http://www.supraliminalsolutions.com/blog/supra-csv-tutorials/>. 
-*	To ingest csv files into custom posts,extract posts into csv files or upload multiple attchments to a post you must upgrade to the premium version of the plugin. 
+
+To ingest csv files into custom posts,extract posts into csv files or upload multiple attchments to a post you must upgrade to the premium version of the plugin. 
 
 == Frequently Asked Questions ==
 
@@ -47,6 +50,8 @@ Make sure there are no special characters in the csv values. CSV Values Must be 
 
 == Changelog ==
 
+= 3.0.4 = 
+updating the readme file
 = 3.0.3 = 
 added the header image
 = 3.0.2 =
