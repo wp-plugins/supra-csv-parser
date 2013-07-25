@@ -2,6 +2,24 @@
   <div style="width: 630px">
   <h2>Supra Csv</h2>
   <div style="float: left; width: 300px;">
+<style type="text/css">
+#limited_offer {
+background-color: darkred;
+color: white;
+padding: 10px;
+}
+#limited_offer span {
+    
+    font-weight: bold;
+    font-size:22px;
+}
+</style>
+<div id="limited_offer">
+<span>Limited Time Offer!</span>
+Simply vote and write a review and receive the latest premium version at no cost!
+Be sure to notify me of your review submission/rating in the site contact form. 
+</div>
+
     <h3>Description</h3>
     <p>
       The purpose of this plugin is to parse uploaded csv files into any type of
