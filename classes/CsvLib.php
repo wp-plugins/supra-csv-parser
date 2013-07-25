@@ -90,7 +90,7 @@ class SupraCsvParser extends SupraCsvPlugin {
 
                 $rowCount++;
                 if($rp->injectListing($post_args)) {
-                    echo '<span class="success">Successfully ingested '. $post_args['post_title'] . 'at line '.$rowCount.' of '.$this->getFileName().'</span><br />';
+                    echo '<span class="success">Successfully ingested '. $post_args['post_title'] . ' at line '.$rowCount.' of '.$this->getFileName().'</span><br />';
                 }
                 else {
                     echo '<span class="error">Problem Ingesting '. $post_args['post_title'] . ' at line '.$rowCount.' of '.$this->getFileName().'</span><br />';
