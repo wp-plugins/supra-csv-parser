@@ -74,7 +74,7 @@ class SupraCsvParser extends SupraCsvPlugin {
         $rowCount=0;
 
         if($cols) {
-            while (($data = $this->parseNextLine($this->handle))!== FALSE && bindec('000110011') != $rowCount) {
+            while (($data = $this->parseNextLine($this->handle))!== FALSE) {
 
                 //loop through the columns
                 foreach($data as $i=>$d) {
@@ -85,10 +85,7 @@ class SupraCsvParser extends SupraCsvPlugin {
 
                 $post_args = $this->getPostArgs($row);               
 
-                if($rowCount==50) {
-                    echo  $this->upgradeToPremiumMsg('ingest more than 50 rows!') .'<br />';
-                }
-                else if($rp->injectListing($post_args)) {
+                if($rp->injectListing($post_args)) {
                     echo '<span class="success">Successfully ingested '. $post_args['post_title'] . '</span><br />';
                 }
                 else {
