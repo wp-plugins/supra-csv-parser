@@ -106,7 +106,7 @@ if(!empty($_POST['scsv_submit'])) {
         </p>
         <h3>Go Premium</h3>
         <p>
-            Take advantage of premium features such as ingesting more than 50 posts, using custom post types and extracting csv from posts.
+            Take advantage of premium features such as using custom post types and extracting unlimited posts into csv format.
             <a href="http://www.supraliminalsolutions.com/blog/listings/supra-csv/" target="_blank">upgrade here!</a>
         </p>
 </div>

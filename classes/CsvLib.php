@@ -76,6 +76,9 @@ class SupraCsvParser extends SupraCsvPlugin {
         if($cols) {
             while (($data = $this->parseNextLine($this->handle))!== FALSE) {
 
+                //catch an empty line
+                if(count($data)==1 && empty($data[0])) continue;
+
                 //loop through the columns
                 foreach($data as $i=>$d) {
                     $parsed[$cols[$i]] = $d;
@@ -174,6 +177,7 @@ class SupraCsvParser extends SupraCsvPlugin {
                 unset($row['post_tag']);
 
                 $predefined = array(
+                    'post_id',
                     'post_title',
                     'post_content',
                     'post_type',
@@ -204,6 +208,7 @@ class SupraCsvParser extends SupraCsvPlugin {
                 }
 
                 $post_args = compact(
+                    'post_id',
                     'post_title',
                     'post_content',
                     'post_type',
@@ -286,6 +291,7 @@ class SupraCsvMapperForm {
     private $listing_fields;
 
     private $predefined_meta = array(
+        'post_id'=>'Post ID',
         'post_title'=>'Title',
         'post_content'=>'Description',
         'category'=>'Categories',

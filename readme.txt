@@ -5,11 +5,11 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: csv,import,parse,ingest,custom post,extract,export,attachment,thumbnail
 Requires at least: 3.2.1
 Tested up to: 3.5.1
-Stable tag: 3.0.6
+Stable tag: 3.0.7
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-A plugin to ingest and extract posts, custom posts, attachments, tags, keywords and custom post meta from and into csv files. 
+A plugin to ingest and extract/create/update posts, custom posts, attachments, tags, keywords and custom post meta with csv files. 
  
 == Description ==
 
@@ -48,6 +48,12 @@ Make sure there are no special characters in the csv values. CSV Values Must be 
 
 == Changelog ==
 
+= 3.0.7 =
+added the ability to update posts.
+
+fixed a bug that would ingets blank csv rows
+
+added the sample_basic_edit csv to demonstrate ingesting a record to edit a post
 = 3.0.6 =
 removed 50 post ingestion limit from the free version
 = 3.0.5 =

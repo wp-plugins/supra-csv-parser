@@ -34,37 +34,47 @@ class RemotePost extends SupraCsvPlugin {
 
         $post= get_option('scsv_post');
 
-        $default_args = array(
-                              'post_id'=>null,
-                             );
-
-        $args = array_merge($default_args, $args);
-
         if($this->debugging) {
             Debug::show($args);
         }
 
-        if($args['function'] == "wp.newPost") {
-            if(!$this->client->query($args['function'],$args['post_id'],$this->uname,$this->pass,$args['args'])) {
-               echo $this->debugAndReport($args, $this->client->getErrorMessage());
-               throw new Exception($this->client->getErrorMessage());
-            }
-        } else if($args['function'] == "wp.setOptions") {
-            if(!$this->client->query($args['function'],$args['post_id'],$this->uname,$this->pass,$args['args'])) {
-               echo $this->debugAndReport($args, $this->client->getErrorMessage());
-               throw new Exception($this->client->getErrorMessage());
+        if($args['function'] == "wp.editPost") {
+            if(!$this->client->query($args['function'],null,$this->uname,$this->pass,$args['post_id'],$args['args'])) {
+                echo $this->debugAndReport($args, $this->client->getErrorMessage());
+                throw new Exception($this->client->getErrorMessage());
             }
         }
-
+        else if($args['function'] == "wp.newPost") { 
+            if(!$this->client->query($args['function'],$args['post_id'],$this->uname,$this->pass,$args['args'])) {
+                echo $this->debugAndReport($args, $this->client->getErrorMessage());
+                throw new Exception($this->client->getErrorMessage());
+            }
+        }
         return $this->client->getResponse();
     }
 
     public function postContent($content) {
+ 
+        $post_id = null;
+
+        if($content['post_id']) {
+
+            $function = 'wp.editPost';
+            $post_id = $content['post_id'];
+            unset($content['post_id']);
+
+        } else{
+            $function = 'wp.newPost';
+        }
 
         $args = array(
-                      'function'=>'wp.newPost',
+                      'function'=>$function,
                       'args'    =>$content, 
-                     );
+        );
+
+        if(!is_null($post_id)) {
+            $args['post_id'] = $post_id;
+        }
 
         $response = $this->_makeCall($args);
 
@@ -72,26 +82,6 @@ class RemotePost extends SupraCsvPlugin {
             $this->postId = $response;
         }
    
-        return $response;
-    }
-
-    public function postOptions($options) {
-
-        $args = array(
-                      'function'=>'wp.setOptions',
-                      'post_id' => $this->postId,
-                      'args'    =>$options,
-                      'publish' =>null
-                     );
-
-        return $this->_makeCall($args);
-    }
-
-    public function postContentAndOptions($content,$options) {
-
-        $response['content'] = $this->postContent($content);
-        $response['options'] = $this->postOptions($options);
-       
         return $response;
     }
 
@@ -105,6 +95,7 @@ class RemotePost extends SupraCsvPlugin {
 
         //the keys to filter by
         $params = array(
+                        'post_id',
                         'post_title',
                         'post_type',
                         'post_content',
@@ -135,6 +126,7 @@ class RemotePost extends SupraCsvPlugin {
 
         //compact the variables
         $content = compact(
+                        'post_id',
                         'post_title',
                         'post_type',
                         'terms_names',
@@ -157,7 +149,7 @@ class RemotePost extends SupraCsvPlugin {
 
         if($this->debugging) {
                 ini_set('display_errors', 1); // set to 0 when not debugging
-                error_reporting(E_ALL);
+                error_reporting(E_ALL ^ E_NOTICE);
         }
 
         //if the argument isnt empty than set it
@@ -175,8 +167,6 @@ class RemotePost extends SupraCsvPlugin {
         }
 
         //add the custom terms
-        
-
         if($post['publish'] && empty($content['post_status'])) {
             $content['post_status'] = 'publish';
             

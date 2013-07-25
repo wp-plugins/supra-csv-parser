@@ -146,7 +146,11 @@
       </a>
     </li>
     <ol>
-      <li><a href="#predefined_categoires">
+      <li><a href="#predefined_postid">
+         Post ID(for updating)
+          </a>
+      </li>
+      <li><a href="#predefined_categories">
         Categories
         </a>
       </li>
@@ -358,7 +362,13 @@
         </p>
     </li>
     <ol>
-      <li id="predefined_categoires">
+      <li id="predefined_postid">
+        Post ID(for updating only)
+        <p>
+        Simply provide the ID of the post in this column. When doing so instead of creating a new post with the data ingested from the other columns it will update the post.
+        </p>
+      </li>
+      <li id="predefined_categories">
         Categories
         <p>
         These will only display if the category taxonomy is supported by the post type
