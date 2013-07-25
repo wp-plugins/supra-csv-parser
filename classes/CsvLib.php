@@ -88,14 +88,13 @@ class SupraCsvParser extends SupraCsvPlugin {
 
                 $post_args = $this->getPostArgs($row);               
 
+                $rowCount++;
                 if($rp->injectListing($post_args)) {
-                    echo '<span class="success">Successfully ingested '. $post_args['post_title'] . '</span><br />';
+                    echo '<span class="success">Successfully ingested '. $post_args['post_title'] . 'at line '.$rowCount.' of '.$this->getFileName().'</span><br />';
                 }
                 else {
-                    echo '<span class="error">Problem Ingesting '. $post_args['post_title'] . '</span><br />';
+                    echo '<span class="error">Problem Ingesting '. $post_args['post_title'] . ' at line '.$rowCount.' of '.$this->getFileName().'</span><br />';
                 }
-
-                $rowCount++;
             }
         }
 
@@ -233,7 +232,7 @@ class SupraCsvParser extends SupraCsvPlugin {
  
         return $post_args;
     }
-   
+  
     private function patchByRow($row) {
 
         /*

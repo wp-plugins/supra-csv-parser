@@ -163,7 +163,7 @@ class RemotePost extends SupraCsvPlugin {
 
         //set the title to the specified configuration if its empty
         if(empty($content['post_title'])) {
-            $content['post_content'] = $this->xmlencode($post['title']);
+            $content['post_title'] = $this->xmlencode($post['title']);
         }
 
         //add the custom terms

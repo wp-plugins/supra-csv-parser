@@ -32,6 +32,8 @@ $(function() {
     $('#select_csv_file').live('change', function() {
         filename_key = $(this).val();
 
+        $('#supra_csv_ingestion_log').html(null);
+
         if(filename_key) {
           $.ajax({
             type: 'POST',
@@ -50,6 +52,7 @@ $(function() {
     $('#supra_csv_ingest_csv').live('click', function(e) {
         e.preventDefault();
 
+        $('#supra_csv_ingestion_log').html(null);
         $('#patience').show();
 
         var data = $('#supra_csv_mapping_form').serialize();

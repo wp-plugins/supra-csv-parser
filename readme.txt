@@ -5,7 +5,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: csv,import,parse,ingest,custom post,extract,export,attachment,thumbnail
 Requires at least: 3.2.1
 Tested up to: 3.5.1
-Stable tag: 3.0.7
+Stable tag: 3.0.8
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -48,6 +48,10 @@ Make sure there are no special characters in the csv values. CSV Values Must be 
 
 == Changelog ==
 
+= 3.0.8 =
+error logging including the csv filename and the line number of the row
+
+make the results of the previous ingestion clear when you select a new file to ingest so that it shows you it is uploading it
 = 3.0.7 =
 added the ability to update posts.
 
