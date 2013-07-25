@@ -5,26 +5,24 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: csv,import,parse,ingest,custom post,extract,export,attachment,thumbnail
 Requires at least: 3.2.1
 Tested up to: 3.5.1
-Stable tag: 3.0.4
+Stable tag: 3.0.6
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-A plugin to ingest and extract posts, custom posts, attachments, tags, keyword and custom post meta from and into csv files. 
+A plugin to ingest and extract posts, custom posts, attachments, tags, keywords and custom post meta from and into csv files. 
  
 == Description ==
 
 The purpose of this plugin is to parse uploaded csv files into any type of
-post. Themes or plugin store data in posts and this plugin provides the functionality 
-to upload data from the csv file to the records that the theme or plugin creates. The plugin also provides the ability to import images and associate them to post as attachment in the premium version.
-Manage existing csv files and promote ease of use by creating presets for both postmeta 
-and ingestion mapping.
+post. Themes or plugin store data in posts and post meta. This plugin provides the functionality 
+to upload data from the csv file into the postmeta records which themes and plugins create. 
+This plugin also provides the ability to import images and associate them to post 
+as attachments or thumbnails. Manage existing csv files and promote ease of 
+use by creating presets for both postmeta and ingestion mapping.
 
 For general information regarding the plugin visit <http://www.supraliminalsolutions.com/blog/listings/supra-csv/> .
 
-For more infomation on how to obtain the necessary info watch the 
-detailed tutorials <http://www.supraliminalsolutions.com/blog/supra-csv-tutorials/>. 
-
-To ingest csv files into custom posts,extract posts into csv files or upload multiple attchments to a post you must upgrade to the premium version of the plugin. 
+Watch the detailed tutorials <http://www.supraliminalsolutions.com/blog/supra-csv-tutorials/>. 
 
 == Frequently Asked Questions ==
 
@@ -50,6 +48,10 @@ Make sure there are no special characters in the csv values. CSV Values Must be 
 
 == Changelog ==
 
+= 3.0.6 =
+removed 50 post ingestion limit from the free version
+= 3.0.5 =
+limited time offer! rate and review for premium
 = 3.0.4 = 
 updating the readme file
 = 3.0.3 = 
