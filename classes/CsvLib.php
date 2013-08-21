@@ -54,12 +54,14 @@ class SupraCsvParser extends SupraCsvPlugin {
 
     private function parseNextLine($handle) {
         $csv_settings = get_option('scsv_csv_settings');
+        $additional_csv_settings = get_option('scsv_addtional_csv_settings');
+
         if (strnatcmp(phpversion(),'5.3') >= 0) {    
-            return fgetcsv($handle,1000,stripslashes($csv_settings['delimiter']),stripslashes($csv_settings['enclosure']),stripslashes($csv_settings['escape']));
+            return fgetcsv($handle,$additional_csv_settings['line_maxlen'],stripslashes($csv_settings['delimiter']),stripslashes($csv_settings['enclosure']),stripslashes($csv_settings['escape']));
         
         } 
         else { 
-            return fgetcsv($handle,1000,stripslashes($csv_settings['delimiter']),stripslashes($csv_settings['enclosure']));
+            return fgetcsv($handle,$additional_csv_settings['line_maxlen'],stripslashes($csv_settings['delimiter']),stripslashes($csv_settings['enclosure']));
         }  
     }
 

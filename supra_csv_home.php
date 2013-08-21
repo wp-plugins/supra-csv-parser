@@ -14,11 +14,6 @@ padding: 10px;
     font-size:22px;
 }
 </style>
-<div id="limited_offer">
-<span>Limited Time Offer!</span>
-Simply vote and write a review and receive the latest premium version at no cost!
-Be sure to notify me of your review submission/rating in the site contact form. 
-</div>
 
     <h3>Description</h3>
     <p>

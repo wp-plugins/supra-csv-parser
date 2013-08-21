@@ -11,6 +11,7 @@ if(!empty($_POST['scsv_submit'])) {
     $csvpost['type'] = (empty($_POST['scsv_posttype'])) ? $_POST['scsv_custom_posttype'] : $_POST['scsv_posttype'];
     $csvpost['title'] = $_POST['scsv_defaulttitle'];
     $csvpost['desc'] = $_POST['scsv_defaultdesc'];
+    $additional_csv_settings['line_maxlen'] = $_POST['scsv_line_maxlen'];
     $post_terms = $_POST['scsv_custom_terms'];
     $parse_terms = $_POST['scsv_parse_terms'];
     $ingest_debugger = $_POST['scsv_ingest_debugger'];
@@ -25,6 +26,7 @@ if(!empty($_POST['scsv_submit'])) {
     update_option('scsv_ingest_debugger', $ingest_debugger);
     update_option('scsv_report_issue', $report_issue);
     update_option('scsv_csv_settings', $csv_settings);
+    update_option('scsv_additional_csv_settings', $additional_csv_settings);
     update_option('scsv_encode_special_chars',$encode_chars);
     echo '<div class="updated"><p><strong>Configuration saved</strong></p></div>';
 } else {
@@ -36,6 +38,7 @@ if(!empty($_POST['scsv_submit'])) {
     $ingest_debugger = get_option('scsv_ingest_debugger');
     $report_issue = get_option('scsv_report_issue');
     $csv_settings = get_option('scsv_csv_settings');
+    $additional_csv_settings = get_option('scsv_additional_csv_settings');
     $encode_chars = get_option('scsv_encode_special_chars');
 }
 
@@ -103,6 +106,7 @@ if(!empty($_POST['scsv_submit'])) {
             <?php foreach($settings_keys as $k=>$v): ?>
                 <p class="scsv_input"><?php echo $k?>:<input type='text' name='scsv_csv_settings[<?php echo $k?>]' value='<?php echo($csv_settings[$k])?stripslashes($csv_settings[$k]):$v;?>' size='2' maxlength='2' /></p>
             <?php endforeach; ?>
+            <p id="line_maxlen">Max Character Limit Per Line<input type="text" name="scsv_line_maxlen" value="<?php echo (is_null($additional_csv_settings['line_maxlen']))?'1000':$additional_csv_settings['line_maxlen'];?>" size="20"></p>
         </p>
         <h3>Go Premium</h3>
         <p>
