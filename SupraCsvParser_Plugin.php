@@ -173,6 +173,8 @@ class SupraCsvParser_Plugin extends SupraCsvParser_LifeCycle {
         wp_enqueue_script('jquery');
         wp_enqueue_style('my-style', plugins_url('/css/style.css', __FILE__));
         wp_enqueue_script('supra_csv_globals', plugins_url('/js/global.js', __FILE__));
+        wp_enqueue_script('toolip-lib', plugins_url('/js/jquery.qtip-1.0.0-rc3.min.js', __FILE__));
+        wp_enqueue_script('toolip', plugins_url('/js/tooltip.js', __FILE__));
 
         add_action('activated_plugin',array(&$this,'save_error'));
 

@@ -87,6 +87,10 @@
         Report Issues
     </a>
       </li>
+      <li ><a href="#special_char">  
+        Encode Special Characters
+    </a>
+      </li>
     </ol>
     <li ><a href="#csv_settings">CSV Settings</a></li>
     <ol>
@@ -103,6 +107,9 @@
     </a>
       </li>
     </ol>
+    <li >
+      <a href="#max_char">Max Character Limit Per Line</a>
+    </li>
   </ol>
   <li ><a href="#upload">Upload</a></li>
   <ol>
@@ -272,6 +279,12 @@
         ingestion is confined to 3.
         </p>
       </li>
+      <li id="special_char">  
+        Encode Special Characters
+        <p>
+        Attempt to remove any illegal characters from the post title and body that may halt the ingestion process.
+        </p>
+      </li>
     </ol>
     <li id="csv_settings">CSV Settings</li>
     <ol>
@@ -294,6 +307,12 @@
         </p>
       </li>
     </ol>
+    <li id="max_char">  
+      Max Character Limit Per Line
+      <p>
+      Sets the maximum length of each row in the csv file. Sometimes this needs to be adjusted for post with a large amount of content.
+      </p>
+    </li>
   </ol>
   <li id="upload">Upload</li>
   <ol>

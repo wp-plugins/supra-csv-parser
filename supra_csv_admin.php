@@ -48,21 +48,21 @@ if(!empty($_POST['scsv_submit'])) {
         <hr />
 <div style="float: left; width: 300px;">
 <form name="scsv_form" method="post">
-        <h3>User Settings</h3>
+        <h3><span id="usersettings_tt" class="tooltip"></span>User Settings</h3>
         <p>Username<input type="text" name="scsv_wpname" value="<?php echo $csvuser['name']; ?>" size="20"></p>
         <p>Pasword<input type="password" name="scsv_wppass" value="<?php echo $csvuser['pass']; ?>" size="20"></p>
 
         <hr />
-        <h3>Post Settings</h3>
+        <h3><span id="postsettings_tt" class="tooltip"></span>Post Settings</h3>
         <p>
-            Auto Publish
+            <span id="autopublish_tt" class="tooltip"></span>Auto Publish
             <select name="scsv_autopub">
                 <option value="0">false</option>
                 <option value="1" <?php if($csvpost['publish']) echo 'selected="selected"';?>>true</option>
             </select>
         </p>
         <p>
-            Post Type
+            <span id="posttype_tt" class="tooltip"></span>Post Type
             <select name="scsv_posttype" value="<?php echo $csvpost['type']; ?>">
                 <option value=""></option>
                 <option value="post" value="post" selected>post</option>
@@ -75,38 +75,39 @@ if(!empty($_POST['scsv_submit'])) {
             <h3>or</h3>
         </p>
         <p>
-            Custom Post Type <span class="premium_only">(Premium Only)</span>
+            <span id="customposttype_tt" class="tooltip"></span>Custom Post Type <span class="premium_only">(Premium Only)</span>
             <input type="text" name="scsv_custom_posttype" value="" size="5" style="background-color: #FDEEF4" disabled>
         </p>
+        <h3><span id="postdefaults_tt" class="tooltip"></span>Post Defaults</h3>
         <p>Default Title<input type="text" name="scsv_defaulttitle" value="<?php echo $csvpost['title']; ?>" size="20"></p>
         <p>Default Description<textarea name="scsv_defaultdesc" cols="50"><?php echo $csvpost['desc']; ?></textarea></p>
 </div>
 <div style="float: right; width: 300px;">
         <h3>Ingestion Settings</h3>
         <p id="custom_terms" class="input">
-          Custom Terms (<span style="color: red">separate terms with commas</span>)
+          <span id="customterms_tt" class="tooltip"></span>Custom Terms (<span style="color: red">separate terms with commas</span>)
             <input type="text" name="scsv_custom_terms" value="<?php echo $post_terms?>" style="width: 240px;">
         </p>
         <p id="compex_categories">
-            Parse complex categories: <input type="checkbox" name="scsv_parse_terms" value="true" <?php echo ($parse_terms)?'checked="checked"':''?>>
+            <span id="parsecomplex_tt" class="tooltip"></span>Parse complex categories: <input type="checkbox" name="scsv_parse_terms" value="true" <?php echo ($parse_terms)?'checked="checked"':''?>>
         </p>
         <p id="ingestion_debugging">
-            Debug Ingestion: <input type="checkbox" name="scsv_ingest_debugger" value="true" <?php echo ($ingest_debugger)?'checked="checked"':''?>>
+            <span id="debugingestion_tt" class="tooltip"></span>Debug Ingestion: <input type="checkbox" name="scsv_ingest_debugger" value="true" <?php echo ($ingest_debugger)?'checked="checked"':''?>>
         </p>
         <p id="issue_reporting">
-            Report Issues: <span class="premium_only">(Premium Only)</span><input type="checkbox" name="scsv_report_issue" value="true" <?php echo ($report_issue)?'checked="checked"':''?> disabled>
+            <span id="reportissues_tt" class="tooltip"></span>Report Issues: <span class="premium_only">(Premium Only)</span><input type="checkbox" name="scsv_report_issue" value="true" <?php echo ($report_issue)?'checked="checked"':''?> disabled>
         </p>
         <p id="encode_char">
-            Encode Special Characters: <input type="checkbox" name="scsv_encode_special_chars" value="true" <?php echo($encode_chars)?'checked="checked"':''?>>
+            <span id="specialchar_tt" class="tooltip"></span>Encode Special Characters: <input type="checkbox" name="scsv_encode_special_chars" value="true" <?php echo($encode_chars)?'checked="checked"':''?>>
         </p>
         <hr />
-        <h3>CSV Settings</h3>
+        <h3><span id="csvsettings_tt" class="tooltip"></span>CSV Settings</h3>
         <p id="csv_settings">
             <?php $settings_keys = array('delimiter'=>',','enclosure'=>'"','escape'=>'\\'); ?>
             <?php foreach($settings_keys as $k=>$v): ?>
                 <p class="scsv_input"><?php echo $k?>:<input type='text' name='scsv_csv_settings[<?php echo $k?>]' value='<?php echo($csv_settings[$k])?stripslashes($csv_settings[$k]):$v;?>' size='2' maxlength='2' /></p>
             <?php endforeach; ?>
-            <p id="line_maxlen">Max Character Limit Per Line<input type="text" name="scsv_line_maxlen" value="<?php echo (is_null($additional_csv_settings['line_maxlen']))?'1000':$additional_csv_settings['line_maxlen'];?>" size="20"></p>
+            <p id="line_maxlen"><span id="maxchar_tt" class="tooltip"></span>Max Character Limit Per Line<input type="text" name="scsv_line_maxlen" value="<?php echo (is_null($additional_csv_settings['line_maxlen']))?'1000':$additional_csv_settings['line_maxlen'];?>" size="20"></p>
         </p>
         <h3>Go Premium</h3>
         <p>

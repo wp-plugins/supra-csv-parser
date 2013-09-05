@@ -139,3 +139,13 @@ width: 30%;
 #uploaded_files li {
     min-height: 80px;
 }
+
+.tooltip {
+    display: block;
+    float: left;
+    padding-right: 3px; 
+    background: url('../img/help_retina_black.png') no-repeat;
+    width: 19px;
+    height: 19px;
+    clear: both;
+}
