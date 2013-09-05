@@ -10,6 +10,7 @@ wp_enqueue_script( 'misc', plugins_url('/js/misc.js', __FILE__) );
 <div class="wrap_scsv">
 <div id="flash"></div>
 <div id="file_selector">
+<span id="selectfile_tt" class="tooltip"></span>
 <?php $uc->displayFileSelector();?>
 </div>
 <div id="preset_container">

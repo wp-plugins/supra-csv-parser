@@ -44,6 +44,7 @@ $(function() {
                 $('#supra_csv_ingestion_mapper').html(msg.map);
                 $('#supra_csv_mapping_preset').html(msg.preset);
                 clearMappingForm();
+                Supra.Tooltips.bindTooltips();
             }
           });
         }

@@ -419,7 +419,7 @@
       <li id="term_parent">
         Term Parent
         <p>
-        This should be the name of the parent term. This will establish a heierarchy between the two terms.
+        This should be the name of the parent term. This will establish a hierarchy between the two terms.
         </p>
       </li>
     </ol>

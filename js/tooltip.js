@@ -1,13 +1,16 @@
-$(function() {
+Supra.Tooltips = (function() { 
 
-    $.ajax({
-      type: 'POST',
-      data: {'action':'supra_csv','command':'get_tooltips','args':null},
-      url: ajaxurl,
-      success: function(msg){
-          binding(msg); 
-      }
-    });
+    var bindTooltips = function() {
+
+        $.ajax({
+            type: 'POST',
+            data: {'action':'supra_csv','command':'get_tooltips','args':null},
+            url: ajaxurl,
+            success: function(msg){
+                binding(msg); 
+            }
+        });
+    }
 
     var binding_mapping = {
         'usersettings_tt':['user_settings'],
@@ -22,7 +25,20 @@ $(function() {
         'reportissues_tt':['report_issues'],
         'specialchar_tt':['special_char'],
         'csvsettings_tt':['csv_settings + ol'],
-        'maxchar_tt':['max_char']
+        'maxchar_tt':['max_char'],
+        'filemgmt_tt':['upload + ol'],
+        'postinfo_tt':['post_info'],
+        'pmpresets_tt':['post_meta_presets'],
+        'pmmapping_tt':['post_meta_mapping'],
+        'pmsuggest_tt':['post_meta_suggestions'],
+        'filemgmt_tt':['upload + ol'],
+        'selectfile_tt':['select_a_file'],
+
+        'custompostmeta_tt':['custom_postmeta'],
+        'customterms_tt':['ingestion_custom_terms + ol'],
+        'ingest_tt':['ingest'],
+        'ingestionpredefined_tt':['ingestion_predefined','ingestion_predefined + ol'],
+        'selectfile_tt':['select_a_file'],
     }
 
     var binding = function(docs) { 
@@ -40,4 +56,10 @@ $(function() {
 
         })
     }
-});
+
+    return {
+        bindTooltips: function() {
+            bindTooltips();
+        }
+    }
+})();

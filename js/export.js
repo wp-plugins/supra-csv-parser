@@ -29,7 +29,6 @@ $(function() {
           url: ajaxurl,
           success: function(msg){
               msg = $.parseJSON(msg);
-              console.log(msg);
               $('#extracted_results').html('<h3>'+msg.premium+'</h3><textarea cols="200" rows="10">'+msg.exported+'</textarea>');
           }
         });

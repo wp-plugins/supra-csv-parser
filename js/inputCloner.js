@@ -40,7 +40,6 @@ $(function () {
 
 var checkAddRem = function() {
     var num = $('.pm_info').length;
-    console.log(num);
     if (num <= 1)
         $('#rem_pmr').attr('disabled','disabled');
     else

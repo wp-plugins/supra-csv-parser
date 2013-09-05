@@ -351,7 +351,7 @@ class SupraCsvMapperForm {
 
         if(count($fields) == 1 && !empty($fields[0]) || count($fields) > 1) {
 
-            $inputs .= '<h3>Custom Postmeta</h3>'; 
+            $inputs .= '<h3><span id="custompostmeta_tt" class="tooltip"></span>Custom Postmeta</h3>'; 
             foreach((array)$this->getListingFields() as $k=>$v) {
                 $inputs .= self::createInput($k,$v,$this->rows);
             }
@@ -378,7 +378,7 @@ class SupraCsvMapperForm {
 
     public function getForm() {
 
-        $inputs .= '<h3>Predefined</h3>';
+        $inputs .= '<h3><span id="ingestionpredefined_tt" class="tooltip"></span>Predefined</h3>';
 
         $inputs .= '<div class="scsv_predefined_mapper">';
 
@@ -395,7 +395,7 @@ class SupraCsvMapperForm {
         $inputs .= '<div class="scsv_custom_mapper">';
 
         if($parse_terms || !empty($custom_terms))
-              $inputs .= '<h3>Custom Terms</h3>';
+              $inputs .= '<h3><span id="customterms_tt" class="tooltip"></span>Custom Terms</h3>';
 
 
         
@@ -419,7 +419,7 @@ class SupraCsvMapperForm {
 
         $inputs .= $this->displayListingFields();
 
-        $inputs .= '<button id="supra_csv_ingest_csv">Ingest</button>';
+        $inputs .= '<span id="ingest_tt" class="tooltip"></span><button id="supra_csv_ingest_csv">Ingest</button>';
         $inputs .= '</div><div class="clear"></div>';
         $inputs .= '</div>';
 

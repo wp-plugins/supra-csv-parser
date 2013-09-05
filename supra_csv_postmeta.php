@@ -21,9 +21,15 @@ if(!empty($option)) $postmetas = get_option('scsv_postmeta');
 ?>
 <div class="wrap_scsv">
 <div id="flash"></div>
+    <h3><span id="postinfo_tt" class="tooltip"></span>Post Info</h3>
+
+    <h3><span id="pmpresets_tt" class="tooltip"></span>Preset Configuration</h3>
+
     <div id="postmeta_preset"><div id="scsv_form" style="width: 300px;"><?php echo $pmp->getForm();?></div></div>
+
+    <h3><span id="pmmapping_tt" class="tooltip"></span>Mapping Configuration</h3>
     <form id="supra_csv_postmeta_form"><?php echo $pm->getFormContents($postmetas,$suggestions)?></form>
-    <h3>Post Meta Suggestions for Post Type '<?php echo $csvpost['type']?>'</h3>
+    <h3><span id="pmsuggest_tt" class="tooltip"></span>Post Meta Suggestions for Post Type '<?php echo $csvpost['type']?>'</h3>
 
         <table id="postmeta_suggestions">
           <thead>
