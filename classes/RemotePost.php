@@ -78,6 +78,7 @@ class RemotePost extends SupraCsvPlugin {
 
         $response = $this->_makeCall($args);
 
+        //there was a successful post ingestion here
         if($response) {
             $this->postId = $response;
         }
@@ -113,7 +114,7 @@ class RemotePost extends SupraCsvPlugin {
                         'post_format',
                         'enclosure',
                         'post_parent',
-                        'menu_order' 
+                        'menu_order'
                        );
    
         //filter the args into valiables 

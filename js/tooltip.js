@@ -38,7 +38,9 @@ Supra.Tooltips = (function() {
         'customterms_tt':['ingestion_custom_terms + ol'],
         'ingest_tt':['ingest'],
         'ingestionpredefined_tt':['ingestion_predefined','ingestion_predefined + ol'],
-        'selectfile_tt':['select_a_file'],
+        'hooking_tt':['hooking'],
+        'activatehooking_tt':['activate_hooking'],
+
     }
 
     var binding = function(docs) { 

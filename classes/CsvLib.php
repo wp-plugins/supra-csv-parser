@@ -2,23 +2,52 @@
 require_once("Debug.php");
 require_once(dirname(__FILE__) . '/SupraCsvPlugin.php');
 require_once(dirname(__FILE__) . '/SupraCsvPostTaxonomy.php');
+require_once(dirname(__FILE__) . '/SupraCsvHookManager.php');
 
 class SupraCsvParser extends SupraCsvPlugin {
     private $file;
     private $filename;
     private $handle;
     private $columns;
+    private $hasHooks;
 
     function __construct($filename = null) {
 
         parent::__construct();
 
+        $this->hasHooks = (bool) get_option('scsv_has_hooks');
+
         if($filename) {
+
             if(empty($this->handle)){
                 $this->setFile($filename);
                 $this->setHandle(); 
             }
+
             $this->setColumns();
+
+            /*
+             patch type must occur in sequential order based on dependency 
+             relations, each subsequent element will gather the previous dependenies
+            */
+            $csvpost = get_option('scsv_post');
+
+            
+            $hook_types = array('ingestion','row');
+
+            $dependencies = array();
+
+            if($this->hasHooks) { 
+
+                foreach($hook_types as $hook_type) {
+
+                    $hookClassName = 'SupraCsv' . ucfirst($hook_type) . 'Hooks';
+
+        	    $dependencies[$hookClassName] = $this->hook_mgrs[$hook_type] = new $hookClassName($dependencies);
+
+                    $this->has_hook[$hook_type] = $this->hook_mgrs[$hook_type]->hasHooks();
+                }
+            }
         }
     }
 
@@ -28,6 +57,11 @@ class SupraCsvParser extends SupraCsvPlugin {
 
     private function setColumns() {
         $this->columns = fgetcsv($this->handle);
+
+        //add the last_post_id to the select drop down options as a column to ingest
+        //if hooks are enabled in the configuration tab
+        if($this->hasHooks)
+            $this->columns[] = 'last_post_id'; 
     }
 
     public function getColumns() {
@@ -81,6 +115,10 @@ class SupraCsvParser extends SupraCsvPlugin {
                 //catch an empty line
                 if(count($data)==1 && empty($data[0])) continue;
 
+
+                if($this->hasHooks && $this->has_hook['row'])
+                    $data = $this->hook_mgrs['row']->callHooks($data);
+
                 //loop through the columns
                 foreach($data as $i=>$d) {
                     $parsed[$cols[$i]] = $d;
@@ -90,9 +128,16 @@ class SupraCsvParser extends SupraCsvPlugin {
 
                 $post_args = $this->getPostArgs($row);               
 
+                //Debug::show($this->hasHooks, $this->has_hook['row'],$data, $cols, $row);
+
                 $rowCount++;
-                if($rp->injectListing($post_args)) {
+
+                if($rp_result = $rp->injectListing($post_args)) {
+
+                    if($this->hasHooks && $this->has_hook['ingestion'])
+                        $this->hook_mgrs['ingestion']->callHooks($post_args,$rp_result);
                     echo '<span class="success">Successfully ingested '. $post_args['post_title'] . ' at line '.$rowCount.' of '.$this->getFileName().'</span><br />';
+
                 }
                 else {
                     echo '<span class="error">Problem Ingesting '. $post_args['post_title'] . ' at line '.$rowCount.' of '.$this->getFileName().'</span><br />';
@@ -231,28 +276,8 @@ class SupraCsvParser extends SupraCsvPlugin {
                 $post_args['terms'] = $terms;
                 $post_args['terms_names'] = $terms_names;
                 $post_args['custom_fields'] = $custom_fields;
- 
+
         return $post_args;
-    }
-  
-    private function patchByRow($row) {
-
-        /*
-        if(strstr(site_url(),'3dmpekg')) {
-            $row['manufacturer_level1_value'] = ucfirst(strtolower($row['manufacturer_level1_value']));
-    
-            if(empty($row['name_value'])) {
-
-                        $row['name_value'] = $row['manufacturer_level1_value'] . " " .
-                                             $row['manufacturer_level2_value'] . " " .
-                                             $row['year_value'];
-            }
-        }
-
-        $row['post_title'] = $row['name_value'];
-
-        */
-        return $row;
     }
 }
 
@@ -336,6 +361,7 @@ class SupraCsvMapperForm {
             if(in_array($i,$postmetas['use_metakey']))
                 $meta[$meta_key] = $displayname;
         }
+
 
         $this->listing_fields = $meta;
     }

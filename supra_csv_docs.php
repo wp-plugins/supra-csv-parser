@@ -110,6 +110,14 @@
     <li >
       <a href="#max_char">Max Character Limit Per Line</a>
     </li>
+    <li >
+      <a href="#hooking">Hooking</a>
+    </li>
+    <ol>
+        <li>
+            <a href="#activate_hooks">Activate Hooks</a>
+        </li> 
+    </ol>
   </ol>
   <li ><a href="#upload">Upload</a></li>
   <ol>
@@ -313,6 +321,18 @@
       Sets the maximum length of each row in the csv file. Sometimes this needs to be adjusted for post with a large amount of content.
       </p>
     </li>
+    <li id="hooking">  
+      Ingestion Hooking
+      <p>
+          Hooking allows developers to tap into the process of ingestion with custom functionality with a simple functional call. The hooks are loacted in the 'classes/hooks' directory of the plugin code'. There is documentation inside of the code that show an example hook and implementation of the last id hook. As of now there are two types of hooks row level and ingestion level but more will be added in the future. If you have questions about hooking contact the author of the plugin.
+      </p>
+    </li>
+    <ol>
+      <li id="activate_hooking">
+          Activate Hooks
+          <p>By Enabling this you will increase the resource overhead of ingestion as the expense of being provided the ability to activate any hooks that may have been written. Note: to retrieve and use the last_post_id column this must be turned on. last_post_id is not only an example hook but it allows you to retrieve the last post id or the subsequent row that was ingested.
+      </li>
+    </ol>
   </ol>
   <li id="upload">Upload</li>
   <ol>

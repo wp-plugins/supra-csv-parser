@@ -18,6 +18,7 @@ if(!empty($_POST['scsv_submit'])) {
     $csv_settings = $_POST['scsv_csv_settings'];
     $report_issue = $_POST['scsv_report_issue'];
     $encode_chars = $_POST['scsv_encode_special_chars'];
+    $has_hooks = $_POST['scsv_has_hooks'];
     update_option('scsv_filename', $csvfile);
     update_option('scsv_user', $csvuser);
     update_option('scsv_post', $csvpost);
@@ -28,6 +29,7 @@ if(!empty($_POST['scsv_submit'])) {
     update_option('scsv_csv_settings', $csv_settings);
     update_option('scsv_additional_csv_settings', $additional_csv_settings);
     update_option('scsv_encode_special_chars',$encode_chars);
+    update_option('scsv_has_hooks',$has_hooks);
     echo '<div class="updated"><p><strong>Configuration saved</strong></p></div>';
 } else {
     $csvfile = get_option('scsv_filename');
@@ -40,6 +42,7 @@ if(!empty($_POST['scsv_submit'])) {
     $csv_settings = get_option('scsv_csv_settings');
     $additional_csv_settings = get_option('scsv_additional_csv_settings');
     $encode_chars = get_option('scsv_encode_special_chars');
+    $has_hooks = get_option('scsv_has_hooks');
 }
 
 ?>
@@ -108,6 +111,10 @@ if(!empty($_POST['scsv_submit'])) {
                 <p class="scsv_input"><?php echo $k?>:<input type='text' name='scsv_csv_settings[<?php echo $k?>]' value='<?php echo($csv_settings[$k])?stripslashes($csv_settings[$k]):$v;?>' size='2' maxlength='2' /></p>
             <?php endforeach; ?>
             <p id="line_maxlen"><span id="maxchar_tt" class="tooltip"></span>Max Character Limit Per Line<input type="text" name="scsv_line_maxlen" value="<?php echo (is_null($additional_csv_settings['line_maxlen']))?'1000':$additional_csv_settings['line_maxlen'];?>" size="20"></p>
+        </p>
+        <h3><span id="hooking_tt" class="tooltip"></span>Hooking</h3>
+        <p id="ingestion_hooking">
+            <span id="activatehooking_tt" class="tooltip"></span>Activate Hooking: <input type="checkbox" name="scsv_has_hooks" value="true" <?php echo ($has_hooks)?'checked="checked"':''?> />
         </p>
         <h3>Go Premium</h3>
         <p>
