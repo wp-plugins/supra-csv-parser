@@ -23,7 +23,7 @@ This plugin also provides the ability to import images and associate them to pos
 as attachments or thumbnails. Manage existing csv files and promote ease of 
 use by creating presets for both postmeta and ingestion mapping.
 
-The postmeta mapping feature automativally retrieves all of the possible postmeta fileds of the selected post type.
+The postmeta mapping feature automatically retrieves all of the possible postmeta fileds of the selected post type.
 If there is a postmeta field that doesnt show in the interface you have to ability to create a new post meta field.
 The ingestion interface is dynamically arranged and populated based on the post type and the values that you have
 provided in the configuration interface. 
@@ -37,28 +37,24 @@ of ingestion. For instance if you wanted to customize how a post is linked to se
 very minimal php inside of a hook function that the ingestion engine will detect.
 
 For general information regarding the plugin visit 
-
 <http://www.supraliminalsolutions.com/blog/listings/supra-csv/>
 
 Watch the detailed tutorials 
-
 <http://www.supraliminalsolutions.com/blog/supra-csv-tutorials/>
 
 == Frequently Asked Questions ==
 
 = Where is some more information about this plugin? =
-In addition to the tooltips provide in the various interfaces of the plugin you can also
+In addition to the tooltips provided in the various interfaces of the plugin you can also
 read the organized documentation provided in the docs tab of the plugin. The support forum
 is also a great tool and the author of the plugin is very responsive in addressing a multitude of issues
 and questions.
 
 = Links to the info? =
 For general information regarding the plugin visit 
-
 <http://www.supraliminalsolutions.com/blog/listings/supra-csv/> 
 
 Watch the detailed tutorials 
-
 <http://www.supraliminalsolutions.com/blog/supra-csv-tutorials/>
 
 
