@@ -27,12 +27,9 @@ class SupraCsvParser extends SupraCsvPlugin {
             $this->setColumns();
 
             /*
-             patch type must occur in sequential order based on dependency 
+             hook type must occur in sequential order based on dependency 
              relations, each subsequent element will gather the previous dependenies
             */
-            $csvpost = get_option('scsv_post');
-
-            
             $hook_types = array('ingestion','row');
 
             $dependencies = array();

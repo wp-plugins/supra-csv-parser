@@ -5,7 +5,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: csv,import,parse,ingest,custom post,extract,export,attachment,thumbnail
 Requires at least: 3.2.1
 Tested up to: 3.5.1
-Stable tag: 3.1.2
+Stable tag: 3.1.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -14,23 +14,69 @@ A plugin to ingest and extract/create/update posts, custom posts, attachments, t
 == Description ==
 
 The purpose of this plugin is to parse uploaded csv files into any type of
-post. Themes or plugin store data in posts and post meta. This plugin provides the functionality 
-to upload data from the csv file into the postmeta records which themes and plugins create. 
+post including custom post. The ingestion engine of the plugin parses csv records
+into a posts by a mapping of columns that you configure in the plugin interface. 
+
+To understand the basic functioanlity acknowledge that Themes or plugin store data in posts and post meta. 
+This plugin provides the functionality to upload data from the csv file into the postmeta records which themes and plugins create. 
 This plugin also provides the ability to import images and associate them to post 
 as attachments or thumbnails. Manage existing csv files and promote ease of 
 use by creating presets for both postmeta and ingestion mapping.
 
-For general information regarding the plugin visit <http://www.supraliminalsolutions.com/blog/listings/supra-csv/> .
+The postmeta mapping feature automativally retrieves all of the possible postmeta fileds of the selected post type.
+If there is a postmeta field that doesnt show in the interface you have to ability to create a new post meta field.
+The ingestion interface is dynamically arranged and populated based on the post type and the values that you have
+provided in the configuration interface. 
 
-Watch the detailed tutorials <http://www.supraliminalsolutions.com/blog/supra-csv-tutorials/>. 
+There is also an extraction interface that provides the ability to extract post records into a csv format. You have the 
+option to filter the results returned by various post fields in addition to being able to specify what post fields and 
+associated postmeta keys populate in the csv rows.
+
+In the latest version of the plugin there is also the ability to implement th  plugin hooking api the customize the flow
+of ingestion. For instance if you wanted to customize how a post is linked to several other posts you can do so by writing
+very minimal php inside of a hook function that the ingestion engine will detect.
+
+For general information regarding the plugin visit 
+
+<http://www.supraliminalsolutions.com/blog/listings/supra-csv/>
+
+Watch the detailed tutorials 
+
+<http://www.supraliminalsolutions.com/blog/supra-csv-tutorials/>
 
 == Frequently Asked Questions ==
+
+= Where is some more information about this plugin? =
+In addition to the tooltips provide in the various interfaces of the plugin you can also
+read the organized documentation provided in the docs tab of the plugin. The support forum
+is also a great tool and the author of the plugin is very responsive in addressing a multitude of issues
+and questions.
+
+= Links to the info? =
+For general information regarding the plugin visit 
+
+<http://www.supraliminalsolutions.com/blog/listings/supra-csv/> 
+
+Watch the detailed tutorials 
+
+<http://www.supraliminalsolutions.com/blog/supra-csv-tutorials/>
+
 
 = How do I ingest mutiple taxonomy for a post?  =
 Provide a pipe symbol | as a delimiter for the custom terms. more info is provide in the docs at III.a.a
 
-= parse error. not well formed =
+= What does the following error message mean? "parse error. not well formed" =
 Make sure there are no special characters in the csv values. CSV Values Must be UTF-8 compliant!
+
+= Can I associate attachments or thumbnails to a post =
+In the free version of the plugin you do have the ability to associate a thumbnail to a post by 
+referencing the attachment id of the media to post thumbnail. In the premium version you can easily
+provide urls to the images and associate them that way
+
+= Can I customize to ingestion process of the plugin =
+You may customize the ingestion process of the plugin by implementing functionality in the plugin 
+hooking api. There is already an example function there that retrieves the last ingested post id
+and make it as an available field to associate to a post.
 
 == Screenshots ==
 
@@ -47,6 +93,9 @@ Make sure there are no special characters in the csv values. CSV Values Must be 
 6. Easily debug issues
 
 == Changelog ==
+
+= 3.1.3 =
+updating the documentation, faq and screenshots of the plugin
 
 = 3.1.2 =
 implemented a hooking API

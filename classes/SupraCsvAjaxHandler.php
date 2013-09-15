@@ -103,9 +103,7 @@ class SupraCsvAjaxHandler extends SupraCsvPlugin {
                 $scex = new SupraCsvExporter($posts,$query_args);
                 echo json_encode(array('extracted'=>$sce->displayExtractedPosts(),'exported'=>$scex->download(),'premium'=>$this->upgradeToPremiumMsg('export more than 1 row')));
             break;
-
             case "get_tooltips":
-                echo 'hello';
                 include(dirname(__FILE__) . '/../supra_csv_docs.php');
             break;
         }
