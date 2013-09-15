@@ -1,11 +1,11 @@
 === Supra CSV ===
 Contributors: zmijevik
-Author URI: http://www.supraliminalsolutions.com/blog/downloads/supra-csv-premium/
+Author URI: http://www.supraliminalsolutions.com/blog/listings/supra-csv/
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=CLC8GNV7TRGDU
 Tags: csv,import,parse,ingest,custom post,extract,export,attachment,thumbnail
 Requires at least: 3.2.1
 Tested up to: 3.5.1
-Stable tag: 3.1.4
+Stable tag: 3.1.5
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -90,7 +90,7 @@ and make it as an available field to associate to a post.
 
 == Changelog ==
 
-= 3.1.4 =
+= 3.1.5 =
 updating the documentation, faq and screenshots of the plugin
 
 = 3.1.2 =
