@@ -6,7 +6,7 @@ class SupraCsvPlugin {
 
     private $plugin_name = 'supraCsvFree';
     public $dbal = false;
-    private $download_link = 'www.supraliminalsolutions.com/blog/downloads/supra-csv-premium/';
+    private $download_link = 'www.supraliminalsolutions.com/blog/listings/supra-csv/';
 
     //set the DBAL instance
     public function __construct() {
