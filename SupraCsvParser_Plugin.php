@@ -167,14 +167,16 @@ class SupraCsvParser_Plugin extends SupraCsvParser_LifeCycle {
     }
 
     function supracsv_enqueue_scripts() {
-        wp_enqueue_script('jquery');
-        wp_enqueue_script('supra_csv_globals', plugins_url('/js/global.js', __FILE__));
-        wp_enqueue_script('toolip-lib', plugins_url('/js/jquery.qtip-1.0.0-rc3.min.js', __FILE__));
-        wp_enqueue_script('toolip', plugins_url('/js/tooltip.js', __FILE__));
+        admin_enqueue_script('jquery');
+        admin_enqueue_script('supra_csv_globals', plugins_url('/js/global.js', __FILE__));
+        admin_enqueue_script('toolip-lib', plugins_url('/js/jquery.qtip-1.0.0-rc3.min.js', __FILE__));
+        admin_enqueue_script('toolip', plugins_url('/js/tooltip.js', __FILE__));
     }
 
 
     public function addActionsAndFilters() {
+
+        global $pagenow;
 
         add_action('admin_menu', array(&$this, 'callAdminActions'));
 
@@ -185,20 +187,23 @@ class SupraCsvParser_Plugin extends SupraCsvParser_LifeCycle {
 
         add_action('activated_plugin',array(&$this,'save_error'));
 
-        wp_enqueue_script('jquery');
-        wp_enqueue_style('my-style', plugins_url('/css/style.css', __FILE__));
-        wp_enqueue_script('supra_csv_globals', plugins_url('/js/global.js', __FILE__));
-        wp_enqueue_script('toolip-lib', plugins_url('/js/jquery.qtip-1.0.0-rc3.min.js', __FILE__));
-        wp_enqueue_script('toolip', plugins_url('/js/tooltip.js', __FILE__));
+        if($pagenow === "admin.php") { 
 
+            wp_enqueue_script('jquery');
+            wp_enqueue_style('my-style', plugins_url('/css/style.css', __FILE__));
+            wp_enqueue_script('supra_csv_globals', plugins_url('/js/global.js', __FILE__));
+            wp_enqueue_script('toolip-lib', plugins_url('/js/jquery.qtip-1.0.0-rc3.min.js', __FILE__));
+            wp_enqueue_script('toolip', plugins_url('/js/tooltip.js', __FILE__));
+        }
+
+        //do_action('admin_enqueue_scripts');
+        //do_action('admin_enqueue_styles');
 
         // Register short codes
         // http://plugin.michael-simpson.com/?page_id=39
 
-
         // Register AJAX hooks
         // http://plugin.michael-simpson.com/?page_id=41
-
     }
 
     function save_error(){
