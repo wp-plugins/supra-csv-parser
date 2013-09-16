@@ -29,7 +29,11 @@ $(function() {
           url: ajaxurl,
           success: function(msg){
               msg = $.parseJSON(msg);
-              $('#extracted_results').html('<h3>'+msg.premium+'</h3><textarea cols="200" rows="10">'+msg.exported+'</textarea>');
+              if(msg.success)
+                  $('#extracted_results').html('<h3>'+msg.premium+'</h3><b>File created: </b> Upload >> '+msg.filename);
+              else
+                  $('#extracted_results').html('<h3>Something went wrong</h3>');
+     
           }
         });
     });

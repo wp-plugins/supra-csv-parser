@@ -101,7 +101,14 @@ class SupraCsvAjaxHandler extends SupraCsvPlugin {
                 $posts = $sce->getPostsAndDetails(); 
                 //var_dump($query_args);
                 $scex = new SupraCsvExporter($posts,$query_args);
-                echo json_encode(array('extracted'=>$sce->displayExtractedPosts(),'exported'=>$scex->download(),'premium'=>$this->upgradeToPremiumMsg('export more than 1 row')));
+
+                $content = $scex->download();
+
+                $filename = 'ingest-'.date('y-m-d-h-i-s-a') .'.csv';
+
+                $success = $uc->writeToFile($filename,$content);
+                echo json_encode(array('extracted'=>$content,'success'=>$success,'premium'=>$this->upgradeToPremiumMsg('export more than 1 row'),'filename'=>$filename));
+ 
             break;
             case "get_tooltips":
                 include(dirname(__FILE__) . '/../supra_csv_docs.php');

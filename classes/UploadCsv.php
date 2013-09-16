@@ -66,6 +66,11 @@ class UploadCsv extends SupraCsvPlugin {
         }
     }
 
+    public function writeToFile($filename, $contents) {
+
+       return file_put_contents($this->getCsvDir() . $filename, $contents);
+    }
+
     private function getForm() {
 
             return '<form enctype="multipart/form-data" method="POST">
