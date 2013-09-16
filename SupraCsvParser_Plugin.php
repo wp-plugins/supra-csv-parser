@@ -169,15 +169,9 @@ class SupraCsvParser_Plugin extends SupraCsvParser_LifeCycle {
         //ajax actions
         add_action('wp_ajax_supra_csv',array(&$this,'supraCsvAjax'));
 
-        // Adding scripts & styles to all pages
-        wp_enqueue_script('jquery');
-        wp_enqueue_style('my-style', plugins_url('/css/style.css', __FILE__));
-        wp_enqueue_script('supra_csv_globals', plugins_url('/js/global.js', __FILE__));
-        wp_enqueue_script('toolip-lib', plugins_url('/js/jquery.qtip-1.0.0-rc3.min.js', __FILE__));
-        wp_enqueue_script('toolip', plugins_url('/js/tooltip.js', __FILE__));
-
         add_action('activated_plugin',array(&$this,'save_error'));
 
+        add_action('wp_enqueue_scripts',array(&$this,'supracsv_enqueue_scripts'));
         // Register short codes
         // http://plugin.michael-simpson.com/?page_id=39
 
@@ -185,6 +179,14 @@ class SupraCsvParser_Plugin extends SupraCsvParser_LifeCycle {
         // Register AJAX hooks
         // http://plugin.michael-simpson.com/?page_id=41
 
+    }
+
+    function supracsv_enqueue_scripts() {
+        wp_enqueue_script('jquery');
+        wp_enqueue_style('my-style', plugins_url('/css/style.css', __FILE__));
+        wp_enqueue_script('supra_csv_globals', plugins_url('/js/global.js', __FILE__));
+        wp_enqueue_script('toolip-lib', plugins_url('/js/jquery.qtip-1.0.0-rc3.min.js', __FILE__));
+        wp_enqueue_script('toolip', plugins_url('/js/tooltip.js', __FILE__));
     }
 
     function save_error(){
