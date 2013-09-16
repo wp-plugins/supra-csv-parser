@@ -5,7 +5,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: csv,import,parse,ingest,custom post,extract,export,attachment,thumbnail
 Requires at least: 3.2.1
 Tested up to: 3.5.1
-Stable tag: 3.1.8
+Stable tag: 3.1.9
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -94,12 +94,14 @@ and make it as an available field to associate to a post.
 
 == Changelog ==
 
-= 3.1.8 =
+= 3.1.9 =
 fixing script clash of enqueue scripts bug
 
 added file export functionality into uploads from extraction
 
 added the ability to select multiple post type in extraction
+
+imploding field array in extracted post csv file
 
 = 3.1.5 =
 updating the documentation, faq and screenshots of the plugin

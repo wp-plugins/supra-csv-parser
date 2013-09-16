@@ -206,6 +206,10 @@ class SupraCsvExporter extends ExporterArgumentParser {
         $val_array = array();
         $key_array = array();
         foreach($record AS $key => $val) {
+            if(is_array($val)){
+               $val = implode('|',$val);
+               //var_dump($val);
+            }
             $key_array[] = $key;
             if(!empty($escape)) {
                 $val = str_replace($enclosure, $escape.$enclosure, $val);
