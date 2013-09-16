@@ -21,13 +21,14 @@ wp_enqueue_script( 'extractor', plugins_url('/js/export.js', __FILE__) );
             <input type="text" id="offset" name="offset" maxlength="3" size="3" />
         </div>
 
-        <div id="input">
+        <div id="input" style="height: 100px;">
             <label for="post_type">Post Type</label>
-            <select name="post_type" id="post_type">
+            <select name="post_type[]" id="post_type" multiple="multiple">
             <?php foreach(get_post_types() as $post_type): ?>
                 <option value="<?php echo $post_type?>"><?php echo $post_type?></option>
             <?php endforeach ?>
             </select>
+            <br /><sub>Hold  ctrl to select multiple</sub>
         </div>
 
         <div id="input">

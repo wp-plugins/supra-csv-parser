@@ -9,6 +9,7 @@ class ExtractorArgumentParser {
     function __construct($args) {
         $this->args = $args;
         $this->parseTaxAndMeta();
+        $this->parseArrayFields();
         $this->parseWeeksAgo();
         $this->parsePostsPerPage();
         $this->parseRemainingArgs();
@@ -25,6 +26,18 @@ class ExtractorArgumentParser {
                 $this->properties[$parsing] = explode(',', $this->args[$parsing]);
             }
   
+            unset($this->args[$parsing]);
+        }
+    }
+
+    protected function parseArrayFields() {
+
+        $toParse = array('post_type');
+
+        foreach($toParse as $parsing) {
+
+            $this->properties[$parsing] = $this->args[$parsing];
+
             unset($this->args[$parsing]);
         }
     }
@@ -72,7 +85,7 @@ class SupraCsvExtractor extends ExtractorArgumentParser {
 
     private function getPosts() {
 
-        return get_posts($this->properties);
+        return query_posts($this->properties);
     }
 
     public function getPostsAndDetails() {
