@@ -18,7 +18,7 @@ class ExtractorArgumentParser {
 
     protected function parseTaxAndMeta() {
 
-        $toParse = array('post_taxonomies','meta_keys');
+        $toParse = array('post_taxonomies');
 
         foreach($toParse as $parsing) {
 
@@ -32,7 +32,7 @@ class ExtractorArgumentParser {
 
     protected function parseArrayFields() {
 
-        $toParse = array('post_type');
+        $toParse = array('post_type','post_fields','meta_keys');
 
         foreach($toParse as $parsing) {
 
@@ -157,8 +157,8 @@ class ExporterArgumentParser extends ExtractorArgumentParser {
     }
 
     private function buildArgs() {
-        $post_fields = explode(',',$this->args['post_fields']);
-        $meta_and_terms = array('custom_fields'=>$this->properties['meta_keys'],'terms'=>$this->properties['post_taxonomies']);
+        $post_fields = array('post_fields'=>$this->args['post_fields']);
+        $meta_and_terms = array('custom_fields'=>$this->args['meta_keys'],'terms'=>$this->properties['post_taxonomies']);
         $this->parsable_keys = array_merge($post_fields,$meta_and_terms);
         $this->filename = $this->args['filename'];
         $this->settings = $csv_settings;
@@ -173,15 +173,23 @@ class SupraCsvExporter extends ExporterArgumentParser {
 
         $post = $this->posts[0];
 
+        //Debug::show($this->parsable_keys);
+        //Debug::show($post); 
+ 
         foreach($this->parsable_keys as $key=>$pk) {
   
-            if(!in_array($key,array('custom_fields','terms')) && !is_array($key) || empty($key)) {
+            if(!in_array($key,array('post_fields','custom_fields','terms')) && !is_array($key) || empty($key)) {
                 $this->records[0][$pk] = $post['post']->$pk;
 
             }
-            else { 
+            else if(!in_array($key,array('post_fields'))) { 
                 foreach((array)$pk as $p) {
                     $this->records[0][$p] = $post['postinfo'][$key][$p];
+                }
+            }
+            else if($key == 'post_fields') {
+                foreach((array)$pk as $p) {
+                    $this->records[0][$p] = $post['post']->$p;
                 }
             }
         }

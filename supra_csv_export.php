@@ -21,14 +21,15 @@ wp_enqueue_script( 'extractor', plugins_url('/js/export.js', __FILE__) );
             <input type="text" id="offset" name="offset" maxlength="3" size="3" />
         </div>
 
-        <div id="input" style="height: 100px;">
+        <div id="input" style="height: 100px">
             <label for="post_type">Post Type</label>
             <select name="post_type[]" id="post_type" multiple="multiple">
             <?php foreach(get_post_types() as $post_type): ?>
                 <option value="<?php echo $post_type?>"><?php echo $post_type?></option>
             <?php endforeach ?>
             </select>
-            <br /><sub>Hold  ctrl to select multiple</sub>
+            <br />
+            <span class="help">Hold ctrl to select multiple</span>
         </div>
 
         <div id="input">
@@ -73,26 +74,60 @@ wp_enqueue_script( 'extractor', plugins_url('/js/export.js', __FILE__) );
             <button id="extract_and_preview">Extract</button>
         </div>
 </div>
-<div class="wrap_scsv" style="width: 400px;">
+<div class="wrap_scsv" style="width: 600px;">
         <h3>Export Settings</h3>
-        <span class="help">provide comma-separated-values</span>
-        <div id="input">
+        <div id="input" style="height: 210px">
             <label for="post_fields">Post Fields</label>
-            <input type="text" id="post_fields" name="post_fields" size="50" value="post_title,post_content,post_date,post_author,post_status" />
+            <span class="help">Hold Ctrl to select multiple</span>
+            <select id="post_fields" name="post_fields[]" multiple="multiple" style="height: 200px">
+                <?php
+                $postfields = array(
+                  'post_author',
+                  'post_date',
+                  'post_date_gmt',
+                  'post_content',
+                  'post_title',
+                  'post_category',
+                  'post_excerpt',
+                  'comment_status',
+                  'ping_status',
+                  'post_password',
+                  'post_name',
+                  'to_ping',
+                  'pinged',
+                  'post_modified',
+                  'post_modified_gmt',
+                  'post_content_filtered',
+                  'post_parent',
+                  'guid',
+                  'menu_order',
+                  'post_mime_type',
+                  'comment_count',
+                );
+                ?>
+                <?php foreach($postfields as $postfield): ?>
+                <option value="<?php echo $postfield?>"><?php echo $postfield?></option>
+                <?php endforeach ?>
+            </select>
         </div>
 
         <div id="input">
             <label for="post_taxonomies">Taxonomies</label>
+            <span class="help">provide comma-separated-values</span>
             <input type="text" id="post_taxonomies" name="post_taxonomies" value="category,post_tag" size="50" />
         </div>
 
-        <div id="input">
+        <div id="input" style="height: 100px">
             <label for="meta_keys">Meta Keys</label>
-            <input type="text" id="meta_keys" name="meta_keys" value="<?php
-            $postmetas = get_option('scsv_postmeta');
-            $values = implode(',',$postmetas['meta_key']);
-            echo $values;
-            ?>" size="50" />
+            <span class="help">Hold Ctrl to select multiple. These are populated from the preset selected in the post info tab.</span>
+            <select name="meta_keys[]" id="meta_keys" multiple="multiple">
+                <?php 
+                    $postmetas = get_option('scsv_postmeta');
+                    foreach($postmetas['meta_key'] as $mk) { 
+                      echo '<option value="'.$mk.'">'.$mk.'</option>';
+                    }
+                ?>
+            </select>
         </div>
 
         <div id="input">

@@ -5,7 +5,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: csv,import,parse,ingest,custom post,extract,export,attachment,thumbnail
 Requires at least: 3.2.1
 Tested up to: 3.5.1
-Stable tag: 3.2.1
+Stable tag: 3.2.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -100,29 +100,26 @@ and make it as an available field to associate to a post.
 
 == Changelog ==
 
+= 3.2.2 =
+*adding all post fields to select drop down in extraction interface
+*replaced post meta input with select drop down in extraction interface
 = 3.2.1 =
 *fixing script clash of enqueue scripts bug
 *added file export functionality into uploads from extraction
 *added the ability to select multiple post type in extraction
 *imploding field array in extracted post csv file
-
 = 3.1.5 =
 *updating the documentation, faq and screenshots of the plugin
-
 = 3.1.2 =
 *implemented a hooking API
 *updating the docs and tooltips about hooking
 *integrated last_post_id as a hook
-
 = 3.1.1 =
 *adding tooltips to the rest of the pages
-
 = 3.1.0 =
 *created help icon tooltips for the configuration page and updated the docs
-
 = 3.0.9 =
 *added max character count per line of the csv
-
 = 3.0.8 =
 *error logging including the csv filename and the line number of the row
 *make the results of the previous ingestion clear when you select a new file to ingest so that it shows you it is uploading it
