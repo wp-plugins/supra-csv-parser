@@ -108,7 +108,7 @@ span.error {
 
 .wrap_scsv #input, .wrap_scsv .input {
     min-height: 30px; 
-    clear both;
+    clear: both;
 }
 
 .premium_only {

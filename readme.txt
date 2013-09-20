@@ -5,7 +5,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: csv,import,parse,ingest,custom post,extract,export,attachment,thumbnail
 Requires at least: 3.2.1
 Tested up to: 3.5.1
-Stable tag: 3.2.2
+Stable tag: 3.2.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -100,56 +100,56 @@ and make it as an available field to associate to a post.
 
 == Changelog ==
 
-= 3.2.2 =
-*adding all post fields to select drop down in extraction interface
-*replaced post meta input with select drop down in extraction interface
+= 3.2.3 =
+* adding all post fields to select drop down in extraction interface
+* replaced post meta input with select drop down in extraction interface
 = 3.2.1 =
-*fixing script clash of enqueue scripts bug
-*added file export functionality into uploads from extraction
-*added the ability to select multiple post type in extraction
-*imploding field array in extracted post csv file
+* fixing script clash of enqueue scripts bug
+* added file export functionality into uploads from extraction
+* added the ability to select multiple post type in extraction
+* imploding field array in extracted post csv file
 = 3.1.5 =
-*updating the documentation, faq and screenshots of the plugin
+* updating the documentation, faq and screenshots of the plugin
 = 3.1.2 =
-*implemented a hooking API
-*updating the docs and tooltips about hooking
-*integrated last_post_id as a hook
+* implemented a hooking API
+* updating the docs and tooltips about hooking
+* integrated last_post_id as a hook
 = 3.1.1 =
-*adding tooltips to the rest of the pages
+* adding tooltips to the rest of the pages
 = 3.1.0 =
-*created help icon tooltips for the configuration page and updated the docs
+* created help icon tooltips for the configuration page and updated the docs
 = 3.0.9 =
-*added max character count per line of the csv
+* added max character count per line of the csv
 = 3.0.8 =
-*error logging including the csv filename and the line number of the row
-*make the results of the previous ingestion clear when you select a new file to ingest so that it shows you it is uploading it
+* error logging including the csv filename and the line number of the row
+* make the results of the previous ingestion clear when you select a new file to ingest so that it shows you it is uploading it
 = 3.0.7 =
-*added the ability to update posts.
-*fixed a bug that would ingets blank csv rows
-*added the sample_basic_edit csv to demonstrate ingesting a record to edit a post
+* added the ability to update posts.
+* fixed a bug that would ingets blank csv rows
+* added the sample_basic_edit csv to demonstrate ingesting a record to edit a post
 = 3.0.6 =
-*removed 50 post ingestion limit from the free version
+* removed 50 post ingestion limit from the free version
 = 3.0.5 =
-*limited time offer! rate and review for premium
+* limited time offer! rate and review for premium
 = 3.0.4 = 
-*updating the readme file
+* updating the readme file
 = 3.0.3 = 
-*added the header image
+* added the header image
 = 3.0.2 =
-*added more verbose and detailed debugging ouput
+* added more verbose and detailed debugging ouput
 = 3.0.0 =
-*autopopulated suggestions as postmeta keys with enable feature.
-*added post_status and menu_order to predefined in ingestion.
-*added the ability to encode special characters in the configuration tab.
+* autopopulated suggestions as postmeta keys with enable feature.
+* added post_status and menu_order to predefined in ingestion.
+* added the ability to encode special characters in the configuration tab.
 = 2.9.9 =
-*fixed the delimiter bug in export tab and added some example csvs
+* fixed the delimiter bug in export tab and added some example csvs
 = 2.9.8 =
-*added the post parent to predefined on the ingestion page
+* added the post parent to predefined on the ingestion page
 = 2.9.6 = 
-*auto populate export meta keys
+* auto populate export meta keys
 = 2.9.1 = 
-*plugin split into premium and free version
+* plugin split into premium and free version
 = 2.8.9 =
-*xmlrpc tweak for wp 3.5 enable option depracation
+* xmlrpc tweak for wp 3.5 enable option depracation
 = 2.8.8 = 
-*no more open_short_tag
+* no more open_short_tag
