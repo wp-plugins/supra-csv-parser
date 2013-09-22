@@ -5,7 +5,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: csv,import,parse,ingest,custom post,extract,export,attachment,thumbnail
 Requires at least: 3.2.1
 Tested up to: 3.5.1
-Stable tag: 3.2.3
+Stable tag: 3.2.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -100,6 +100,8 @@ and make it as an available field to associate to a post.
 
 == Changelog ==
 
+= 3.2.4 =
+* fixed a bug that was preventing postmeta suggestions from populating
 = 3.2.3 =
 * adding all post fields to select drop down in extraction interface
 * replaced post meta input with select drop down in extraction interface
