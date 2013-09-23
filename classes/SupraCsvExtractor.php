@@ -208,23 +208,48 @@ class SupraCsvExporter extends ExporterArgumentParser {
     }
 
     private function buildCsv() {
-        extract($this->getSettings());
+
+        $enclosure = '"';
+        $escape = "\\";
+        $delimiter = ",";
 
         $record = $this->records[0];
         $val_array = array();
         $key_array = array();
+
         foreach($record AS $key => $val) {
-            if(is_array($val)){
-               $val = implode('|',$val);
-               //var_dump($val);
-            }
-            $key_array[] = $key;
-            if(!empty($escape)) {
+
+                if(is_array($val)){
+                    //Debug::show($val);
+                    $oldval = $val;
+                    $val="";
+                    foreach($oldval as $arr) {
+                        if(!is_array($arr)) {
+                            //if its not an array implode it
+                            $val .= implode('|',$this->removeHardReturns($arr));
+                        }
+                        else {
+                            //if it is an array then barf
+                            $val .= "NESTED ARRAYS UNSUPPORTED";
+                            break;
+                        }
+                    }
+                }
+                else {
+                    $val = $this->removeHardReturns($val);
+                }
+            
+                //store the header columns
+                $key_array[] = $key;
+
+                //escape encolusre characters
                 $val = str_replace($enclosure, $escape.$enclosure, $val);
+                //escape delimiter character
                 $val = str_replace($delimiter, $escape.$delimiter, $val);
-            }
-            $val_array[] = $enclosure.$val.$enclosure;
+
+                $val_array[] = $enclosure.$val.$enclosure;
         }
+
         $this->csvstring = implode($delimiter, $key_array)."\n";
         $this->csvstring .= implode($delimiter, $val_array)."\n";
         return $this;
