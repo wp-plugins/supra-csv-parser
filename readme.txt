@@ -5,7 +5,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: csv,import,parse,ingest,custom post,extract,export,attachment,thumbnail
 Requires at least: 3.2.1
 Tested up to: 3.5.1
-Stable tag: 3.2.5
+Stable tag: 3.2.7
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -38,6 +38,14 @@ very minimal php inside of a hook function that the ingestion engine will detect
 For general information regarding the plugin visit 
 
 <http://www.supraliminalsolutions.com/blog/listings/supra-csv/>
+
+Try the demo here
+
+<http://www.supraliminalsolutions.com/supra-csv/demoblog/wp-admin/>
+
+* username: admin
+
+* password: admin
 
 Watch the detailed tutorials 
 
@@ -100,6 +108,8 @@ and make it as an available field to associate to a post.
 
 == Changelog ==
 
+= 3.2.7 =
+* fixed a major issue resolving directory names
 = 3.2.5 =
 * fixed a bunch of bugs in extraction process
 = 3.2.4 =
