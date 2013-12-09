@@ -4,7 +4,6 @@ require_once(dirname(__FILE__).'/../SupraCsvParser_Plugin.php');
 
 class SupraCsvPlugin {
 
-    private $plugin_name = 'supraCsvFree';
     public $dbal = false;
     private $download_link = 'www.supraliminalsolutions.com/blog/listings/supra-csv/';
 
@@ -12,6 +11,12 @@ class SupraCsvPlugin {
     public function __construct() {
            $this->dbal = new SupraCsvDBAL(DB_NAME,DB_HOST,DB_USER,DB_PASSWORD);
            $this->plugin = new SupraCsvParser_Plugin();
+           $this->setPluginName();
+    }
+
+    private function setPluginName() {
+      $arr = array_reverse(split('/', dirname(__FILE__)));
+      $this->plugin_name = $arr[1];
     }
 
     public function getPresetsTable() {
