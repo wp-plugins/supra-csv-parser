@@ -255,6 +255,11 @@ class SupraCsvExporter extends ExporterArgumentParser {
         return $this;
     }
 
+    private function removeHardReturns($val) {
+
+        return str_replace(array("\r\n", "\r", "\n"), null, $val);
+    }
+
     public function download() {
         if(empty($this->csvstring)) $this->parseRecords()->buildCsv();
         return $this->csvstring;
