@@ -5,7 +5,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: csv,import,parse,ingest,custom post,extract,export,attachment,thumbnail
 Requires at least: 3.2.1
 Tested up to: 3.5.1
-Stable tag: 3.2.8
+Stable tag: 3.2.9
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -108,6 +108,8 @@ and make it as an available field to associate to a post.
 
 == Changelog ==
 
+= 3.2.9 =
+* centralizing documentation 
 = 3.2.8 =
 * critical bug in extract and export process fixed
 = 3.2.7 =
