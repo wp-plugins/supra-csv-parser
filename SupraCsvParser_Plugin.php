@@ -59,10 +59,6 @@ class SupraCsvParser_Plugin extends SupraCsvParser_LifeCycle {
                 $wpdb->query($presetsSql);
     }
 
-    public function getCsvDir() {
-        return WP_CONTENT_DIR . '/uploads/' . $this->getPluginNameDehumanized() .'/csv/';
-    }
-
     public function getSampleCsvDir() {
 
         return dirname(__FILE__) . '/samplecsvs/';
@@ -72,16 +68,11 @@ class SupraCsvParser_Plugin extends SupraCsvParser_LifeCycle {
         return WP_CONTENT_DIR . '/uploads/' . $this->getPluginNameDehumanized() .'/img/';
     }
   
-    public function getCsvDirUrl() {
-        return WP_CONTENT_URL . '/uploads/' . $this->getPluginNameDehumanized() .'/csv/';
-    }
-
     protected function createFileSystem() {
 
-        chmod(WP_CONTENT_DIR . '/uploads/',0777);
-
-        if(!file_exists($this->getCsvDir())) {
-            mkdir($this->getCsvDir(),0777,true);
+        if(!file_exists($this->getImgDir())) {
+            mkdir($this->getImgDir(),0777,true);
+            chmod($this->getImgDir(),0777);
         }
 
         $this->createSampleFiles();
@@ -123,7 +114,6 @@ class SupraCsvParser_Plugin extends SupraCsvParser_LifeCycle {
                     $wpdb->query("DROP TABLE IF EXISTS `$table`");
                 }
     }
-
 
     /**
      * Perform actions when upgrading from version X to version Y
@@ -167,37 +157,27 @@ class SupraCsvParser_Plugin extends SupraCsvParser_LifeCycle {
     }
 
     function supracsv_enqueue_scripts() {
-        admin_enqueue_script('jquery');
-        admin_enqueue_script('supra_csv_globals', plugins_url('/js/global.js', __FILE__));
-        admin_enqueue_script('toolip-lib', plugins_url('/js/jquery.qtip-1.0.0-rc3.min.js', __FILE__));
-        admin_enqueue_script('toolip', plugins_url('/js/tooltip.js', __FILE__));
+        wp_enqueue_script('jquery');
+        wp_enqueue_script('supra_csv_globals', plugins_url('/js/global.js', __FILE__));
+        wp_enqueue_script('toolip-lib', plugins_url('/js/jquery.qtip-1.0.0-rc3.min.js', __FILE__));
+        wp_enqueue_script('toolip', plugins_url('/js/tooltip.js', __FILE__));
     }
 
-
     public function addActionsAndFilters() {
-
         global $pagenow;
 
         add_action('admin_menu', array(&$this, 'callAdminActions'));
 
         //ajax actions
         add_action('wp_ajax_supra_csv',array(&$this,'supraCsvAjax'));
-        //add_action('admin_enqueue_scripts',array(&$this,'supracsv_enqueue_scripts'));
-        //add_action('admin_enqueue_styles',array(&$this,'supracsv_enqueue_styles'));
 
         add_action('activated_plugin',array(&$this,'save_error'));
 
         if($pagenow === "admin.php") { 
 
-            wp_enqueue_script('jquery');
-            wp_enqueue_style('my-style', plugins_url('/css/style.css', __FILE__));
-            wp_enqueue_script('supra_csv_globals', plugins_url('/js/global.js', __FILE__));
-            wp_enqueue_script('toolip-lib', plugins_url('/js/jquery.qtip-1.0.0-rc3.min.js', __FILE__));
-            wp_enqueue_script('toolip', plugins_url('/js/tooltip.js', __FILE__));
+            $this->supracsv_enqueue_styles();
+            $this->supracsv_enqueue_scripts();
         }
-
-        //do_action('admin_enqueue_scripts');
-        //do_action('admin_enqueue_styles');
 
         // Register short codes
         // http://plugin.michael-simpson.com/?page_id=39

@@ -1,8 +1,12 @@
 <?php 
 require_once('classes/Debug.php');
+require_once(dirname(__FILE__).'/classes/ExtractCsv.php');
 
 wp_enqueue_script( 'inputCloner', plugins_url('/js/inputCloner.js', __FILE__) );
 wp_enqueue_script( 'extractor', plugins_url('/js/export.js', __FILE__) );
+wp_enqueue_script( 'misc', plugins_url('/js/misc.js', __FILE__) );
+
+$xc = new ExtractCsv($_FILES);
 
 ?>
 <div id="supra_csv_extractor_form">
@@ -136,4 +140,12 @@ wp_enqueue_script( 'extractor', plugins_url('/js/export.js', __FILE__) );
 </div>
     </form>
 <div id="extracted_results"></div>
+</div>
+<hr />
+<h3>
+<span id="extractedfilemgmt_tt" class="tooltip"></span>
+Extracted CSV File Management
+</h3>
+<div id="supra_csv_extract_forms" class="wrap_scsv" style="width: 550px;">
+    <?php $xc->renderForms();?>
 </div>

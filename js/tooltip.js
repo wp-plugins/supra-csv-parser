@@ -27,6 +27,7 @@ Supra.Tooltips = (function() {
         'csvsettings_tt':['csv_settings + ol'],
         'maxchar_tt':['max_char'],
         'filemgmt_tt':['upload + ol'],
+        'extractedfilemgmt_tt':['extracted + ol'],
         'postinfo_tt':['post_info'],
         'pmpresets_tt':['post_meta_presets'],
         'pmmapping_tt':['post_meta_mapping'],

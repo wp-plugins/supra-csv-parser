@@ -29,12 +29,26 @@ $(function() {
           url: ajaxurl,
           success: function(msg){
               msg = $.parseJSON(msg);
-              if(msg.success)
-                  $('#extracted_results').html('<h3>'+msg.premium+'</h3><b>File created: </b> Upload >> '+msg.filename);
-              else
+              if(msg.success) {
+                  $('#extracted_results').html('<h3>'+msg.premium+'</h3><b>File created below: </b>'+msg.filename);
+                  refreshExtractedForm();
+              } 
+              else {
                   $('#extracted_results').html('<h3>Something went wrong</h3>');
-     
+              }
           }
         });
     });
+
+    refreshExtractedForm = function() {
+        $.ajax({
+          type: 'POST',
+          data: {'action':'supra_csv','command':'get_extracted_form'},
+          url: ajaxurl,
+          success: function(msg){
+              result = $.parseJSON(msg);
+              $('#supra_csv_extract_forms').html(result.html);
+          }
+        });
+    }
 });

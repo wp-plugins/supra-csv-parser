@@ -29,6 +29,36 @@ $(function() {
         });
     });
 
+    $('#delete_extract').live('click', function() {
+
+        filename_key = $(this).data('key');
+
+        $.ajax({
+          type: 'POST',
+          data: {'action':'supra_csv','command':'delete_extract_file','args':filename_key},
+          url: ajaxurl,
+          success: function(msg){
+              $('#supra_csv_extract_forms').html(msg);
+          }
+        });
+
+    });
+
+    $('#download_extract').live('click', function() {
+
+        var file = $(this).data('file');
+
+        $.ajax({
+          type: 'POST',
+          data: {'action':'supra_csv','command':'download_extract_file','args':file},
+          url: ajaxurl,
+          success: function(msg){
+              $('#supra_csv_preview').html(msg);
+          }
+        });
+    });
+
+
     $('#select_csv_file').live('change', function() {
         filename_key = $(this).val();
 

@@ -1,6 +1,7 @@
 <?php
 session_start();
 require_once(dirname(__FILE__).'/UploadCsv.php');
+require_once(dirname(__FILE__).'/ExtractCsv.php');
 require_once(dirname(__FILE__).'/IngestCsv.php');
 require_once(dirname(__FILE__).'/Debug.php');
 require_once(dirname(__FILE__).'/Presets.php');
@@ -14,6 +15,7 @@ class SupraCsvAjaxHandler extends SupraCsvPlugin {
     function __construct($request) {
 
         $uc = new UploadCsv();
+        $xc = new ExtractCsv();
         $ic = new IngestCsv();
         switch($request['command']) {
             case "delete_file":
@@ -21,6 +23,12 @@ class SupraCsvAjaxHandler extends SupraCsvPlugin {
             break;
             case "download_file":
                 $uc->downloadFile($request['args']);
+            break;
+            case "delete_extract_file":
+                $xc->deleteFileByKey($request['args']);
+            break;
+            case "download_extract_file":
+                $xc->downloadFile($request['args']);
             break;
             case "select_ingest_file":
                 $filename = $uc->getFileByKey($request['args']);
@@ -106,9 +114,12 @@ class SupraCsvAjaxHandler extends SupraCsvPlugin {
 
                 $filename = 'ingest-'.date('y-m-d-h-i-s-a') .'.csv';
 
-                $success = $uc->writeToFile($filename,$content);
+                $success = $xc->writeToFile($filename,$content);
                 echo json_encode(array('extracted'=>$content,'success'=>$success,'premium'=>$this->upgradeToPremiumMsg('export more than 1 row'),'filename'=>$filename));
  
+            break;
+            case "get_extracted_form":
+                echo json_encode(array('html'=>$xc->getForms()));
             break;
             case "get_tooltips":
                 include(dirname(__FILE__) . '/../supra_csv_docs.php');
