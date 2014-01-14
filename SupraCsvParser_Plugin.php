@@ -182,6 +182,11 @@ class SupraCsvParser_Plugin extends SupraCsvParser_LifeCycle {
 
         add_action('activated_plugin',array(&$this,'save_error'));
 
+        if(is_null($pagenow)) {
+          $pagenow = array_reverse(explode('/',$_SERVER['SCRIPT_NAME']));
+          $pagenow = $pagenow[0];
+        }
+
         if($pagenow === "admin.php") { 
 
             $this->supracsv_enqueue_styles();
