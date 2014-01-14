@@ -17,7 +17,7 @@ class SupraCsvPlugin {
     }
 
     private function setPluginName() {
-      $arr = array_reverse(split('/', dirname(__FILE__)));
+      $arr = array_reverse(explode('/', dirname(__FILE__)));
       $this->plugin_name = $arr[1];
     }
 
