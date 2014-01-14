@@ -62,7 +62,7 @@ class SupraCsvParser_LifeCycle extends SupraCsvParser_InstallIndicator {
      * @return void
      */
     public function activate() {
-        $this->createFileSystem(); 
+      $this->install();
     }
 
     /**

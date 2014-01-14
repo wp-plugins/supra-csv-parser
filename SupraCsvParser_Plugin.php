@@ -67,12 +67,21 @@ class SupraCsvParser_Plugin extends SupraCsvParser_LifeCycle {
     public function getImgDir() {
         return WP_CONTENT_DIR . '/uploads/' . $this->getPluginNameDehumanized() .'/img/';
     }
-  
+ 
+    public function getCsvDir() {
+        return WP_CONTENT_DIR . '/uploads/' . $this->getPluginNameDehumanized() .'/csv/';
+    }
+
+ 
     protected function createFileSystem() {
 
         if(!file_exists($this->getImgDir())) {
             mkdir($this->getImgDir(),0777,true);
             chmod($this->getImgDir(),0777);
+        }
+        if(!file_exists($this->getCsvDir())) {
+            mkdir($this->getCsvDir(),0777,true);
+            chmod($this->getCsvDir(),0777);
         }
 
         $this->createSampleFiles();
@@ -109,7 +118,7 @@ class SupraCsvParser_Plugin extends SupraCsvParser_LifeCycle {
      */
     protected function unInstallDatabaseTables() {
                 global $wpdb;
-                $tables[] = $this->prefixTableName('presets');
+                $tables[] = $this->getPresetsTable();
                 foreach($tables as $table) {
                     $wpdb->query("DROP TABLE IF EXISTS `$table`");
                 }
