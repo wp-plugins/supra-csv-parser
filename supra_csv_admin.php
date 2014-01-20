@@ -75,7 +75,7 @@ if(!empty($_POST['scsv_submit'])) {
             </select>
         </p>
         <p style="text-align: center">
-            <h3>or</h3>
+            <b>or</b>
         </p>
         <p>
             <span id="customposttype_tt" class="tooltip"></span>Custom Post Type <span class="premium_only">(Premium Only)</span>
@@ -83,13 +83,13 @@ if(!empty($_POST['scsv_submit'])) {
         </p>
         <h3><span id="postdefaults_tt" class="tooltip"></span>Post Defaults</h3>
         <p>Default Title<input type="text" name="scsv_defaulttitle" value="<?php echo $csvpost['title']; ?>" size="20"></p>
-        <p>Default Description<textarea name="scsv_defaultdesc" cols="50"><?php echo $csvpost['desc']; ?></textarea></p>
+        <p>Default Description<textarea name="scsv_defaultdesc" id="scsv_defaultdesc" cols="50"><?php echo $csvpost['desc']; ?></textarea></p>
 </div>
 <div style="float: right; width: 300px;">
         <h3>Ingestion Settings</h3>
         <p id="custom_terms" class="input">
           <span id="customterms_tt" class="tooltip"></span>Custom Terms (<span style="color: red">separate terms with commas</span>)
-            <input type="text" name="scsv_custom_terms" value="<?php echo $post_terms?>" style="width: 240px;">
+            <input type="text" name="scsv_custom_terms" id="scsv_custom_terms" value="<?php echo $post_terms?>">
         </p>
         <p id="compex_categories">
             <span id="parsecomplex_tt" class="tooltip"></span>Parse complex categories: <input type="checkbox" name="scsv_parse_terms" value="true" <?php echo ($parse_terms)?'checked="checked"':''?>>

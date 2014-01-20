@@ -1,3 +1,7 @@
+.wrap_scsv h3 {
+  margin: 2em 0;
+}
+
 #labeling td {
     text-align: center;
     font-weight: bold;
@@ -149,4 +153,13 @@ width: 30%;
     width: 19px;
     height: 19px;
     clear: both;
+}
+
+#scsv_defaultdesc { 
+  width: 100%;
+}
+
+#scsv_custom_terms {
+  width: 100%;
+  float: none;
 }
