@@ -39,6 +39,8 @@ class ExtractCsv extends SupraCsvPlugin {
 
     private function getExtracts() {
         $files = $this->getExtractedFiles();
+
+        $list = null;
         
         foreach($files as $i=>$file) {
             $delete_button = '<button id="delete_extract" data-key="'.$i.'">Delete</button>';

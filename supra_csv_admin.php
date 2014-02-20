@@ -83,7 +83,7 @@ if(!empty($_POST['scsv_submit'])) {
         </p>
         <h3><span id="postdefaults_tt" class="tooltip"></span>Post Defaults</h3>
         <p>Default Title<input type="text" name="scsv_defaulttitle" value="<?php echo $csvpost['title']; ?>" size="20"></p>
-        <p>Default Description<textarea name="scsv_defaultdesc" id="scsv_defaultdesc" cols="50"><?php echo $csvpost['desc']; ?></textarea></p>
+        <p>Default Description<textarea name="scsv_defaultdesc" id="scsv_defaultdesc"><?php echo $csvpost['desc']; ?></textarea></p>
 </div>
 <div style="float: right; width: 300px;">
         <h3>Ingestion Settings</h3>

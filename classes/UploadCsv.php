@@ -80,6 +80,8 @@ class UploadCsv extends SupraCsvPlugin {
     }
 
     private function getUploads() {
+
+        $list = null;
         $files = $this->getUploadedFiles();
         
         foreach($files as $i=>$file) {

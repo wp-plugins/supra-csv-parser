@@ -401,6 +401,8 @@ class SupraCsvMapperForm {
 
     public function getForm() {
 
+        $inputs = null;
+
         $inputs .= '<h3><span id="ingestionpredefined_tt" class="tooltip"></span>Predefined</h3>';
 
         $inputs .= '<div class="scsv_predefined_mapper">';

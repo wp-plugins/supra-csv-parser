@@ -1,12 +1,19 @@
-<?php
+<?php 
 class SupraCsvPostMeta {
 
     private function buildInputRow($metainfo=array(),$num) {
 
             if(is_array($metainfo)) extract($metainfo);
 
+            $input_row = null;
+
             $input_row .= '<tr id="pm_info'.$num.'" class="pm_info">';
-            $checked = ($checked)?'checked="checked"':'';
+
+            if(isset($checked))           
+               $checked = ($checked)?'checked="checked"':'';
+            else 
+              $checked = null;
+ 
             $input_row .= '<td><input type="checkbox" name="use_metakey[]" id="use_metakey" '.$checked.' value="'.$num.'" /></td>';
             $input_row .= '<td><input type="text" name="meta_key[]" id="meta_key" value="'.$meta_key.'" size="40" maxlength="40" /></td>';
             $input_row .= '<td><input type="text" name="displayname[]" id="displayname" value="'.$displayname.'" size="40" maxlength="40" /></td>';

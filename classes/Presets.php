@@ -9,10 +9,11 @@ class SupraCsvPreset extends SupraCsvParser {
 
     public function setPreset($params) {
         extract($params);
-        if($preset_id) $this->preset_id   = $preset_id;
-        if($preset_name) $this->preset_name = $preset_name;
-        if($preset_type) $this->preset_type = $preset_type;
-        if($preset) $this->preset = $preset;
+
+        if(isset($preset_id)) $this->preset_id   = $preset_id;
+        if(isset($preset_name)) $this->preset_name = $preset_name;
+        if(isset($preset_type)) $this->preset_type = $preset_type;
+        if(isset($preset)) $this->preset = $preset;
     }
 
     public function getPresets($params) {
@@ -93,6 +94,8 @@ class SupraCsvPreset extends SupraCsvParser {
     }
 
     public function getBaseForm($presets) {
+          $form = null;
+ 
           $input[0] = '<span id="label">'.ucfirst($this->preset_type).' Presets</span>';
           $input[0] .= '<select id="select_'.$this->preset_type.'_preset" name="'.$this->preset_type.'_preset">';
           $input[0] .= '<option value=""> </option>';

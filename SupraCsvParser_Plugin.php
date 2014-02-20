@@ -161,11 +161,8 @@ class SupraCsvParser_Plugin extends SupraCsvParser_LifeCycle {
         die();    
     }
 
-    function supracsv_enqueue_styles() {
-        wp_enqueue_style('my-style', plugins_url('/css/style.css', __FILE__));
-    }
-
     function supracsv_enqueue_scripts() {
+        wp_enqueue_style('my-style', plugins_url('/css/style.css', __FILE__));
         wp_enqueue_script('jquery');
         wp_enqueue_script('supra_csv_globals', plugins_url('/js/global.js', __FILE__));
         wp_enqueue_script('toolip-lib', plugins_url('/js/jquery.qtip-1.0.0-rc3.min.js', __FILE__));
@@ -173,31 +170,10 @@ class SupraCsvParser_Plugin extends SupraCsvParser_LifeCycle {
     }
 
     public function addActionsAndFilters() {
-        global $pagenow;
-
         add_action('admin_menu', array(&$this, 'callAdminActions'));
-
-        //ajax actions
         add_action('wp_ajax_supra_csv',array(&$this,'supraCsvAjax'));
-
         add_action('activated_plugin',array(&$this,'save_error'));
-
-        if(is_null($pagenow)) {
-          $pagenow = array_reverse(explode('/',$_SERVER['SCRIPT_NAME']));
-          $pagenow = $pagenow[0];
-        }
-
-        if($pagenow === "admin.php") { 
-
-            $this->supracsv_enqueue_styles();
-            $this->supracsv_enqueue_scripts();
-        }
-
-        // Register short codes
-        // http://plugin.michael-simpson.com/?page_id=39
-
-        // Register AJAX hooks
-        // http://plugin.michael-simpson.com/?page_id=41
+        add_action( 'admin_enqueue_scripts',array(&$this,'supracsv_enqueue_scripts'));
     }
 
     function save_error(){
