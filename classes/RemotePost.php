@@ -170,9 +170,8 @@ class RemotePost extends SupraCsvPlugin {
         //add the custom terms
         if($post['publish'] && empty($content['post_status'])) {
             $content['post_status'] = 'publish';
-            
-        }
-        else {
+        } 
+        else if(empty($content['post_status'])) {
             $content['post_status'] = 'pending';
         }
 
