@@ -5,7 +5,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: csv,import,parse,ingest,custom post,extract,export,attachment,thumbnail
 Requires at least: 3.2.1
 Tested up to: 3.8.1
-Stable tag: 3.3.5
+Stable tag: 3.3.6
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -107,6 +107,8 @@ and make it as an available field to associate to a post.
 6. Easily debug issues
 
 == Changelog ==
+= 3.3.6 =
+* implementing windows compatible directory delimiter
 = 3.3.5 =
 * fixed post status bug
 = 3.3.4 =

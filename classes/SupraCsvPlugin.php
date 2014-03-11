@@ -2,6 +2,11 @@
 require_once(dirname(__FILE__).'/SupraCsvDBAL.php');
 require_once(dirname(__FILE__).'/../SupraCsvParser_Plugin.php');
 
+if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN')
+  define("DIR_SEP", "\\");
+else
+  define("DIR_SEP", "/");
+
 class SupraCsvPlugin {
 
     public $dbal = false;
@@ -17,7 +22,7 @@ class SupraCsvPlugin {
     }
 
     private function setPluginName() {
-      $arr = array_reverse(explode('/', dirname(__FILE__)));
+      $arr = array_reverse(explode(DIR_SEP, dirname(__FILE__)));
       $this->plugin_name = $arr[1];
     }
 
@@ -30,7 +35,7 @@ class SupraCsvPlugin {
     }
 
     private function getPluginRelUploadsDir() {
-        return '/uploads/' . $this->plugin_name .'/';
+        return DIR_SEP . 'uploads' . DIR_SEP . $this->plugin_name . DIR_SEP;
     }
 
     private function getPluginUploadsDir() {
@@ -42,11 +47,11 @@ class SupraCsvPlugin {
     }
 
     public function getCsvDir() {
-        return $this->getPluginUploadsDir() . $this->csv_dir . '/';
+        return $this->getPluginUploadsDir() . $this->csv_dir . DIR_SEP;
     }
 
     public function getExtractedCsvDir() {
-        return $this->getPluginUploadsDir() . $this->extracted_csv_dir . '/';
+        return $this->getPluginUploadsDir() . $this->extracted_csv_dir . DIR_SEP;
     }
 
     public function getSampleCsvDir() {
