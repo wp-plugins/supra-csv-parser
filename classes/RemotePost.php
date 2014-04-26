@@ -120,9 +120,9 @@ class RemotePost extends SupraCsvPlugin {
         //filter the args into valiables 
         foreach($params as $param) {
             if(empty($args[$param]))
-                $$param = $post[$param];
+                $$param = @ $post[$param];
             else
-                $$param = $args[$param];
+                $$param = @ $args[$param];
         }
 
         //compact the variables

@@ -273,7 +273,22 @@ class wp_xmlrpc_server extends IXR_Server {
 		$post_id = (int) $post_id;
 
 		foreach ( (array) $fields as $meta ) {
-			if ( isset($meta['id']) ) {
+
+                        if ( ! isset($meta['id']) ) {
+
+                            $postmeta = get_metadata( 'post', $post_id, $meta['key'] );
+
+                            if( $postmeta ) {
+
+                                update_metadata('post', $post_id, $meta['key'], $meta['value']);
+
+                            } else {
+
+                                add_post_meta( $post_id, $meta['key'], $meta['value'] );
+                            }
+
+                        } else {
+
 				$meta['id'] = (int) $meta['id'];
 				$pmeta = get_metadata_by_mid( 'post', $meta['id'] );
 				if ( isset($meta['key']) ) {
@@ -285,8 +300,6 @@ class wp_xmlrpc_server extends IXR_Server {
 				} else {
 			    	        delete_metadata_by_mid( 'post', $meta['id'] );
 				}
-			} else {
-				add_post_meta( $post_id, $meta['key'], $meta['value'] );
 			}
 		}
 	}
@@ -1046,8 +1059,10 @@ class wp_xmlrpc_server extends IXR_Server {
 			unset( $content_struct['post_thumbnail'] );
 		}
 
-		if ( isset( $post_data['custom_fields'] ) )
+		if ( isset( $post_data['custom_fields'] ) ) {
+
 			$this->set_custom_fields( $post_ID, $post_data['custom_fields'] );
+                }
 
 		if ( isset( $post_data['terms'] ) || isset( $post_data['terms_names'] ) ) {
 			$post_type_taxonomies = get_object_taxonomies( $post_data['post_type'], 'objects' );

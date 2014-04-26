@@ -240,7 +240,7 @@ class SupraCsvParser extends SupraCsvPlugin {
                 );
 
                 foreach($predefined as $key) {
-                    $$key = $row[$key];
+                    $$key = @ $row[$key];
                     unset($row[$key]);
                 }
 
