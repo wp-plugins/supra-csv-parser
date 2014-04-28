@@ -65,5 +65,18 @@ padding: 10px;
     <a href="http://www.supraliminalsolutions.com/blog/supra-csv-tutorials/" target="_blank">here</a>.</p>
   </div>
   <div style="clear: both"></div>
+  <div id="installation_errors">
+  
+  <?php
+
+    $pluginErr = (array) get_option('supracsvplugin_error');
+
+    if(array_key_exists('details',$pluginErr)) {
+      echo "<h2>Plugin Installation Errors (".$pluginErr['date'].")</h2>";
+      echo "<p>".$pluginErr['details']."</p>";
+    }
+  ?>
+
+  </div>
   </div>
 </div>

@@ -1,4 +1,8 @@
-$(function() { 
+$(function() {
+
+    var 
+      sMain = Supra.Main()
+    ;
 
     $('#extract_and_preview').click( function(e) {
 
@@ -6,13 +10,9 @@ $(function() {
 
         var data = $('#extraction_form').serialize();
 
-        $.ajax({
-          type: 'POST',
-          data: {'action':'supra_csv','command':'extract_and_preview','data':data},
-          url: ajaxurl,
-          success: function(msg){
-              $('#extracted_results').html(msg);
-          }
+        sMain.baseCall( 'extract_and_preview', data, function(msg) {
+            $('#extracted_results').html(msg);
+            sMain.scrollToEl($("#extracted_results"));
         });
 
     });
@@ -23,32 +23,25 @@ $(function() {
 
         var data = $('#extraction_form').serialize();
 
-        $.ajax({
-          type: 'POST',
-          data: {'action':'supra_csv','command':'extract_and_export','data':data},
-          url: ajaxurl,
-          success: function(msg){
-              msg = $.parseJSON(msg);
-              if(msg.success) {
-                  $('#extracted_results').html('<h3>'+msg.premium+'</h3><b>File created below: </b>'+msg.filename);
-                  refreshExtractedForm();
-              } 
-              else {
-                  $('#extracted_results').html('<h3>Something went wrong</h3>');
-              }
+        sMain.baseCall( 'extract_and_export', data, function(msg) {
+        
+          msg = $.parseJSON(msg);
+          if(msg.success) {
+              $('#extracted_results').html('<h3>' + msg.premium + '</h3><b>File created below: </b>'+msg.filename);
+              sMain.scrollToEl($('ul#uploaded_files li').last(), function() {
+                _refreshExtractedForm();
+              }); 
+          } 
+          else {
+              $('#extracted_results').html('<h3>Something went wrong</h3>');
           }
         });
     });
 
-    refreshExtractedForm = function() {
-        $.ajax({
-          type: 'POST',
-          data: {'action':'supra_csv','command':'get_extracted_form'},
-          url: ajaxurl,
-          success: function(msg){
-              result = $.parseJSON(msg);
-              $('#supra_csv_extract_forms').html(result.html);
-          }
+    _refreshExtractedForm = function() {
+        sMain.baseCall( 'get_extracted_form', {}, function(msg) {
+          result = $.parseJSON(msg);
+          $('#supra_csv_extract_forms').html(result.html);
         });
     }
 });

@@ -1,61 +1,77 @@
 $(function() {
 
+    var 
+      downloadUploadElToggled = []
+      , downloadExtractElToggled = []
+      , sMain = Supra.Main();
+      ;
+
     $('#delete_upload').live('click', function() {
 
         filename_key = $(this).data('key');
 
-        $.ajax({
-          type: 'POST',
-          data: {'action':'supra_csv','command':'delete_file','args':filename_key},
-          url: ajaxurl,
-          success: function(msg){
-              $('#supra_csv_upload_forms').html(msg);
-          }
-        });
+        var answer = confirm("Are you sure you want to delete this item?"); 
 
+        if( ! answer ) return ;
+
+        sMain.baseCall( 'delete_file', filename_key, function(msg) {
+
+          $('#supra_csv_upload_forms').html(msg);
+        });
     });
 
     $('#download_upload').live('click', function() {
 
         var file = $(this).data('file');
 
-        $.ajax({
-          type: 'POST',
-          data: {'action':'supra_csv','command':'download_file','args':file},
-          url: ajaxurl,
-          success: function(msg){
-              $('#supra_csv_preview').html(msg);
-          }
-        });
+        el = $(this);
+
+        elToggled = downloadUploadElToggled[file];
+
+        if( typeof elToggled == "undefined" ) {
+
+          sMain.baseCall('download_file', file, function(msg) {
+            el.parent().append('<div id="previewToggle">' + msg + '</div>');
+            downloadUploadElToggled[file] = true;
+          });
+
+        } else {
+          el.parent().find('#previewToggle').toggle();
+        }
+
     });
 
     $('#delete_extract').live('click', function() {
 
         filename_key = $(this).data('key');
 
-        $.ajax({
-          type: 'POST',
-          data: {'action':'supra_csv','command':'delete_extract_file','args':filename_key},
-          url: ajaxurl,
-          success: function(msg){
-              $('#supra_csv_extract_forms').html(msg);
-          }
-        });
+        var answer = confirm("Are you sure you want to delete this item?");
 
+        if( ! answer ) return ;
+
+        sMain.baseCall( 'delete_extract_file', filename_key, function(msg) {
+            $('#supra_csv_extract_forms').html(msg);
+        });
     });
 
     $('#download_extract').live('click', function() {
 
-        var file = $(this).data('file');
+        file = $(this).data('file');
 
-        $.ajax({
-          type: 'POST',
-          data: {'action':'supra_csv','command':'download_extract_file','args':file},
-          url: ajaxurl,
-          success: function(msg){
-              $('#supra_csv_preview').html(msg);
-          }
-        });
+        el = $(this);
+
+        elToggled = downloadExtractElToggled[file];
+
+        if( typeof elToggled == "undefined" ) {
+
+          sMain.baseCall('download_extract_file', file, function(msg) {
+            el.parent().append('<div id="previewToggle">' + msg + '</div>');
+            downloadExtractElToggled[file] = true;
+          });
+
+        } else {
+          el.parent().find('#previewToggle').toggle();
+        }
     });
 
 
@@ -65,17 +81,12 @@ $(function() {
         $('#supra_csv_ingestion_log').html(null);
 
         if(filename_key) {
-          $.ajax({
-            type: 'POST',
-            data: {'action':'supra_csv','command':'select_ingest_file','args':filename_key},
-            url: ajaxurl,
-            success: function(msg){
-                msg = $.parseJSON(msg);
-                $('#supra_csv_ingestion_mapper').html(msg.map);
-                $('#supra_csv_mapping_preset').html(msg.preset);
-                clearMappingForm();
-                Supra.Tooltips.bindTooltips();
-            }
+          sMain.baseCall( 'select_ingest_file', filename_key, function(msg) {
+            msg = $.parseJSON(msg);
+            $('#supra_csv_ingestion_mapper').html(msg.map);
+            $('#supra_csv_mapping_preset').html(msg.preset);
+            clearMappingForm();
+            Supra.Tooltips.bindTooltips();
           });
         }
     });
@@ -89,14 +100,12 @@ $(function() {
         var data = $('#supra_csv_mapping_form').serialize();
         var filename = $('#supra_csv_mapping_form').data('filename');
 
-        $.ajax({
-          type: 'POST',
-          data: {'action':'supra_csv','command':'ingest_file','args': {'data': data, 'filename':filename} },
-          url: ajaxurl,
-          success: function(msg){
-              $('#supra_csv_ingestion_log').html(msg);
-              $('#patience').hide();
-          }
+        sMain.baseCall('ingest_file', {'data': data, 'filename':filename}, function(msg) {
+
+          sMain.scrollToEl($('#supra_csv_ingestion_log'), function() {
+            $('#supra_csv_ingestion_log').html(msg);
+            $('#patience').hide();
+          });
         });
     });
 });

@@ -99,12 +99,12 @@ class SupraCsvAjaxHandler extends SupraCsvPlugin {
                                                        )));
             break;
             case "extract_and_preview":
-                parse_str($_POST['data'], $query_args);
+                parse_str($_POST['args'], $query_args);
                 $sce = new SupraCsvExtractor($query_args);
                 echo $sce->displayExtractedPosts();
             break;
             case "extract_and_export":
-                parse_str($_POST['data'], $query_args);
+                parse_str($_POST['args'], $query_args);
                 $sce = new SupraCsvExtractor($query_args);
                 $posts = $sce->getPostsAndDetails(); 
                 //var_dump($query_args);

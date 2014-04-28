@@ -36,9 +36,13 @@ class ExtractorArgumentParser {
 
         foreach($toParse as $parsing) {
 
-            $this->properties[$parsing] = $this->args[$parsing];
+            if(array_key_exists($parsing, $this->args)) {
 
-            unset($this->args[$parsing]);
+                $this->properties[$parsing] =  $this->args[$parsing];
+
+                unset($this->args[$parsing]);
+ 
+            }
         }
     }
 
@@ -137,7 +141,9 @@ class SupraCsvExtractor extends ExtractorArgumentParser {
             foreach($this->properties['post_taxonomies'] as $pt) {
                 $post_terms = get_the_terms($this->post->ID,$pt);
                 foreach((array)$post_terms as $post_term) {
-                    $this->postinfo['terms'][$pt] = $post_term->name;
+                    if(is_object($post_term) && property_exists($post_term,'name')) { 
+                        $this->postinfo['terms'][$pt] = $post_term->name;
+                    }
                 }
             }
         }
@@ -157,11 +163,19 @@ class ExporterArgumentParser extends ExtractorArgumentParser {
     }
 
     private function buildArgs() {
-        $post_fields = array('post_fields'=>$this->args['post_fields']);
-        $meta_and_terms = array('custom_fields'=>$this->args['meta_keys'],'terms'=>$this->properties['post_taxonomies']);
+        
+        $post_fields = array(
+          'post_fields'=> @ $this->args['post_fields']
+        );
+
+        $meta_and_terms = array(
+          'custom_fields'=> @ $this->args['meta_keys'],
+          'terms'=> @ $this->properties['post_taxonomies']
+        );
+
         $this->parsable_keys = array_merge($post_fields,$meta_and_terms);
-        $this->filename = $this->args['filename'];
-        $this->settings = $csv_settings;
+        $this->filename = @ $this->args['filename'];
+        $this->settings = $this->getSettings();
     }
 
 }
@@ -184,12 +198,16 @@ class SupraCsvExporter extends ExporterArgumentParser {
             }
             else if(!in_array($key,array('post_fields'))) { 
                 foreach((array)$pk as $p) {
-                    $this->records[0][$p] = $post['postinfo'][$key][$p];
+                    if(array_key_exists($p, $post['postinfo'][$key])) { 
+                        $this->records[0][$p] = $post['postinfo'][$key][$p];
+                    }
                 }
             }
             else if($key == 'post_fields') {
                 foreach((array)$pk as $p) {
-                    $this->records[0][$p] = $post['post']->$p;
+                    if(property_exists($post['post'], $p)) {
+                        $this->records[0][$p] = $post['post']->$p;
+                    }
                 }
             }
         }
@@ -197,21 +215,21 @@ class SupraCsvExporter extends ExporterArgumentParser {
         return $this;
     }
 
-    private function getSettings() {
+    protected function getSettings() {
+
+        $settings = get_option('scsv_csv_settings');
  
         $defaultSettings = array(
                                  'delimiter'=>',',
                                  'enclosure'=>'"'
                                 );
 
-        return array_merge($defaultSettings,(array)$this->settings);
+        return array_merge($defaultSettings,(array)$settings);
     }
 
     private function buildCsv() {
 
-        $enclosure = '"';
-        $escape = "\\";
-        $delimiter = ",";
+        extract($this->getSettings());
 
         $record = $this->records[0];
         $val_array = array();

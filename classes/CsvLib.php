@@ -149,8 +149,8 @@ class SupraCsvParser extends SupraCsvPlugin {
 
                 $csvpost = get_option('scsv_post');
 
-                $post_title = $row['post_title'];
-                $post_content =  $row['post_content'];
+                $post_title = @ $row['post_title'];
+                $post_content = @ $row['post_content'];
 
                 $parse_terms = get_option('scsv_parse_terms');
 
@@ -172,8 +172,10 @@ class SupraCsvParser extends SupraCsvPlugin {
                 }
 
                 $post_terms = array();
-                $term_names = array();
+                $terms_names = array();
                 $terms = array();
+                $custom_fields = array();
+                
 
                 $parse_terms = get_option('scsv_parse_terms');
 
@@ -244,7 +246,7 @@ class SupraCsvParser extends SupraCsvPlugin {
                     unset($row[$key]);
                 }
 
-                foreach($row as $k=>$v) {
+                foreach((array)$row as $k=>$v) {
                     if(!empty($k) && !empty($v)) {
                         $custom_fields[$k] = $v;
                     }
@@ -296,6 +298,8 @@ class SupraCsvMapper {
     }
 
     public function retrieveMappedData($data) {
+
+        $row = array(); 
 
         //map the data with csv named keys to wp_keys
         foreach((array)$this->mapping as $wp_name=>$csv_name) {
@@ -445,6 +449,7 @@ class SupraCsvMapperForm {
         $inputs .= $this->displayListingFields();
 
         $inputs .= '<span id="ingest_tt" class="tooltip"></span><button id="supra_csv_ingest_csv">Ingest</button>';
+        $inputs .= '<p><img id="patience" /></p>';
         $inputs .= '</div><div class="clear"></div>';
         $inputs .= '</div>';
 

@@ -177,6 +177,9 @@ class SupraCsvParser_Plugin extends SupraCsvParser_LifeCycle {
     }
 
     function save_error(){
-        update_option('supracsvplugin_error',  ob_get_contents());
+        update_option('supracsvplugin_error',  array(
+          'details'=>ob_get_contents(),
+          'date'=> date('F d, Y h:i:s a', strtotime("now"))
+        ));
     }
 }
