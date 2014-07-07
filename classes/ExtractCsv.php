@@ -5,7 +5,7 @@ class ExtractCsv extends SupraCsvPlugin {
     private $mimes   = array("text/csv","text/comma-separated-values",'application/vnd.ms-excel','text/plain','text/tsv');
     private $success = false;
     private $error;
-    private $preview_num = 10;
+    private $preview_num = 200;
 
     function __construct($file = null) {
         parent::__construct();
@@ -82,22 +82,43 @@ class ExtractCsv extends SupraCsvPlugin {
     function downloadFile($file) {
         $filename_abs = $this->getExtractedCsvDir() . $file;
         $filename_url = $this->getExtractedCsvDirUrl() . $file;
-	echo '<b>(showing First '.$this->preview_num.' lines)</b> or ' .
+
+        echo '<b>(showing First '.$this->preview_num.' lines)</b> or ' .
              '<a href="'.$filename_url.'" target="_blank">Download File</a>';
         $row = 1;
+
         $csv_settings = get_option('scsv_csv_settings');
 
-        if (($handle = fopen($filename_abs, "r")) !== FALSE) {
+        $delimiter_tag = "th";
 
-            while (($data = $this->parseNextLine($handle,$csv_settings)) !== FALSE) {
-                echo "<br />";
+        echo '<table class="tablesorter-blue"><thead>';
+
+        if (($handle = fopen($filename_abs, "r")) !== FALSE)
+        {
+            while (($data = $this->parseNextLine($handle,$csv_settings)) !== FALSE)
+            {
                 $row++;
-                    echo implode(stripslashes($csv_settings['delimiter']),$data);
-                if($row==10) break;
+
+                $delimiter = "</{$delimiter_tag}><{$delimiter_tag}>";
+
+                echo "<tr><{$delimiter_tag}>" . implode($delimiter,$data) . "</{$delimiter_tag}></tr>";
+
+                if($row==$this->preview_num) break;
+
+                if($row == 2)
+                {
+                    $delimiter_tag = "td";
+
+                    echo "</thead><tbody>";
+                }
             }
+
+            echo "</tbody></table>";
+
             fclose($handle);
         }
     }
+
 
     private function parseNextLine($handle,$csv_settings) {
         if (strnatcmp(phpversion(),'5.3') >= 0) { 

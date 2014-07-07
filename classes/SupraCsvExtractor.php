@@ -99,7 +99,7 @@ class SupraCsvExtractor extends ExtractorArgumentParser {
         foreach($this->getPosts() as $i=>$this->post) {
             $this->getCustomFields()->getKeywords();
             $posts[$i]['post'] = $this->post;
-            $posts[$i]['postinfo'] = $this->postinfo;
+            $posts[$i]['postinfo'] = @ $this->postinfo;
         }  
  
         return $posts;        
@@ -265,7 +265,7 @@ class SupraCsvExporter extends ExporterArgumentParser {
                 //escape delimiter character
                 $val = str_replace($delimiter, $escape.$delimiter, $val);
 
-                $val_array[] = $enclosure.$val.$enclosure;
+                $val_array[] = $val; //$enclosure.$val.$enclosure;
         }
 
         $this->csvstring = implode($delimiter, $key_array)."\n";

@@ -33,6 +33,7 @@ $(function() {
           sMain.baseCall('download_file', file, function(msg) {
             el.parent().append('<div id="previewToggle">' + msg + '</div>');
             downloadUploadElToggled[file] = true;
+            $('.tablesorter-blue').tablesorter();
           });
 
         } else {
@@ -41,7 +42,7 @@ $(function() {
 
     });
 
-    $('#delete_extract').live('click', function() {
+    $(document).on('click','#delete_extract', function() {
 
         filename_key = $(this).data('key');
 
@@ -54,7 +55,7 @@ $(function() {
         });
     });
 
-    $('#download_extract').live('click', function() {
+    $(document).on('click','#download_extract', function() {
 
         file = $(this).data('file');
 
@@ -67,6 +68,7 @@ $(function() {
           sMain.baseCall('download_extract_file', file, function(msg) {
             el.parent().append('<div id="previewToggle">' + msg + '</div>');
             downloadExtractElToggled[file] = true;
+            $('.tablesorter-blue').tablesorter();
           });
 
         } else {
