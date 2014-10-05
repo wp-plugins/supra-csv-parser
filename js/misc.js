@@ -21,11 +21,8 @@ $(function() {
 
     $('#extract_and_export').click( function(e) {
 
-        console.log(downloadExtractElToggled); 
-
         downloadExtractElToggled = [];
 
-        console.log(downloadExtractElToggled); 
     });
 
     $('#download_upload').live('click', function() {
@@ -60,6 +57,7 @@ $(function() {
 
         sMain.baseCall( 'delete_extract_file', filename_key, function(msg) {
             $('#supra_csv_extract_forms').html(msg);
+            downloadExtractElToggled = [];
         });
     });
 
@@ -69,12 +67,8 @@ $(function() {
 
         el = $(this);
 
-        console.log(file);
-
         elToggled = downloadExtractElToggled[file];
 
-        console.log(elToggled);
- 
         if(typeof elToggled == "undefined" ) {
 
           sMain.baseCall('download_extract_file', file, function(msg) {
