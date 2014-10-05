@@ -30,6 +30,37 @@ class SupraCsvPlugin {
         return $this->plugin->getPresetsTable();
     }
 
+    public function _get_scsv_settings()
+    {
+        $csv_settings = get_option('scsv_csv_settings');
+
+        foreach($csv_settings as $key=>$csv_setting)
+        {
+            $value = html_entity_decode($csv_setting);
+
+            $value = stripslashes($value);
+            
+            $converted[$key] = $value;
+        }
+
+        return $converted;
+    }
+
+    protected function parseNextLine($handle) {
+
+        $csv_settings = $this->_get_scsv_settings();
+
+        $additional_csv_settings = get_option('scsv_addtional_csv_settings');
+
+        if (strnatcmp(phpversion(),'5.3') >= 0) {
+            return fgetcsv($handle, $additional_csv_settings['line_maxlen'], $csv_settings['delimiter'], $csv_settings['enclosure'], $csv_settings['escape']);
+
+        }
+        else {
+            return fgetcsv($handle,$additional_csv_settings['line_maxlen'], $csv_settings['delimiter'], $csv_settings['enclosure']);
+        }
+    }
+
     public function getPluginDirUrl() {
         return WP_PLUGIN_URL . '/' . $this->plugin_name .'/';
     }

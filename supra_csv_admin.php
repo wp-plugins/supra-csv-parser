@@ -19,6 +19,7 @@ if(!empty($_POST['scsv_submit'])) {
     $report_issue = $_POST['scsv_report_issue'];
     $encode_chars = $_POST['scsv_encode_special_chars'];
     $has_hooks = $_POST['scsv_has_hooks'];
+    $report_issue = get_option('scsv_report_issue');
     update_option('scsv_filename', $csvfile);
     update_option('scsv_user', $csvuser);
     update_option('scsv_post', $csvpost);
@@ -31,6 +32,7 @@ if(!empty($_POST['scsv_submit'])) {
     update_option('scsv_encode_special_chars',$encode_chars);
     update_option('scsv_has_hooks',$has_hooks);
     echo '<div class="updated"><p><strong>Configuration saved</strong></p></div>';
+    $csv_settings = $scp->_get_scsv_settings();
 } else {
     $csvfile = get_option('scsv_filename');
     $csvuser = get_option('scsv_user');
@@ -39,7 +41,7 @@ if(!empty($_POST['scsv_submit'])) {
     $parse_terms = get_option('scsv_parse_terms');
     $ingest_debugger = get_option('scsv_ingest_debugger');
     $report_issue = get_option('scsv_report_issue');
-    $csv_settings = get_option('scsv_csv_settings');
+    $csv_settings = $scp->_get_scsv_settings();
     $additional_csv_settings = get_option('scsv_additional_csv_settings');
     $encode_chars = get_option('scsv_encode_special_chars');
     $has_hooks = get_option('scsv_has_hooks');
@@ -107,8 +109,9 @@ if(!empty($_POST['scsv_submit'])) {
         <h3><span id="csvsettings_tt" class="tooltip"></span>CSV Settings</h3>
         <p id="csv_settings">
             <?php $settings_keys = array('delimiter'=>',','enclosure'=>'"','escape'=>'\\'); ?>
+
             <?php foreach($settings_keys as $k=>$v): ?>
-                <p class="scsv_input"><?php echo $k?>:<input type='text' name='scsv_csv_settings[<?php echo $k?>]' value='<?php echo($csv_settings[$k])?stripslashes($csv_settings[$k]):$v;?>' size='2' maxlength='2' /></p>
+                <p class="scsv_input"><?php echo $k?>:<input type='text' name='scsv_csv_settings[<?php echo $k?>]' value="<?php echo isset($csv_settings[$k])?htmlentities($csv_settings[$k]):htmlentities($v);?>" size='2' maxlength='2' /></p>
             <?php endforeach; ?>
             <p id="line_maxlen"><span id="maxchar_tt" class="tooltip"></span>Max Character Limit Per Line<input type="text" name="scsv_line_maxlen" value="<?php echo (is_null($additional_csv_settings['line_maxlen']))?'1000':$additional_csv_settings['line_maxlen'];?>" size="20"></p>
         </p>

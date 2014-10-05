@@ -28,9 +28,11 @@ Supra.Main = function() {
       _baseCall(dataCmd, dataArgs, cb);
     }
    ,scrollToEl: function(el, cb) {
-      $('html, body').animate({
-        scrollTop: el.offset().top
-      }, 2000);
+      if(typeof el.offset() !== "undefined") {
+        $('html, body').animate({
+          scrollTop: el.offset().top
+        }, 2000);
+      }
       if(cb) cb(); 
     }
   }

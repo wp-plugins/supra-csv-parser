@@ -1,10 +1,11 @@
 <?php 
 require_once('classes/Debug.php');
 require_once(dirname(__FILE__).'/classes/ExtractCsv.php');
-
 wp_enqueue_script( 'inputCloner', plugins_url('/js/inputCloner.js', __FILE__) );
-wp_enqueue_script( 'extractor', plugins_url('/js/export.js', __FILE__) );
+
 wp_enqueue_script( 'misc', plugins_url('/js/misc.js', __FILE__) );
+wp_register_script('extractor', plugins_url('/js/export.js', __FILE__) );
+wp_enqueue_script( 'extractor' );
 wp_enqueue_script( 'tablesorter', plugins_url('/js/jquery.tablesorter.js', __FILE__) );
 wp_enqueue_style( 'tablesorter-blue', plugins_url('/css/tablesorter-blue.css', __FILE__) );
 
@@ -14,7 +15,8 @@ $xc = new ExtractCsv($_FILES);
 <div id="supra_csv_extractor_form">
  
     <form id="extraction_form"> 
-<div class="wrap_scsv" style="width: 230px;">
+        <div class="wrap_scsv inputGroupWrapper" style="width: 350px">
+
         <h3>Extract Settings</h3>
 
         <div id="input">
@@ -77,10 +79,10 @@ $xc = new ExtractCsv($_FILES);
         </div>
 
         <div id="input">
+            <span class="help">Clicking this button shows all the posts that match your criteria specified above.</span>
             <button id="extract_and_preview">Extract</button>
         </div>
-</div>
-<div class="wrap_scsv" style="width: 600px;">
+
         <h3>Export Settings</h3>
         <div id="input" style="height: 210px">
             <label for="post_fields">Post Fields</label>
@@ -120,7 +122,7 @@ $xc = new ExtractCsv($_FILES);
         <div id="input">
             <label for="post_taxonomies">Taxonomies</label>
             <span class="help">provide comma-separated-values</span>
-            <input type="text" id="post_taxonomies" name="post_taxonomies" value="category,post_tag" size="50" />
+            <input type="text" id="post_taxonomies" name="post_taxonomies" value="category,post_tag" size="35" />
         </div>
 
         <div id="input" style="height: 100px">
@@ -134,6 +136,39 @@ $xc = new ExtractCsv($_FILES);
                     }
                 ?>
             </select>
+        </div>
+
+        <?php
+            extract($xc->_get_scsv_settings());
+        ?>
+        <div id="input">
+            <label for="extract_delim">CSV delimiter</label>
+            <span class="help">This setting will override the delimiter character provided on the configuration page</span>
+            <input type="text" id="extract_delim" name="extract_delim" value="<?php echo htmlentities($delimiter)?>" size="2" maxlength="2" />
+        </div>
+ 
+        <div id="input">
+            <label for="extract_enclose">CSV enclosure</label>
+            <span class="help">This setting will override the enclosure character provided on the configuration page</span>
+            <input type="text" id="extract_enclose" name="extract_enclose" value="<?php echo htmlentities($enclosure)?>"  size="2" maxlength="2" />
+        </div>
+ 
+        <div id="input">
+            <label for="extract_escape">CSV escape</label>
+            <span class="help">This setting will override the escape character provided on the configuration page</span>
+            <input type="text" id="extract_escape" name="extract_escape" value="<?php echo htmlentities($escape)?>"  size="2" maxlength="2" />
+        </div>
+
+        <div id="input">
+            <label for="from_charset">Extract from charset</label>
+            <span class="help">If you're not sure about this just leave it blank</span>
+            <input type="text" id="from_charset" name="from_charset" />
+        </div>
+ 
+        <div id="input">
+            <label for="to_charset">Extract to charset</label>
+            <span class="help">If you're not sure about this just leave it blank</span>
+            <input type="text" id="to_charset" name="to_charset" />
         </div>
 
         <div id="input">

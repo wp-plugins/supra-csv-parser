@@ -125,15 +125,13 @@ class UploadCsv extends SupraCsvPlugin {
              '<a href="'.$filename_url.'" target="_blank">Download File</a>';
         $row = 1;
 
-        $csv_settings = get_option('scsv_csv_settings');
-
         $delimiter_tag = "th";
 
         echo '<table class="tablesorter-blue"><thead>';
 
         if (($handle = fopen($filename_abs, "r")) !== FALSE) 
         {
-            while (($data = $this->parseNextLine($handle,$csv_settings)) !== FALSE) 
+            while (($data = $this->parseNextLine($handle)) !== FALSE) 
             {
                 $row++;
 
@@ -155,18 +153,6 @@ class UploadCsv extends SupraCsvPlugin {
 
             fclose($handle);
         }
-    }
-
-
-
-    private function parseNextLine($handle,$csv_settings) {
-        if (strnatcmp(phpversion(),'5.3') >= 0) { 
-            return fgetcsv($handle,1000,stripslashes($csv_settings['delimiter']),stripslashes($csv_settings['enclosure']),stripslashes($csv_settings['escape']));
- 
-        } 
-        else { 
-            return fgetcsv($handle,1000,stripslashes($csv_settings['delimiter']),stripslashes($csv_settings['enclosure']));
-        } 
     }
 
     public function displayFileSelector() {

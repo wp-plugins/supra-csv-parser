@@ -4,8 +4,8 @@ Author URI: http://www.supraliminalsolutions.com/blog/listings/supra-csv/
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=CLC8GNV7TRGDU
 Tags: csv,import,parse,ingest,custom post,extract,export,attachment,thumbnail
 Requires at least: 3.2.1
-Tested up to: 3.9
-Stable tag: 3.3.9
+Tested up to: 4.0
+Stable tag: 3.4.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -107,6 +107,10 @@ and make it as an available field to associate to a post.
 6. Easily debug issues
 
 == Changelog ==
+= 3.4.0
+* fixed bugs in the export feature
+* fixed javascript bugs with extracted file previews
+* added overridable CSV settings to the extraction funtionality
 = 3.3.9 =
 * adding the jquery table sorter to the csv preview/download buttons
 = 3.3.8 =

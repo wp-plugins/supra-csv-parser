@@ -1,10 +1,9 @@
 $(function() {
 
     var 
-      downloadUploadElToggled = []
-      , downloadExtractElToggled = []
-      , sMain = Supra.Main();
-      ;
+      sMain = Supra.Main()
+    , downloadExtractElToggled = []
+    , downloadUploadElToggled = [];
 
     $('#delete_upload').live('click', function() {
 
@@ -18,6 +17,15 @@ $(function() {
 
           $('#supra_csv_upload_forms').html(msg);
         });
+    });
+
+    $('#extract_and_export').click( function(e) {
+
+        console.log(downloadExtractElToggled); 
+
+        downloadExtractElToggled = [];
+
+        console.log(downloadExtractElToggled); 
     });
 
     $('#download_upload').live('click', function() {
@@ -61,9 +69,13 @@ $(function() {
 
         el = $(this);
 
+        console.log(file);
+
         elToggled = downloadExtractElToggled[file];
 
-        if( typeof elToggled == "undefined" ) {
+        console.log(elToggled);
+ 
+        if(typeof elToggled == "undefined" ) {
 
           sMain.baseCall('download_extract_file', file, function(msg) {
             el.parent().append('<div id="previewToggle">' + msg + '</div>');

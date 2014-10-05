@@ -1,8 +1,15 @@
 <?php
 
+require_once(dirname(__FILE__) . '/../vendor/autoload.php');
+
+use Goodby\CSV\Export\Standard\Exporter;
+use Goodby\CSV\Export\Standard\ExporterConfig;
+
+
+require_once(dirname(__FILE__) . '/SupraCsvPlugin.php'); 
 require_once(dirname(__FILE__) . '/../../../../wp-load.php');
 
-class ExtractorArgumentParser {
+class ExtractorArgumentParser extends SupraCsvPlugin {
 
     private $exporter_properties = array('post_fields','filename');
 
@@ -175,7 +182,6 @@ class ExporterArgumentParser extends ExtractorArgumentParser {
 
         $this->parsable_keys = array_merge($post_fields,$meta_and_terms);
         $this->filename = @ $this->args['filename'];
-        $this->settings = $this->getSettings();
     }
 
 }
@@ -193,44 +199,75 @@ class SupraCsvExporter extends ExporterArgumentParser {
         foreach($this->parsable_keys as $key=>$pk) {
   
             if(!in_array($key,array('post_fields','custom_fields','terms')) && !is_array($key) || empty($key)) {
-                $this->records[0][$pk] = $post['post']->$pk;
+                $this->records[1][$pk] = $post['post']->$pk;
 
             }
             else if(!in_array($key,array('post_fields'))) { 
                 foreach((array)$pk as $p) {
                     if(array_key_exists($p, $post['postinfo'][$key])) { 
-                        $this->records[0][$p] = $post['postinfo'][$key][$p];
+                        $this->records[1][$p] = $post['postinfo'][$key][$p];
                     }
                 }
             }
             else if($key == 'post_fields') {
                 foreach((array)$pk as $p) {
                     if(property_exists($post['post'], $p)) {
-                        $this->records[0][$p] = $post['post']->$p;
+                        $this->records[1][$p] = $post['post']->$p;
                     }
                 }
             }
         }
 
+        $this->_set_header_column();
+
         return $this;
     }
 
-    protected function getSettings() {
+    private function _set_header_column()
+    {
+        foreach($this->records as $record)
+            foreach($record as $key=>$val)
+                $this->records[0][$key] = $key;
 
-        $settings = get_option('scsv_csv_settings');
- 
-        $defaultSettings = array(
-                                 'delimiter'=>',',
-                                 'enclosure'=>'"'
-                                );
+        ksort($this->records); 
+    }  
 
-        return array_merge($defaultSettings,(array)$settings);
-    }
+    private function buildCsv($export_settings = array()) {
 
-    private function buildCsv() {
+        foreach($export_settings as $key=>$export_setting)
+        {
+            $value = html_entity_decode($export_setting);
 
-        extract($this->getSettings());
+            $converted[$key] = $value;
+        }
 
+        extract($converted); 
+
+        $config = new ExporterConfig();
+
+        $config
+            ->setDelimiter($extract_delim) 
+            // Customize delimiter. Default value is comma(,)
+            ->setEnclosure($extract_enclose)  
+            // Customize enclosure. Default value is double quotation(")
+            ->setEscape($extract_escape)   
+            // Customize escape character. Default value is backslash(\)
+            ->setToCharset($to_charset) 
+            // Customize file encoding. Default value is null, no converting.
+           ->setFromCharset($from_charset); 
+            // Customize source encoding. Default value is null.
+
+        $exporter = new Exporter($config);
+
+        ob_start();
+
+        $exporter->export('php://output', $this->records);
+
+        $this->csvstring = ob_get_contents();
+                 
+        ob_end_clean();
+
+/**
         $record = $this->records[0];
         $val_array = array();
         $key_array = array();
@@ -270,6 +307,9 @@ class SupraCsvExporter extends ExporterArgumentParser {
 
         $this->csvstring = implode($delimiter, $key_array)."\n";
         $this->csvstring .= implode($delimiter, $val_array)."\n";
+
+**/
+
         return $this;
     }
 
@@ -278,13 +318,13 @@ class SupraCsvExporter extends ExporterArgumentParser {
         return str_replace(array("\r\n", "\r", "\n"), null, $val);
     }
 
-    public function download() {
-        if(empty($this->csvstring)) $this->parseRecords()->buildCsv();
+    public function download($export_settings = array()) {
+        if(empty($this->csvstring)) $this->parseRecords()->buildCsv($export_settings);
         return $this->csvstring;
     }
 
-    public function createFile() {
-        if(empty($this->csvstring)) $this->parseRecords()->buildCsv();
+    public function createFile($export_settings = array()) {
+        if(empty($this->csvstring)) $this->parseRecords()->buildCsv($export_settings);
         $my_file = dirname(__FILE__) . '/../../../uploads/supra-csv-parser/csv/'.$this->filename;
         $handle = fopen($my_file, 'w') or die('Cannot open file:  '.$my_file);
         fwrite($handle, $this->csvstring);

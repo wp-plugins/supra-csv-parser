@@ -110,7 +110,7 @@ class SupraCsvAjaxHandler extends SupraCsvPlugin {
                 //var_dump($query_args);
                 $scex = new SupraCsvExporter($posts,$query_args);
 
-                $content = $scex->download();
+                $content = $scex->download($query_args);
 
                 $filename = 'ingest-'.date('y-m-d-h-i-s-a') .'.csv';
 
