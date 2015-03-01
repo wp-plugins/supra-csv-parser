@@ -1,7 +1,6 @@
 <?php
 require_once('Debug.php');
 require_once('SupraCsvPlugin.php');
-require_once('SupraCsvAttachmentCreator.php');
 
 class RemotePost extends SupraCsvPlugin 
 {
@@ -213,12 +212,6 @@ class RemotePost extends SupraCsvPlugin
             $content['post_title'] = $this->xmlencode($post['title']);
         }
  
-        $scac = new SupraCsvAttachmentCreator();
- 
-        if(!empty($content['post_thumbnail'])) {
-            $content['post_thumbnail'] = $scac->processAttachment($content['post_thumbnail']);
-        }
- 
         //add the custom terms
         if($post['publish'] && empty($content['post_status'])) {
             $content['post_status'] = 'publish';
@@ -241,9 +234,6 @@ class RemotePost extends SupraCsvPlugin
 
         try {
             $success = $this->postContent($content);
-
-            if(!empty($content['attachments']))
-                $scac->processAttachment($content['attachments'],$success);                
 
         } catch( Exception $e ) {
             echo '<span class="error">'.$e->getMessage().'</span>';
