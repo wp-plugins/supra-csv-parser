@@ -137,7 +137,6 @@ width: 30%;
 }
 
 .help {
-    white-space: no-wrap !important;
     color:grey;
     font-size: 10px;
     display: block; 

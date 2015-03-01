@@ -3,6 +3,7 @@ require_once("Debug.php");
 require_once(dirname(__FILE__) . '/SupraCsvPlugin.php');
 require_once(dirname(__FILE__) . '/SupraCsvPostTaxonomy.php');
 require_once(dirname(__FILE__) . '/SupraCsvHookManager.php');
+require_once(dirname(__FILE__) . '/SupraXmlrpcServer.php');
 
 class SupraCsvParser extends SupraCsvPlugin {
     private $file;
@@ -83,12 +84,17 @@ class SupraCsvParser extends SupraCsvPlugin {
     }
 
 
-    public function ingestContent($mapping) {
-
+    public function ingestContent($mapping) 
+    {
         $rp   = new RemotePost();
+
+        $rp->setServer(new SupraXmlrpcServer()); 
+
         $cm   = new SupraCsvMapper($mapping);
 
         $cols = $this->getColumns();
+
+        $this->_blog_id = get_current_blog_id();
 
         $rowCount=0;
 
@@ -111,6 +117,8 @@ class SupraCsvParser extends SupraCsvPlugin {
 
                 $post_args = $this->getPostArgs($row);               
 
+                $post_args['blog_id'] = $this->_blog_id;
+                    
                 //Debug::show($this->hasHooks, $this->has_hook['row'],$data, $cols, $row);
 
                 $rowCount++;
