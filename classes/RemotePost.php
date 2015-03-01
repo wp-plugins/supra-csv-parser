@@ -1,7 +1,6 @@
 <?php
 require_once('Debug.php');
 require_once('SupraCsvPlugin.php');
-require_once('SupraCsvAttachmentCreator.php');
 
 class RemotePost extends SupraCsvPlugin 
 {
