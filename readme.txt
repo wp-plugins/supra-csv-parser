@@ -5,7 +5,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: csv,import,parse,ingest,custom post,extract,export,attachment,thumbnail
 Requires at least: 3.2.1
 Tested up to: 4.0
-Stable tag: 3.4.4
+Stable tag: 3.4.5
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -107,6 +107,8 @@ and make it as an available field to associate to a post.
 6. Easily debug issues
 
 == Changelog ==
+= 3.4.5 =
+* fixed broken error reporting functionality
 = 3.4.4 =
 * fixed major performance issues by overhauling xmlrpc methodology to process confined. No overhead of network latency 
 * fixed broken CSS that removed styling in 1.3.2. 

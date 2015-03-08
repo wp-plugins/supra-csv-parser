@@ -127,7 +127,7 @@ class SupraCsvParser extends SupraCsvPlugin {
 
                     if($this->hasHooks && $this->has_hook['ingestion'])
                         $this->hook_mgrs['ingestion']->callHooks($post_args,$rp_result);
-                    echo '<span class="success">Successfully ingested '. $post_args['post_title'] . ' at line '.$rowCount.' of '.$this->getFileName().'</span><br />';
+                    echo '<span class="success">Successfully ingested '. $post_args['post_title'] . ' at line '.$rowCount.' of '.$this->getFileName().' with postId: '.$rp_result.'</span><br />';
 
                 }
                 else {

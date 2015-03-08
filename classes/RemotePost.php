@@ -40,7 +40,10 @@ class RemotePost extends SupraCsvPlugin
     private function _makeCall($args) 
     {
 
-        if(!is_array($args['args'])) throw new Exception('Invalid Argument');
+        if(!is_array($args['args'])) 
+        {
+            Throw new Exception('Invalid Argument');
+        }
 
         $post= get_option('scsv_post');
 
@@ -66,11 +69,13 @@ class RemotePost extends SupraCsvPlugin
 
             $response = $this->server->wp_editPost($args);
 
-            if (!$response) 
+            if($response instanceof XMLRPC_Error)
             {
-                echo $this->debugAndReport($args, $this->server->getErrorMessage());
-
-                throw new Exception($this->server->getErrorMessage());
+                $this->debugAndReport($args, $response);
+            }
+            else if(!is_numeric($response))
+            {
+                $this->debugAndReport($args, new XMLRPC_Error(500, _('Response did not return a postId')));
             }
         }
         else if($args['function'] == "wp.newPost") 
@@ -83,12 +88,14 @@ class RemotePost extends SupraCsvPlugin
             );
 
             $response = $this->server->wp_newPost($args);
-        
-            if (!$response) 
-            {
-                echo $this->debugAndReport($args, $this->server->getErrorMessage());
 
-                throw new Exception($this->server->getErrorMessage());
+            if($response instanceof XMLRPC_Error)
+            {
+                $this->debugAndReport($args, $response);
+            }
+            else if(!is_numeric($response))
+            {
+                $this->debugAndReport($args, new XMLRPC_Error(500, _('Response did not return a postId')));
             }
         }
 
@@ -193,6 +200,14 @@ class RemotePost extends SupraCsvPlugin
                         'attachments'
         );
 
+        foreach($params as $var_name)
+        {
+            if(empty($$var_name))
+            {
+                unset($content[$var_name]);
+            }
+        }
+
         if($this->debugging) {
                 ini_set('display_errors', 1); // set to 0 when not debugging
                 error_reporting(E_ALL ^ E_NOTICE);
@@ -243,18 +258,22 @@ class RemotePost extends SupraCsvPlugin
         return $success;
     }
 
-    private function debugAndReport($args, $error) {
-        if($this->debugging) {
+    private function debugAndReport($args, XMLRPC_Error $error) 
+    {
+        throw new Exception($error);
+
+
+        if($this->debugging) 
+        {
             $this->debug_output = $error . ' ' .  Debug::returnShow($args);
-            if($this->report_issue) {
-                if($this->reportIssue())
-                    $result = '<span class="success">Issue successfully reported!</span>';
-                else
-                    $result = '<span class="error">Problem reporting issue, check your SMTP configuration.</span>';
+
+            if($this->report_issue) 
+            {
+                $this->reportIssue();
             }
         }
 
-        return $result;
+        throw new Exception($error);
     }
 
     private function xmlencode($data) {
@@ -268,17 +287,5 @@ class RemotePost extends SupraCsvPlugin
         return $data;
     }
 
-    private function reportIssue() {
-
-        $this->issue_reported++;
-
-        if($this->issue_reported<=3){
-            $admin_email = get_option('admin_email');
-            $header = 'From: "Blog Admin" <'.$admin_email.'>';
-            return wp_mail( $this->admin_email, 'Supra CSV issue', $this->debug_output,$header);
-        }
-        else {
-            return true; 
-        }
-    }
+    private function reportIssue() {}
 }
