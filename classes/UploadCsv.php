@@ -37,6 +37,8 @@ class UploadCsv extends SupraCsvPlugin {
 
     private function validateFileType($type) {
 
+        return true;
+
         $valid = false;
 
         foreach($this->mimes as $mime) {

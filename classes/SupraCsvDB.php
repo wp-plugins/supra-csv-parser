@@ -23,8 +23,7 @@ class SupraCsvDB {
       $this->mtStart    = $this->getMicroTime();
       $this->nbQueries  = 0;
       $this->lastResult = NULL;
-      mysql_connect($server, $user, $pass) or die('Server connexion not possible.');
-      mysql_select_db($base)               or die('Database connexion not possible.');
+      $this->connection_link = mysqli_connect($server, $user, $pass, $base) or die(mysqli_error($this->connection_link));
     }
 
     /** Query the database.
@@ -34,12 +33,13 @@ class SupraCsvDB {
       */
     function query($query, $debug = -1)
     {
-      $this->nbQueries++;
-      $this->lastResult = mysql_query($query) or $this->debugAndDie($query);
+        $this->nbQueries++;
 
-      $this->debug($debug, $query, $this->lastResult);
+        $this->lastResult = mysqli_query($this->connection_link, $query) or $this->debugAndDie($query);
 
-      return $this->lastResult;
+        $this->debug($debug, $query, $this->lastResult);
+
+        return $this->lastResult;
     }
     /** Do the same as query() but do not return nor store result.\n
       * Should be used for INSERT, UPDATE, DELETE...
@@ -49,11 +49,12 @@ class SupraCsvDB {
     function execute($query, $debug = -1)
     {
       $this->nbQueries++;
-      mysql_query($query) or $this->debugAndDie($query);
+      
+      mysqli_query($this->connection_link, $query) or $this->debugAndDie($query);
 
       $this->debug($debug, $query);
     }
-    /** Convenient method for mysql_fetch_object().
+    /** Convenient method for mysqli_fetch_object().
       * @param $result The ressource returned by query(). If NULL, the last result returned by query() will be used.
       * @return An object representing a data row.
       */
@@ -62,10 +63,10 @@ class SupraCsvDB {
       if ($result == NULL)
         $result = $this->lastResult;
 
-      if ($result == NULL || mysql_num_rows($result) < 1)
+      if ($result == NULL || mysqli_num_rows($result) < 1)
         return NULL;
       else
-        return mysql_fetch_object($result);
+        return mysqli_fetch_object($result);
     }
     /** Get the number of rows of a query.
       * @param $result The ressource returned by query(). If NULL, the last result returned by query() will be used.
@@ -74,9 +75,9 @@ class SupraCsvDB {
     function numRows($result = NULL)
     {
       if ($result == NULL)
-        return mysql_num_rows($this->lastResult);
+        return mysqli_num_rows($this->lastResult);
       else
-        return mysql_num_rows($result);
+        return mysqli_num_rows($result);
     }
     /** Get the result of the query as an object. The query should return a unique row.\n
       * Note: no need to add "LIMIT 1" at the end of your query because
@@ -90,11 +91,12 @@ class SupraCsvDB {
       $query = "$query LIMIT 1";
 
       $this->nbQueries++;
-      $result = mysql_query($query) or $this->debugAndDie($query);
+
+      $result = mysqli_query($this->connection_link, $query) or $this->debugAndDie($query);
 
       $this->debug($debug, $query, $result);
 
-      return mysql_fetch_object($result);
+      return mysqli_fetch_object($result);
     }
     /** Get the result of the query as value. The query should return a unique cell.\n
       * Note: no need to add "LIMIT 1" at the end of your query because
@@ -108,8 +110,9 @@ class SupraCsvDB {
       $query = "$query LIMIT 1";
 
       $this->nbQueries++;
-      $result = mysql_query($query) or $this->debugAndDie($query);
-      $line = mysql_fetch_row($result);
+      $result = mysqli_query($this->connection_link, $query) or $this->debugAndDie($query);
+      
+      $line = mysqli_fetch_row($result);
 
       $this->debug($debug, $query, $result);
 
@@ -158,7 +161,7 @@ class SupraCsvDB {
     function debugAndDie($query)
     {
       $this->debugQuery($query, "Error");
-      die("<p style=\"margin: 2px;\">".mysql_error()."</p></div>");
+      die("<p style=\"margin: 2px;\">".mysqli_error()."</p></div>");
     }
     /** Internal function to debug a MySQL query.\n
       * Show the query and output the resulting table if not NULL.
@@ -176,7 +179,7 @@ class SupraCsvDB {
       $reason = ($debug === -1 ? "Default Debug" : "Debug");
       $this->debugQuery($query, $reason);
       if ($result == NULL)
-        echo "<p style=\"margin: 2px;\">Number of affected rows: ".mysql_affected_rows()."</p></div>";
+        echo "<p style=\"margin: 2px;\">Number of affected rows: ".mysqli_affected_rows()."</p></div>";
       else
         $this->debugResult($result);
     }
@@ -201,14 +204,14 @@ class SupraCsvDB {
     {
       echo "<table border=\"1\" style=\"margin: 2px;\">".
            "<thead style=\"font-size: 80%\">";
-      $numFields = mysql_num_fields($result);
+      $numFields = mysqli_num_fields($result);
       // BEGIN HEADER
       $tables    = array();
       $nbTables  = -1;
       $lastTable = "";
       $fields    = array();
       $nbFields  = -1;
-      while ($column = mysql_fetch_field($result)) {
+      while ($column = mysqli_fetch_field($result)) {
         if ($column->table != $lastTable) {
           $nbTables++;
           $tables[$nbTables] = array("name" => $column->table, "count" => 1);
@@ -226,7 +229,7 @@ class SupraCsvDB {
         echo "<th>".$fields[$i]."</th>";
       echo "</thead>";
       // END HEADER
-      while ($row = mysql_fetch_array($result)) {
+      while ($row = mysqli_fetch_array($result)) {
         echo "<tr>";
         for ($i = 0; $i < $numFields; $i++)
           echo "<td>".htmlentities($row[$i])."</td>";
@@ -256,22 +259,22 @@ class SupraCsvDB {
       */
     function resetFetch($result)
     {
-      if (mysql_num_rows($result) > 0)
-        mysql_data_seek($result, 0);
+      if (mysqli_num_rows($result) > 0)
+        mysqli_data_seek($result, 0);
     }
     /** Get the id of the very last inserted row.
       * @return The id of the very last inserted row (in any table).
       */
     function lastInsertedId()
     {
-      return mysql_insert_id();
+      return mysqli_insert_id($this->connection_link);
     }
     /** Close the connexion with the database server.\n
       * It's usually unneeded since PHP do it automatically at script end.
       */
     function close()
     {
-      mysql_close();
+      mysqli_close($this->connection_link);
     }
 
     /** Internal method to get the current time.
@@ -284,19 +287,20 @@ class SupraCsvDB {
     }
 	
     function begin() {
-        mysql_query("SET AUTOCOMMIT=0");
-        mysql_query("START TRANSACTION");
+        mysqli_query($this->connection_link, "SET AUTOCOMMIT=0");
+        
+        mysqli_query($this->connection_link, "START TRANSACTION");
     }
 	
     function commit() {
-        mysql_query("COMMIT");
+        mysqli_query($this->connection_link, "COMMIT");
     }
 	
     function rollback() {
-        mysql_query("ROLLBACK");
+        mysqli_query($this->connection_link, "ROLLBACK");
     }
 	
     function truncateTable($table) {
-        mysql_query("TRUNCATE TABLE $table");
+        mysqli_query($this->connection_link, "TRUNCATE TABLE $table");
     }
 } 
