@@ -7,8 +7,6 @@ use Goodby\CSV\Import\Standard\Lexer;
 use Goodby\CSV\Import\Standard\Interpreter;
 use Goodby\CSV\Import\Standard\LexerConfig;
 
-use Goodby\CSV\Import\Tests\Standard\Join\CSVFiles;
-
 class LexerTest extends \PHPUnit_Framework_TestCase
 {
     public function test_shift_jis_CSV()
@@ -147,5 +145,12 @@ class LexerTest extends \PHPUnit_Framework_TestCase
             array("14", "スティック型クリーナ", "tho@eample.com"),
             array("16", "スティック型", "carot@eample.com"),
         ), $csvContents);
+    }
+
+    public function test_instantiation_without_config()
+    {
+        $lexer = new Lexer();
+
+        $this->assertInstanceOf('Goodby\CSV\Import\Standard\Lexer', $lexer);
     }
 }
