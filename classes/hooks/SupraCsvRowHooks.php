@@ -1,4 +1,7 @@
 <?php
+
+namespace SupraCsvFree;
+
 /* 
 
 Runs before row data is sent to be ingested
@@ -7,6 +10,7 @@ Here only one parameter of an array of row data is
 used an each subsequent method is chained down to return a result
 
 */
+
 
 class SupraCsvRowHooks extends SupraCsvHookManager {
 
@@ -28,9 +32,20 @@ class SupraCsvRowHooks extends SupraCsvHookManager {
 
         $dep = $this->getDependencies();
 
-        //Debug::show($dep); 
+        $className = $this->getCurrentClassName();
 
-        $row[] = $dep[get_class($this)]['SupraCsvIngestionHooks']->getLastPostId();
+        $ingestionDependency = $dep[$className]['SupraCsvIngestionHooks'];
+
+        //$this->logger->info(__METHOD__);
+        //$this->logger->info(var_export($row, true));
+
+        if(is_object($ingestionDependency))
+        {
+            $row[] = $ingestionDependency->getLastPostId();
+        }
+
+        //$this->logger->info("end of: " . __METHOD__);
+        //$this->logger->info(var_export($row, true));
 
         return $row;
     }

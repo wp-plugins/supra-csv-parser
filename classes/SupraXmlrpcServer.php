@@ -1,4 +1,6 @@
 <?php
+namespace SupraCsvFree;
+
 class XMLRPC_Error
 {
     private $errors;

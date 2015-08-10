@@ -1,20 +1,22 @@
 <?php
+namespace SupraCsvFree;
+
 class SupraCsvDB {
     /** Put this variable to true if you want ALL queries to be debugged by default:
       */
-    var $defaultDebug = false;
+    protected $defaultDebug = false;
 
     /** INTERNAL: The start time, in miliseconds.
       */
-    var $mtStart;
+    protected $mtStart;
     /** INTERNAL: The number of executed queries.
       */
-    var $nbQueries;
+    protected $nbQueries;
     /** INTERNAL: The last result ressource of a query().
       */
-    var $lastResult;
+    protected $lastResult;
 	
-	var $findResult;
+	protected $findResult;
 
     /** Connect to a MySQL database to be able to use the methods below.
       */

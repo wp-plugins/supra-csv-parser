@@ -1,31 +1,30 @@
 <?php
+namespace SupraCsvFree;
 require_once('Debug.php');
-require_once('SupraCsvPlugin.php');
 
-class RemotePost extends SupraCsvPlugin 
+class RemotePost
 {
     private $uname;
     private $pass;
     private $postId;
     private $debugging, $debug_output, $report_issue, $issue_reported;
-    private $admin_email = "zmijevik@hotmail.com";
-
-    function __construct() 
+    
+    function __construct(SupraCsvParser $scp) 
     {
-        parent::__construct();
-
+        $this->scp = $scp;
+        
         $this->setUser();       
 
-        $this->debugging     = get_option('scsv_ingest_debugger');
+        $this->debugging     = $this->scp->getSetting('scsv_ingest_debugger');
 
-        $this->report_issue  = get_option('scsv_report_issue');
+        $this->report_issue  = $this->scp->getSetting('scsv_report_issue');
 
         $this->issue_reported = 0; 
     }
 
     private function setUser() 
     {
-        $csvuser = get_option('scsv_user');
+        $csvuser = $this->scp->getSetting('scsv_user');
 
         $this->uname = $csvuser['name'];
 
@@ -42,10 +41,10 @@ class RemotePost extends SupraCsvPlugin
 
         if(!is_array($args['args'])) 
         {
-            Throw new Exception('Invalid Argument');
+            Throw new \Exception('Invalid Argument');
         }
 
-        $post= get_option('scsv_post');
+        $post= $this->scp->getSetting('scsv_post');
 
         $default_args = array(
             'post_id'=>null,
@@ -54,7 +53,7 @@ class RemotePost extends SupraCsvPlugin
         $args = array_merge($default_args, $args);
 
         if($this->debugging) {
-            Debug::show($args);
+            $this->scp->appendToProgressBuffer(Debug::returnShow($args));
         }
 
         if($args['function'] == "wp.editPost") 
@@ -81,7 +80,7 @@ class RemotePost extends SupraCsvPlugin
         else if($args['function'] == "wp.newPost") 
         {
             $args = array(
-                'blog_id'=>$args['blog_id'],
+                'blog_id'=> @ $args['blog_id'],
                 'username'=>$this->uname,
                 'password'=>$this->pass,
                 'content_struct'=>$args['args']
@@ -107,7 +106,7 @@ class RemotePost extends SupraCsvPlugin
 
         $post_id = null;
 
-        if($content['post_id']) {
+        if(@ $content['post_id']) {
 
             $function = 'wp.editPost';
             $post_id = $content['post_id'];
@@ -142,7 +141,7 @@ class RemotePost extends SupraCsvPlugin
             $custom_fields[] = array('key'=>$k,'value'=>$v);
         }
 
-        $post = get_option('scsv_post');
+        $post = $this->scp->getSetting('scsv_post');
 
         //the keys to filter by
         $params = array(
@@ -251,7 +250,11 @@ class RemotePost extends SupraCsvPlugin
             $success = $this->postContent($content);
 
         } catch( Exception $e ) {
-            echo '<span class="error">'.$e->getMessage().'</span>';
+            
+            $err = '<span class="error">'.$e->getMessage().'</span>';
+            
+            $this->scp->appendToProgressBuffer($err);
+
             $success = false;;
         }
          
@@ -260,12 +263,13 @@ class RemotePost extends SupraCsvPlugin
 
     private function debugAndReport($args, XMLRPC_Error $error) 
     {
-        throw new Exception($error);
-
+        throw new \Exception($error);
 
         if($this->debugging) 
         {
             $this->debug_output = $error . ' ' .  Debug::returnShow($args);
+
+            $this->scp->appendToProgressBuffer($this->debug_output);
 
             if($this->report_issue) 
             {
@@ -273,12 +277,12 @@ class RemotePost extends SupraCsvPlugin
             }
         }
 
-        throw new Exception($error);
+        throw new \Exception($error);
     }
 
     private function xmlencode($data) {
 
-        if(get_option('scsv_encode_special_chars')) {
+        if($this->scp->getSetting('scsv_encode_special_chars')) {
 
             $data = utf8_encode($data);
             $data = htmlentities($data);

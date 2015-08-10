@@ -47,10 +47,16 @@ padding: 10px;
   <div style="float: right;width: 300px;">
     <h3>Rapid Releases</h3>
     <p>There are times when new releases are available and may contain bugs. if you encounter any issues with the plugin ingestion be sure to toggle ingestion debugging by checking the <a href="#ingestion_debugging">box</a> and provide the debug output in the <a href="http://wordpress.org/support/plugin/supra-csv-parser" target="_blank">support forum</a> to get the problem solved quickly.</p>
-    <h3>Issue Reporting<span class="premium_only">(Premium Only)</span></h3>
-     <p>If you are experiencing issues be sure to turn the ingestion debugger on as mentioned above and toggle the <a href="#issue_reporting">issue reporting</a> checkbox.
-      This will send en email directly to the admin to debug the issue if something went wrong in the ingestion.
-     </p>
+    <h3>Issue Reporting</h3>
+    <p>
+      If you are experiencing issues be sure to turn the ingestion debugger on as mentioned above.
+      There is an area where you can copy the Plugin Settings on the configuration page. Please provide these settings and the CSV file that is causing issues. It would also be very helpful to provide the error log for the day the issues were experiened.
+    </p>
+    <h3>Error Logging</h3>
+    <p>
+      All errors are logged in a log file for each days. These log files are located in the logs directory at the root of the plugin. Regardless of whether or not you have php error reporting enabled or disabled all php error will show here.
+    </p>
+    
     <h3>Donations</h3>
     <p>Additional requests or feeling generous, feel free to donate!</p>
     <form action="https://www.paypal.com/cgi-bin/webscr" method="post">
@@ -72,8 +78,11 @@ padding: 10px;
     $pluginErr = (array) get_option('supracsvplugin_error');
 
     if(array_key_exists('details',$pluginErr)) {
-      echo "<h2>Plugin Installation Errors (".$pluginErr['date'].")</h2>";
-      echo "<p>".$pluginErr['details']."</p>";
+        if(!empty($pluginErr['details']))
+        {  
+            echo "<h2>Plugin Installation Errors (".$pluginErr['date'].")</h2>";
+            echo "<p>".$pluginErr['details']."</p>";
+        }
     }
   ?>
 

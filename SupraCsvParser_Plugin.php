@@ -157,7 +157,7 @@ class SupraCsvParser_Plugin extends SupraCsvParser_LifeCycle {
 
     public function supraCsvAjax() {
         require_once(dirname(__FILE__).'/classes/SupraCsvAjaxHandler.php');
-        $ah = new SupraCsvAjaxHandler($_REQUEST);
+        $ah = new \SupraCsvFree\SupraCsvAjaxHandler($_REQUEST);
         die();    
     }
 

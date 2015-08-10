@@ -1,6 +1,8 @@
 <?php
+namespace SupraCsvFree;
 require_once("Debug.php");
 require_once("CsvLib.php");
+
 class SupraCsvPreset extends SupraCsvParser {
 
     private $debug_queries = false;

@@ -23,9 +23,32 @@ Supra.Main = function() {
       });
   }
 
+  _basePoll = function(dataCmd, dataArgs, cb) {
+
+      $.ajax({ 
+        type: 'POST',
+        url: ajaxurl,
+        data: {'action':'supra_csv','command': dataCmd,'args': dataArgs},
+        success: function(msg){
+          
+          cb(msg);
+
+          setTimeout(function() {
+
+              Supra.poll();
+
+          }, 5000);
+        }, 
+        dataType: "json", 
+      });
+  }
+
   return {
     baseCall: function(dataCmd, dataArgs, cb) {
       _baseCall(dataCmd, dataArgs, cb);
+    }
+   ,basePoll: function(dataCmd, dataArgs, cb) {
+      _basePoll(dataCmd, dataArgs, cb);
     }
    ,scrollToEl: function(el, cb) {
       if(typeof el.offset() !== "undefined") {

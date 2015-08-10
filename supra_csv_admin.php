@@ -1,10 +1,13 @@
 <?php
 require_once(dirname(__FILE__).'/classes/SupraCsvPlugin.php');
 
-$scp = new SupraCsvPlugin();
+$scp = new \SupraCsvFree\SupraCsvPlugin();
+    
+$scp->setSettingsResolver(function($setting_key) {
+    return get_option($setting_key);
+});
 
 if(!empty($_POST['scsv_submit'])) {
-    $csvfile= $_POST['scsv_filename'];
     $csvuser['name'] = $_POST['scsv_wpname'];
     $csvuser['pass'] = $_POST['scsv_wppass'];
     $csvpost['publish'] = $_POST['scsv_autopub'];
@@ -16,17 +19,29 @@ if(!empty($_POST['scsv_submit'])) {
     $parse_terms = $_POST['scsv_parse_terms'];
     $ingest_debugger = $_POST['scsv_ingest_debugger'];
     $csv_settings = $_POST['scsv_csv_settings'];
-    $report_issue = $_POST['scsv_report_issue'];
     $encode_chars = $_POST['scsv_encode_special_chars'];
     $has_hooks = $_POST['scsv_has_hooks'];
-    $report_issue = get_option('scsv_report_issue');
-    update_option('scsv_filename', $csvfile);
+
+    $misc_options_keys = array(
+        'scsv_is_ingestion_chunked',
+        'scsv_chunk_by_n_rows',
+        'scsv_are_revisions_skipped',
+        'scsv_is_using_multithreads'
+    );
+
+    foreach($misc_options_keys as $misc_options_key)
+    {
+        $option_key_name = str_replace('scsv_', '', $misc_options_key);
+
+        $misc_options[$option_key_name] = $_POST[$misc_options_key];
+    }
+
+    update_option('scsv_misc_options', $misc_options);
     update_option('scsv_user', $csvuser);
     update_option('scsv_post', $csvpost);
     update_option('scsv_custom_terms', $post_terms);
     update_option('scsv_parse_terms', $parse_terms);
     update_option('scsv_ingest_debugger', $ingest_debugger);
-    update_option('scsv_report_issue', $report_issue);
     update_option('scsv_csv_settings', $csv_settings);
     update_option('scsv_additional_csv_settings', $additional_csv_settings);
     update_option('scsv_encode_special_chars',$encode_chars);
@@ -40,11 +55,12 @@ if(!empty($_POST['scsv_submit'])) {
     $post_terms = get_option('scsv_custom_terms');
     $parse_terms = get_option('scsv_parse_terms');
     $ingest_debugger = get_option('scsv_ingest_debugger');
-    $report_issue = get_option('scsv_report_issue');
     $csv_settings = $scp->_get_scsv_settings();
     $additional_csv_settings = get_option('scsv_additional_csv_settings');
     $encode_chars = get_option('scsv_encode_special_chars');
     $has_hooks = get_option('scsv_has_hooks');
+
+    $misc_options = get_option('scsv_misc_options');
 }
 
 ?>
@@ -86,6 +102,32 @@ if(!empty($_POST['scsv_submit'])) {
         <h3><span id="postdefaults_tt" class="tooltip"></span>Post Defaults</h3>
         <p>Default Title<input type="text" name="scsv_defaulttitle" value="<?php echo $csvpost['title']; ?>" size="20"></p>
         <p>Default Description<textarea name="scsv_defaultdesc" id="scsv_defaultdesc"><?php echo $csvpost['desc']; ?></textarea></p>
+
+        <h3>Performance</h3>
+
+          <p>
+            <span id="arerevisionsskipped_tt" class="tooltip"></span>
+            Skip Revisions<input type="checkbox" name="scsv_are_revisions_skipped" value="1" <? echo ($misc_options['are_revisions_skipped'])?'checked="checked"':"";?>/>
+          </p>
+
+          <p>
+            <span id="isingestionchunked_tt" class="tooltip"></span>
+            Chunk Ingestion<span class="premium_only">(Premium Only)</span><input type="checkbox" name="scsv_is_ingestion_chunked" disabled />
+          </p>
+
+        <p id="chunk_ingestion_options">
+
+                <span id="chunkbynrows_tt" class="tooltip"></span>
+                Chunk ingestion for every 
+                <input name="scsv_chunk_by_n_rows" value="50" size="4" style="display: inline; float: none" maxlength="4" disabled> rows
+                <span class="premium_only">(Premium Only)</span>
+                <br />
+                <span id="isusingmultithreads_tt" class="tooltip"></span>
+                Use Multi-Threading<input type="checkbox" name="scsv_is_using_multithreads" value="1" disabled/>
+                <span class="premium_only">(Premium Only)</span>
+
+        </p>
+
 </div>
 <div style="float: right; width: 300px;">
         <h3>Ingestion Settings</h3>
@@ -98,9 +140,6 @@ if(!empty($_POST['scsv_submit'])) {
         </p>
         <p id="ingestion_debugging">
             <span id="debugingestion_tt" class="tooltip"></span>Debug Ingestion: <input type="checkbox" name="scsv_ingest_debugger" value="true" <?php echo ($ingest_debugger)?'checked="checked"':''?>>
-        </p>
-        <p id="issue_reporting">
-            <span id="reportissues_tt" class="tooltip"></span>Report Issues: <span class="premium_only">(Premium Only)</span><input type="checkbox" name="scsv_report_issue" value="true" <?php echo ($report_issue)?'checked="checked"':''?> disabled>
         </p>
         <p id="encode_char">
             <span id="specialchar_tt" class="tooltip"></span>Encode Special Characters: <input type="checkbox" name="scsv_encode_special_chars" value="true" <?php echo($encode_chars)?'checked="checked"':''?>>
@@ -132,4 +171,14 @@ if(!empty($_POST['scsv_submit'])) {
         </p>
 </form>
 </div>
+<h2>
+  <span id="pluginsettings_tt" class="tooltip"></span>
+  Plugin Settings
+</h2>
+<?php
+$settings = json_encode($scp->getSettings(), true);
+echo "<textarea>$settings</textarea>";
+?>
+
+
 

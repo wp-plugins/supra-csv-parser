@@ -1,8 +1,10 @@
 <?php
+namespace SupraCsvFree;
+
 require_once(dirname(__FILE__).'/SupraCsvPlugin.php');
+
 class ExtractCsv extends SupraCsvPlugin {
 
-    private $mimes   = array("text/csv","text/comma-separated-values",'application/vnd.ms-excel','text/plain','text/tsv');
     private $success = false;
     private $error;
     private $preview_num = 200;
@@ -91,29 +93,28 @@ class ExtractCsv extends SupraCsvPlugin {
 
         echo '<table class="tablesorter-blue"><thead>';
 
-        if (($handle = fopen($filename_abs, "r")) !== FALSE)
+        $csvLines = $this->parseLines($filename_abs);
+
+        //$this->getLogger()->info(__METHOD__ . var_export($csvLines, true));
+
+        foreach($csvLines as $data)
         {
-            while (($data = $this->parseNextLine($handle)) !== FALSE)
+            $row++;
+
+            $delimiter = "</{$delimiter_tag}><{$delimiter_tag}>";
+
+            echo "<tr><{$delimiter_tag}>" . implode($delimiter,$data) . "</{$delimiter_tag}></tr>";
+
+            if($row==$this->preview_num) break;
+
+            if($row == 2)
             {
-                $row++;
+                $delimiter_tag = "td";
 
-                $delimiter = "</{$delimiter_tag}><{$delimiter_tag}>";
-
-                echo "<tr><{$delimiter_tag}>" . implode($delimiter,$data) . "</{$delimiter_tag}></tr>";
-
-                if($row==$this->preview_num) break;
-
-                if($row == 2)
-                {
-                    $delimiter_tag = "td";
-
-                    echo "</thead><tbody>";
-                }
+                echo "</thead><tbody>";
             }
-
-            echo "</tbody></table>";
-
-            fclose($handle);
         }
+
+        echo "</tbody></table>";
     }
 }

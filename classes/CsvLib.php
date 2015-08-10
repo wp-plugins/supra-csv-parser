@@ -1,78 +1,171 @@
 <?php
+namespace SupraCsvFree;
+
 require_once("Debug.php");
 require_once(dirname(__FILE__) . '/SupraCsvPlugin.php');
-require_once(dirname(__FILE__) . '/SupraCsvPostTaxonomy.php');
 require_once(dirname(__FILE__) . '/SupraCsvHookManager.php');
 require_once(dirname(__FILE__) . '/SupraXmlrpcServer.php');
 
 class SupraCsvParser extends SupraCsvPlugin {
+
     private $file;
     private $filename;
-    private $handle;
     private $columns;
     private $hasHooks;
+    protected $mapper;
+    protected $remotePost;
 
     function __construct($filename = null) {
 
         parent::__construct();
 
-        $this->hasHooks = (bool) get_option('scsv_has_hooks');
-
         if($filename) {
-
-            if(empty($this->handle)){
-                $this->setFile($filename);
-                $this->setHandle(); 
-            }
-
-            $this->setColumns();
-
-            /*
-             hook type must occur in sequential order based on dependency 
-             relations, each subsequent element will gather the previous dependenies
-            */
-            $hook_types = array('ingestion','row');
-
-            $dependencies = array();
-
-            if($this->hasHooks) { 
-
-                foreach($hook_types as $hook_type) {
-
-                    $hookClassName = 'SupraCsv' . ucfirst($hook_type) . 'Hooks';
-
-        	    $dependencies[$hookClassName] = $this->hook_mgrs[$hook_type] = new $hookClassName($dependencies);
-
-                    $this->has_hook[$hook_type] = $this->hook_mgrs[$hook_type]->hasHooks();
-                }
-            }
+            $this->setFile($filename);
         }
     }
 
-    private function setHandle() {
-        $this->handle = fopen($this->file, "r");
+    public function init($settings = array())
+    {
+        $this->settings = $settings;
+
+        $this->hasHooks = (bool) $this->getSetting('scsv_has_hooks');
+        /**
+         * hook type must occur in sequential order based on 
+         * dependency relations, each subsequent element will 
+         * gather the previous dependenies
+         */
+        $hook_types = array('ingestion','row');
+
+        $dependencies = array();
+
+        if($this->hasHooks) { 
+
+            foreach($hook_types as $hook_type) {
+
+                $hookClassName = 'SupraCsv' . ucfirst($hook_type) . 'Hooks';
+
+                $hookNamespacedClassName = '\SupraCsvFree\\' . $hookClassName;
+
+                $dependencies[$hookClassName] = $this->hook_mgrs[$hook_type] = new $hookNamespacedClassName($dependencies);
+
+                $this->hook_mgrs[$hook_type]->setLogger($this->getLogger());
+
+                $this->has_hook[$hook_type] = $this->hook_mgrs[$hook_type]->hasHooks();
+            }
+        }
+
+        $this->remotePost = new RemotePost($this);
+
+        $this->remotePost->setServer(new SupraXmlrpcServer()); 
+        
+        $this->_blog_id = get_current_blog_id();
+
+        add_filter( 'wp_revisions_to_keep', array(&$this, 'revisions_iterator'), 10, 2 );
+    
+        return $this;
     }
 
-    private function setColumns() {
-        $this->columns = fgetcsv($this->handle);
+    public function revisions_iterator($num, $post)
+    {
+        $misc_options = $this->getSetting('scsv_misc_options');
 
-        //add the last_post_id to the select drop down options as a column to ingest
-        //if hooks are enabled in the configuration tab
-        if($this->hasHooks)
-            $this->columns[] = 'last_post_id'; 
+        $are_revisions_skipped = $misc_options['are_revisions_skipped'];
+
+        if($are_revisions_skipped)
+        {
+            return false;
+        }
+        else
+        {
+            return $num;
+        }
     }
+
+    protected function sanitizeHeaderColumns()
+    {
+        $columns = $this->columns;
+
+        $errors = array();
+
+        if(count($columns) == 1)
+        {
+            $errors[] = "there is only one header column $column";
+        }
+
+        foreach($columns as $column)
+        {
+            //if there are more than 3 instance of commas its probbably wrong
+            if(strstr($column,','))
+            {
+                $errors[] = "we found several commas in this column, you may have meant to use commas as a delimiter instead.";
+            }
+
+            if(strlen($column)>50)
+            {
+                $errors[] = "the length of this column is over 50 $column";
+            }
+        }
+
+        return $errors;
+    }
+
+    public function setColumns($columns = array())
+    {
+        if(!count($columns))
+        {
+            $this->columns = array_shift($this->csvLines);
+
+            $errors = $this->sanitizeHeaderColumns();
+
+            foreach($errors as $error)
+            {
+                $this->error_tips[] = "Setting the column headers may have failed because " . $error;
+            }
+
+            //if hooks are enabled in the configuration tab
+            if($this->hasHooks)
+                $this->columns[] = 'last_post_id';
+        }
+        else
+        {
+            $this->columns = $columns;
+        }
+    }
+
 
     public function getColumns() {
-        
-        if(!$this->columns && $this->handle) {
+
+        if(!$this->columns) 
+        {
             $this->setColumns();
         }
+
         return $this->columns;
     }
 
-    public function setFile($filename) {
+    public function setFile($filename, $isAbsolutePath = false) {
+        
         $this->filename = $filename;
-        $this->file = $this->getCsvDir() . $filename;
+        
+        if(!$isAbsolutePath)
+        {
+            $this->file = $this->getCsvDir() . $filename;
+        }
+        else
+        {
+            $this->file = $filename;
+        }
+
+        if(!file_exists($this->file))
+        {
+            Throw new \Exception("{$this->file} does not exists or has permission issues");
+        }
+        else
+        {
+            $this->csvLines = $this->parseLines($this->file);
+
+            $this->setColumns(); 
+        }
     }
 
     public function getFile() {
@@ -83,23 +176,35 @@ class SupraCsvParser extends SupraCsvPlugin {
         return $this->filename;
     }
 
-
-    public function ingestContent($mapping) 
+    public function setMapping($mapping) 
     {
-        $rp   = new RemotePost();
+        $this->mapper = new SupraCsvMapper($mapping);    
 
-        $rp->setServer(new SupraXmlrpcServer()); 
+        return $this->mapper;
+    }
 
-        $cm   = new SupraCsvMapper($mapping);
+    public function appendToProgressBuffer($msg)
+    {
+        $this->progressBuffer .= $msg;
+    }
+
+
+    public function ingestContent($mapping = array()) 
+    {
+        $this->progressBuffer = '';
+
+        if(!empty($mapping))
+        {
+            $this->setMapping($mapping);
+        }
 
         $cols = $this->getColumns();
 
-        $this->_blog_id = get_current_blog_id();
-
+        //$this->getLogger()->info(__METHOD__ . var_export(compact('cols'), true));
         $rowCount=0;
 
         if($cols) {
-            while (($data = $this->parseNextLine($this->handle))!== FALSE) {
+            foreach($this->csvLines as $data) {
 
                 //catch an empty line
                 if(count($data)==1 && empty($data[0])) continue;
@@ -113,164 +218,218 @@ class SupraCsvParser extends SupraCsvPlugin {
                     $parsed[$cols[$i]] = $d;
                 }
 
-                $row = $cm->retrieveMappedData($parsed);
+                $row = $this->mapper->retrieveMappedData($parsed);
 
                 $post_args = $this->getPostArgs($row);               
 
+                //use this to troubleshoot correct mapping
+                //$this->getLogger()->info(__METHOD__ . var_export(compact('cols','post_args'), true));
                 $post_args['blog_id'] = $this->_blog_id;
-                    
-                //Debug::show($this->hasHooks, $this->has_hook['row'],$data, $cols, $row);
 
                 $rowCount++;
 
-                if($rp_result = $rp->injectListing($post_args)) {
-
+                if($rp_result = $this->remotePost->injectListing($post_args)) 
+                {
                     if($this->hasHooks && $this->has_hook['ingestion'])
+                    {
                         $this->hook_mgrs['ingestion']->callHooks($post_args,$rp_result);
-                    echo '<span class="success">Successfully ingested '. $post_args['post_title'] . ' at line '.$rowCount.' of '.$this->getFileName().' with postId: '.$rp_result.'</span><br />';
+                    }
 
+                    $this->progressBuffer .= $this->rowIngestionSuccess($post_args, $rowCount, $rp_result);
                 }
-                else {
-                    echo '<span class="error">Problem Ingesting '. $post_args['post_title'] . ' at line '.$rowCount.' of '.$this->getFileName().'</span><br />';
+                else 
+                {
+                    $this->progressBuffer .= $this->rowIngestionFailure($post_args, $rowCount);
                 }
             }
         }
 
+        return $this->progressBuffer;
+    }
+
+    private function rowIngestionSuccess($post_args, $rowCount, $rowId = 0)
+    {
+        $msg = '<span class="success">Successfully ingested %s at line %d of %s with postId: %d</span><br />';
+
+        $msg = sprintf(
+            $msg, 
+            $post_args['post_title'], 
+            $rowCount, 
+            $this->getFileName(), 
+            $rowId
+        );
+
+        return $msg;
+    }
+
+    private function rowIngestionFailure($post_args, $rowCount)
+    {
+        $msg = '<span class="error">Problem ingesting %s at line %d of %s</span><br />';
+
+        $msg = sprintf(
+            $msg, 
+            $post_args['post_title'], 
+            $rowCount, 
+            $this->getFileName()
+        );
+
+        return $msg;
     }
 
     private function getPostArgs($row) {
-                $ptax = new SupraCsvPostTaxonomy();
 
-                $csvpost = get_option('scsv_post');
+        $csvpost = $this->getSetting('scsv_post');
 
-                $post_title = @ $row['post_title'];
-                $post_content = @ $row['post_content'];
+        $post_title = @ $row['post_title'];
 
-                $parse_terms = get_option('scsv_parse_terms');
+        $post_content = @ $row['post_content'];
 
-                $wp_parse_cats = false;
+        $parse_terms = $this->getSetting('scsv_parse_terms');
 
-                $wp_terms = array();
+        $wp_parse_cats = false;
 
-                if($parse_terms  && $ptax->validTaxonomyByPostType('category')) {
-                    $fields = array('term_name','term_slug','term_parent','term_description');
-                    foreach($fields as $field)
-                        if(!empty($row[$field]))
-                            $$field = $row[$field];
-                    $wp_parse_cats = compact('term_name','term_slug','term_parent','term_description');
-                    foreach($fields as $field)
-                        unset($row[$field]);
-                    $count = count($wp_parse_cats);
-                    if(!empty($count))
-                        $wp_terms['category'][] = $wp_parse_cats;
-                }
+        $wp_terms = array();
 
-                $post_terms = array();
-                $terms_names = array();
-                $terms = array();
-                $custom_fields = array();
-                
+        if($parse_terms  && $this->validTaxonomyByPostType('category')) {
+            $fields = array('term_name','term_slug','term_parent','term_description');
+            foreach($fields as $field)
+                if(!empty($row[$field]))
+                    $$field = $row[$field];
+            $wp_parse_cats = compact('term_name','term_slug','term_parent','term_description');
+            foreach($fields as $field)
+                unset($row[$field]);
+            $count = count($wp_parse_cats);
+            if(!empty($count))
+                $wp_terms['category'][] = $wp_parse_cats;
+        }
 
-                $parse_terms = get_option('scsv_parse_terms');
+        $post_terms = array();
+        $terms_names = array();
+        $terms = array();
+        $custom_fields = array();
 
+        $parse_terms = $this->getSetting('scsv_parse_terms');
 
-                $custom_terms = get_option('scsv_custom_terms');
+        $custom_terms = $this->getSetting('scsv_custom_terms');
 
-                if(!empty($custom_terms))
-                    $post_terms = explode(',',get_option('scsv_custom_terms'));
+        if(!empty($custom_terms))
+            $post_terms = explode(',', $custom_terms);
 
-                //parse the cutom term to its taxonomy
-                foreach((array)$post_terms as $pt) {
-                    if($ptax->validTaxonomyByPostType($pt) )
-                        if(!empty($row['terms_'.$pt]))
-                            $wp_terms[$pt] = explode('|', $row['terms_'.$pt]);
-                }
+        //parse the cutom term to its taxonomy
+        foreach((array)$post_terms as $pt) {
+            if($this->validTaxonomyByPostType($pt) )
+                if(!empty($row['terms_'.$pt]))
+                    $wp_terms[$pt] = explode('|', $row['terms_'.$pt]);
+        }
 
 
-                //categories must be resolved by terms
-                if(!empty( $row['category'] )) {
-                    if($wp_parse_cats) die('<span class="error">You must either parse complexy or simplistic categoires but not both.</span>');
-                    $wp_terms['category'] = explode('|', $row['category']);
-                }
+        //categories must be resolved by terms
+        if(!empty( $row['category'] )) 
+        {
+            if($wp_parse_cats) 
+            {
+                Throw new \Exception('<span class="error">You must either parse complexy or simplistic categoires but not both.</span>');
+            }
+            
+            $wp_terms['category'] = explode('|', $row['category']);
+        }
 
-                //keywords must be resolved by terms
-                if(!empty( $row['post_tag'] ))
-                    $wp_terms['post_tag'] = explode('|', $row['post_tag']);
+        //keywords must be resolved by terms
+        if(!empty( $row['post_tag'] ))
+            $wp_terms['post_tag'] = explode('|', $row['post_tag']);
 
-                //parse and load remaining postmeta
-                foreach((array)$wp_terms as $k=>$v) {
-                    if(!empty($k) && !empty($v)) {
-                        if(is_int($v[0]))
-                            $terms[$k] = $v;
-                        else
-                            $terms_names[$k] = $v;
-                    }
-                }
+        //parse and load remaining postmeta
+        foreach((array)$wp_terms as $k=>$v) {
+            if(!empty($k) && !empty($v)) {
+                if(is_int($v[0]))
+                    $terms[$k] = $v;
+                else
+                    $terms_names[$k] = $v;
+            }
+        }
 
-                //these unsetters confine the array to custom_fields
-                foreach((array)$post_terms as $pt) {
-                    unset($row['terms_'.$pt]);
-                }
+        //these unsetters confine the array to custom_fields
+        foreach((array)$post_terms as $pt) {
+            unset($row['terms_'.$pt]);
+        }
 
-                unset($row['category']);
-                unset($row['post_tag']);
+        unset($row['category']);
+        unset($row['post_tag']);
 
-                $predefined = array(
-                    'post_id',
-                    'post_title',
-                    'post_content',
-                    'post_type',
-                    'post_status',
-                    'post_author',
-                    'post_password',
-                    'post_excerpt',
-                    'post_date',
-                    'post_date_gmt',
-                    'post_thumbnail',
-                    'comment_status',
-                    'ping_status',
-                    'post_format',
-                    'enclosure',
-                    'post_parent',
-                    'menu_order'
-                );
+        $predefined = array(
+            'post_id',
+            'post_title',
+            'post_content',
+            'post_type',
+            'post_status',
+            'post_author',
+            'post_password',
+            'post_excerpt',
+            'post_date',
+            'post_date_gmt',
+            'post_thumbnail',
+            'comment_status',
+            'ping_status',
+            'post_format',
+            'enclosure',
+            'post_parent',
+            'menu_order'
+        );
 
-                foreach($predefined as $key) {
-                    $$key = @ $row[$key];
-                    unset($row[$key]);
-                }
+        foreach($predefined as $key) {
+            $$key = @ $row[$key];
+            unset($row[$key]);
+        }
 
-                foreach((array)$row as $k=>$v) {
-                    if(!empty($k) && !empty($v)) {
-                        $custom_fields[$k] = $v;
-                    }
-                }
+        foreach((array)$row as $k=>$v) {
+            if(!empty($k) && !empty($v)) {
+                $custom_fields[$k] = $v;
+            }
+        }
 
-                $post_args = compact(
-                    'post_id',
-                    'post_title',
-                    'post_content',
-                    'post_type',
-                    'post_status',
-                    'post_author',
-                    'post_password',
-                    'post_excerpt',
-                    'post_date',
-                    'post_date_gmt',
-                    'post_thumbnail',
-                    'comment_status',
-                    'ping_status',
-                    'post_format',
-                    'enclosure',
-                    'post_parent',
-                    'menu_order'
-                );
+        $post_args = compact(
+            'post_id',
+            'post_title',
+            'post_content',
+            'post_type',
+            'post_status',
+            'post_author',
+            'post_password',
+            'post_excerpt',
+            'post_date',
+            'post_date_gmt',
+            'post_thumbnail',
+            'comment_status',
+            'ping_status',
+            'post_format',
+            'enclosure',
+            'post_parent',
+            'menu_order'
+        );
 
-                $post_args['terms'] = $terms;
-                $post_args['terms_names'] = $terms_names;
-                $post_args['custom_fields'] = $custom_fields;
+        $post_args['terms'] = $terms;
+        $post_args['terms_names'] = $terms_names;
+        $post_args['custom_fields'] = $custom_fields;
 
         return $post_args;
+    }
+
+    public function validTaxonomyByPostType($tax) {
+
+        $isValid = false;
+
+        $post_type_taxonomies = $this->getPostTypeTaxonomies();
+
+        if($post_type_taxonomies == "*")
+        {
+            $isValid = true;
+        }
+        else
+        {
+            $isValid = array_key_exists($tax, $post_type_taxonomies);
+        }
+
+        return $isValid;
     }
 }
 
@@ -283,7 +442,7 @@ class SupraCsvMapper {
         $this->setMapping($mapping);        
     }
 
-    public function setMapping($mapping) {
+    public function setMapping($mapping = array()) {
         $this->mapping = array_filter($mapping);
     }
 
@@ -299,13 +458,14 @@ class SupraCsvMapper {
         foreach((array)$this->mapping as $wp_name=>$csv_name) {
             $row[$wp_name] = $data[$csv_name];
         }
-           
+
         return $row;
     }
 
 }
 
 class SupraCsvMapperForm {
+
 
     private $filename;
     private $rows;
@@ -334,20 +494,26 @@ class SupraCsvMapperForm {
         'menu_order'=>'Menu Order'
     );
 
-    function __construct(SupraCsvParser $cp) {
-        $rows = $cp->getColumns();
-        $this->filename = $cp->getFileName();
-        if(!$rows)
-            die('Unable to parse csv.');
+    function __construct(SupraCsvParser $scp) {
+
+        $rows = $scp->getColumns();
+
+        $this->filename = $scp->getFileName();
+
+        $this->scp = $scp;
+
+        if(!$rows) 
+        {
+            Throw new \Exception('Unable to parse csv.');
+        }
 
         $this->rows = $rows;
         $this->setListingFields();
-        $this->ptax = new SupraCsvPostTaxonomy();
     }
 
     public function setListingFields() {
 
-        $postmetas = get_option('scsv_postmeta');
+        $postmetas = $this->scp->getSetting('scsv_postmeta');
 
         //Debug::show($postmetas);
 
@@ -370,7 +536,7 @@ class SupraCsvMapperForm {
 
         $fields = $this->getListingFields();
 
-        if(count($fields) == 1 && !empty($fields[0]) || count($fields) > 1) {
+        if(count($fields) > 0) {
 
             $inputs .= '<h3><span id="custompostmeta_tt" class="tooltip"></span>Custom Postmeta</h3>'; 
             foreach((array)$this->getListingFields() as $k=>$v) {
@@ -381,19 +547,19 @@ class SupraCsvMapperForm {
     }
 
     public static function createInput($name,$value,$rows) {
-          $input = '<span id="label">'.$value.'</span>';
-          $input .= '<select id="supra_csv_'.$name.'" name="'.$name.'">';
+        $input = '<span id="label">'.$value.'</span>';
+        $input .= '<select id="supra_csv_'.$name.'" name="'.$name.'">';
 
-          $input .= '<option value=""> </option>';
+        $input .= '<option value=""> </option>';
 
-          foreach((array)$rows as $row) {
-              $input .= '<option value="'.$row.'">'.$row.'</option>';
-          }
- 
-          $input .= '</select>';
-          $input .= '<div class="clear"></div>';
+        foreach((array)$rows as $row) {
+            $input .= '<option value="'.$row.'">'.$row.'</option>';
+        }
 
-          return '<div id="input">' . $input . "</div>";
+        $input .= '</select>';
+        $input .= '<div class="clear"></div>';
+
+        return '<div id="input">' . $input . "</div>";
     }
 
 
@@ -406,38 +572,38 @@ class SupraCsvMapperForm {
         $inputs .= '<div class="scsv_predefined_mapper">';
 
         foreach($this->predefined_meta as $k=>$v) {
-                $inputs .= self::createInput($k,$v,$this->rows);
+            $inputs .= self::createInput($k,$v,$this->rows);
         }
 
         $inputs .= '</div>';
 
-        $parse_terms = get_option('scsv_parse_terms');
-        $custom_terms = get_option('scsv_custom_terms');
+        $parse_terms = $this->scp->getSetting('scsv_parse_terms');
+        $custom_terms = $this->scp->getSetting('scsv_custom_terms');
 
 
         $inputs .= '<div class="scsv_custom_mapper">';
 
         if($parse_terms || !empty($custom_terms))
-              $inputs .= '<h3><span id="customterms_tt" class="tooltip"></span>Custom Terms</h3>';
+            $inputs .= '<h3><span id="customterms_tt" class="tooltip"></span>Custom Terms</h3>';
 
 
-        
+
         if($parse_terms) {
-              if ( $this->ptax->validTaxonomyByPostType('category') ) {
-                  $inputs .= self::createInput('term_name','Term Name',$this->rows);
-                  $inputs .= self::createInput('term_slug','Term Slug',$this->rows);
-                  $inputs .= self::createInput('term_parent','Term Parent',$this->rows);
-                  $inputs .= self::createInput('term_description','Term Description',$this->rows);
-              }
+            if ( $this->scp->validTaxonomyByPostType('category') ) {
+                $inputs .= self::createInput('term_name','Term Name',$this->rows);
+                $inputs .= self::createInput('term_slug','Term Slug',$this->rows);
+                $inputs .= self::createInput('term_parent','Term Parent',$this->rows);
+                $inputs .= self::createInput('term_description','Term Description',$this->rows);
+            }
         }
 
         if(!empty($custom_terms)) {
-              $post_terms = explode(',',get_option('scsv_custom_terms'));
+            $post_terms = explode(',', $custom_terms);
 
-              foreach($post_terms as $post_term) {
-                  if ( $this->ptax->validTaxonomyByPostType($post_term) )
-                      $inputs .= self::createInput('terms_'.$post_term,$post_term,$this->rows);
-              }
+            foreach($post_terms as $post_term) {
+                if ( $this->scp->validTaxonomyByPostType($post_term) )
+                    $inputs .= self::createInput('terms_'.$post_term,$post_term,$this->rows);
+            }
         }
 
         $inputs .= $this->displayListingFields();

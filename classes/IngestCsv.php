@@ -1,18 +1,38 @@
 <?php
+namespace SupraCsvFree;
 require_once("Debug.php");
 require_once('CsvLib.php');
 require_once('RemotePost.php');
 
 class IngestCsv {
 
-    function ParseAndMap($filename) {
-        $cp = new SupraCsvParser($filename);
-        $mf = new SupraCsvMapperForm($cp);
+    public function setSupraCsvParser(SupraCsvParser $supraCsvParser)
+    {
+        $this->scp = $supraCsvParser;
+    }
+
+    public function ParseAndMap($filename) {
+
+        $this->scp->setFile($filename);
+
+        $mf = new SupraCsvMapperForm($this->scp);
+
         return $mf->getForm();
     }
 
-    function ingest($params) {
-        $cp = new SupraCsvParser($params['filename']);
-        $cp->ingestContent($params['mapping']);
+    public function ingest($params) {
+
+        $this->misc_options = $this->scp->getSetting('scsv_misc_options');
+
+        $this->scp->setFile($params['filename']);
+
+        $mapper = $this->scp->setMapping($params['mapping']);
+
+        return $this->scp->ingestContent();
+    }
+
+    public function getSupraCsvParser()
+    {
+        return $this->scp;
     }
 }

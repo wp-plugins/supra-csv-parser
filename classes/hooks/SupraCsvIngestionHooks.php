@@ -1,4 +1,6 @@
 <?php
+namespace SupraCsvFree;
+
 
 /* Runs in between the execution of every ingested post with access to xmlrpc output */
 
@@ -19,8 +21,19 @@ class SupraCsvIngestionHooks extends SupraCSVHookManager {
     } 
 */
 
+    /**
+     * hookSetLastPostId
+     * 
+     * @param mixed $i 
+     * @param mixed $o 
+     * @access public
+     * @return void
+     */
     function hookSetLastPostId($i, $o) {
-   
+
+        //$this->logger->info(__FUNCTION__);
+        //$this->logger->info(var_export(compact('i','o'), true));
+
         $this->last_post_id = $o;
     }
 

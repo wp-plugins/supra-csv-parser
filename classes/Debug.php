@@ -1,4 +1,5 @@
 <?php
+namespace SupraCsvFree;
 
 class Debug {
     public static function show($data) {
@@ -8,7 +9,7 @@ class Debug {
     }
 
     public static function returnShow($data) {
-        return print_r($data, true);
+        return "<pre>" . print_r($data, true)  . "</pre>";
     }
 
     public static function describe($data) {

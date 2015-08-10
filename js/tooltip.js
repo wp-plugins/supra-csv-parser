@@ -22,12 +22,11 @@ Supra.Tooltips = (function() {
         'customterms_tt':['custom_terms', 'custom_terms + ol'],
         'parsecomplex_tt':['parse_complex_categories'],
         'debugingestion_tt':['debug_ingestion'],
-        'reportissues_tt':['report_issues'],
         'specialchar_tt':['special_char'],
         'csvsettings_tt':['csv_settings + ol'],
         'maxchar_tt':['max_char'],
-        'filemgmt_tt':['upload + ol'],
-        'extractedfilemgmt_tt':['extracted + ol'],
+        'filemgmt_tt':['upload'],
+        'extractedfilemgmt_tt':['extracted_crud_management'],
         'postinfo_tt':['post_info'],
         'pmpresets_tt':['post_meta_presets'],
         'pmmapping_tt':['post_meta_mapping'],
@@ -36,12 +35,16 @@ Supra.Tooltips = (function() {
         'selectfile_tt':['select_a_file'],
 
         'custompostmeta_tt':['custom_postmeta'],
-        'customterms_tt':['ingestion_custom_terms + ol'],
+        'customterms_tt':['custom_terms'],
         'ingest_tt':['ingest'],
         'ingestionpredefined_tt':['ingestion_predefined','ingestion_predefined + ol'],
         'hooking_tt':['hooking'],
         'activatehooking_tt':['activate_hooking'],
-
+        'arerevisionsskipped_tt':['arerevisionsskipped'],
+        'isingestionchunked_tt':['isingestionchunked'],
+        'chunkbynrows_tt':['chunkbynrows'],
+        'isusingmultithreads_tt':['isusingmultithreads'],
+        'pluginsettings_tt':['pluginsettings']
     }
 
     var binding = function(docs) { 

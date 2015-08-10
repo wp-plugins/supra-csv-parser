@@ -5,7 +5,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: csv,import,parse,ingest,custom post,extract,export,attachment,thumbnail
 Requires at least: 3.2.1
 Tested up to: 4.0
-Stable tag: 3.4.6
+Stable tag: 4.0.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -107,6 +107,17 @@ and make it as an available field to associate to a post.
 6. Easily debug issues
 
 == Changelog ==
+
+= 4.0.0 =
+* fixed major issues with parsing csv lines
+* adding csv file chunking support
+* added asynchrnous multithreading capabilities
+* added the ability to skip post revision insertions
+* added error logging
+* added error tips
+* removing error reporting functionality
+* fixed bugs with post type taxonomy validation
+* fixing remaining mysqli support issues
 = 3.4.6 =
 * adding support for mysqli extension
 * removed filetype validation from uploads

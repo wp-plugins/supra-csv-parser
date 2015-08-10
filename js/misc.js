@@ -86,6 +86,8 @@ $(function() {
     $('#select_csv_file').live('change', function() {
         filename_key = $(this).val();
 
+        $('#supra_csv_ingestion_errors').html(null);
+
         $('#supra_csv_ingestion_log').html(null);
 
         if(filename_key) {
@@ -93,6 +95,11 @@ $(function() {
             msg = $.parseJSON(msg);
             $('#supra_csv_ingestion_mapper').html(msg.map);
             $('#supra_csv_mapping_preset').html(msg.preset);
+            for(i in msg.error_tips)
+            {
+              error_tip = msg.error_tips[i];
+              $('#supra_csv_ingestion_errors').append("<li>" + error_tip + "</li>");
+            }
             clearMappingForm();
             Supra.Tooltips.bindTooltips();
           });
@@ -110,10 +117,38 @@ $(function() {
 
         sMain.baseCall('ingest_file', {'data': data, 'filename':filename}, function(msg) {
 
-          sMain.scrollToEl($('#supra_csv_ingestion_log'), function() {
-            $('#supra_csv_ingestion_log').html(msg);
-            $('#patience').hide();
-          });
+          msg = $.parseJSON(msg);
+          
+          if(msg.result)
+          {
+              sMain.scrollToEl($('#supra_csv_ingestion_log'), function() {
+                $('#supra_csv_ingestion_log').html(msg.result);
+                $('#patience').hide();
+              });
+          }
+          else if(msg.chunk_namespace)
+          {
+              Supra.chunk_namespace = msg.chunk_namespace;
+
+              if(!Supra.isPolling)
+              {
+                Supra.poll();
+
+                Supra.isPolling = true;
+              }
+          }
         });
     });
+
+    Supra.poll = function() {
+     
+      sMain.basePoll('poll_ingestion_completion', {'data': Supra.chunk_namespace}, function(msg) {
+            
+        if(msg.output)
+        {
+          $('#supra_csv_ingestion_log').append(msg.output);
+          $('#patience').hide();
+        }
+      });
+    }
 });

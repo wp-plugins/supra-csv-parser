@@ -9,7 +9,11 @@ wp_enqueue_script( 'extractor' );
 wp_enqueue_script( 'tablesorter', plugins_url('/js/jquery.tablesorter.js', __FILE__) );
 wp_enqueue_style( 'tablesorter-blue', plugins_url('/css/tablesorter-blue.css', __FILE__) );
 
-$xc = new ExtractCsv($_FILES);
+$xc = new \SupraCsvFree\ExtractCsv($_FILES);
+
+$xc->setSettingsResolver(function($setting_key) {
+    return get_option($setting_key);
+});
 
 ?>
 <div id="supra_csv_extractor_form">

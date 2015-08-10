@@ -1,8 +1,10 @@
 <?php
+namespace SupraCsvFree;
+
 require_once(dirname(__FILE__).'/SupraCsvPlugin.php');
+
 class UploadCsv extends SupraCsvPlugin {
 
-    private $mimes   = array("text/csv","text/comma-separated-values",'application/vnd.ms-excel','text/plain','text/tsv');
     private $success = false;
     private $error;
     private $preview_num = 200;
@@ -36,24 +38,7 @@ class UploadCsv extends SupraCsvPlugin {
     }
 
     private function validateFileType($type) {
-
         return true;
-
-        $valid = false;
-
-        foreach($this->mimes as $mime) {
-            if($type == $mime) { 
-                $valid = true;
-                break;
-            }
-        }
-
-        if(!$valid) {
-            $this->error = '<span class="error">File is not a csv format</span>';
-            $valid = false;
-        } 
-        
-        return $valid;
     }
 
     private function processFile($file) {
@@ -131,10 +116,12 @@ class UploadCsv extends SupraCsvPlugin {
 
         echo '<table class="tablesorter-blue"><thead>';
 
-        if (($handle = fopen($filename_abs, "r")) !== FALSE) 
+        $csvLines = $this->parseLines($filename_abs);
+
+        //$this->getLogger()->info(__METHOD__ . var_export($csvLines, true));
+
+        foreach($csvLines as $data)
         {
-            while (($data = $this->parseNextLine($handle)) !== FALSE) 
-            {
                 $row++;
 
                 $delimiter = "</{$delimiter_tag}><{$delimiter_tag}>";
@@ -149,12 +136,9 @@ class UploadCsv extends SupraCsvPlugin {
 
                     echo "</thead><tbody>";
                 }
-            }
-
-            echo "</tbody></table>";
-
-            fclose($handle);
         }
+
+        echo "</tbody></table>";
     }
 
     public function displayFileSelector() {

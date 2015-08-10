@@ -1,11 +1,10 @@
 <?php
-
-require_once(dirname(__FILE__) . '/../vendor/autoload.php');
+namespace SupraCsvFree;
 
 use Goodby\CSV\Export\Standard\Exporter;
 use Goodby\CSV\Export\Standard\ExporterConfig;
 
-
+require_once(dirname(__FILE__) . '/../vendor/autoload.php');
 require_once(dirname(__FILE__) . '/SupraCsvPlugin.php'); 
 require_once(dirname(__FILE__) . '/../../../../wp-load.php');
 
@@ -14,6 +13,9 @@ class ExtractorArgumentParser extends SupraCsvPlugin {
     private $exporter_properties = array('post_fields','filename');
 
     function __construct($args) {
+
+        parent::__construct();
+
         $this->args = $args;
         $this->parseTaxAndMeta();
         $this->parseArrayFields();
@@ -266,49 +268,6 @@ class SupraCsvExporter extends ExporterArgumentParser {
         $this->csvstring = ob_get_contents();
                  
         ob_end_clean();
-
-/**
-        $record = $this->records[0];
-        $val_array = array();
-        $key_array = array();
-
-        foreach($record AS $key => $val) {
-
-                if(is_array($val)){
-                    //Debug::show($val);
-                    $oldval = $val;
-                    $val="";
-                    foreach($oldval as $arr) {
-                        if(!is_array($arr)) {
-                            //if its not an array implode it
-                            $val .= implode('|',$this->removeHardReturns($arr));
-                        }
-                        else {
-                            //if it is an array then barf
-                            $val .= "NESTED ARRAYS UNSUPPORTED";
-                            break;
-                        }
-                    }
-                }
-                else {
-                    $val = $this->removeHardReturns($val);
-                }
-            
-                //store the header columns
-                $key_array[] = $key;
-
-                //escape encolusre characters
-                $val = str_replace($enclosure, $escape.$enclosure, $val);
-                //escape delimiter character
-                $val = str_replace($delimiter, $escape.$delimiter, $val);
-
-                $val_array[] = $val; //$enclosure.$val.$enclosure;
-        }
-
-        $this->csvstring = implode($delimiter, $key_array)."\n";
-        $this->csvstring .= implode($delimiter, $val_array)."\n";
-
-**/
 
         return $this;
     }

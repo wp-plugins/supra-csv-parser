@@ -1,4 +1,6 @@
 <?php 
+namespace SupraCsvFree;
+
 class SupraCsvPostMeta {
 
     private function buildInputRow($metainfo=array(),$num) {
@@ -44,6 +46,8 @@ EOF;
         }
 
         $suggestion_keys = $this->diffSuggestionsFromStoredPostmeta($suggestions,$postmetas);
+
+        $i = 0;
 
         foreach($suggestions as $suggestion) {
 
