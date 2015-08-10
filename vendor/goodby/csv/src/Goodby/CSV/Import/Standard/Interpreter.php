@@ -8,7 +8,6 @@ use Goodby\CSV\Import\Standard\Exception\StrictViolationException;
 
 /**
  * standard interpreter
- *
  */
 class Interpreter implements InterpreterInterface
 {
@@ -84,8 +83,6 @@ class Interpreter implements InterpreterInterface
      */
     private function delegate($observer, $line)
     {
-        $this->checkCallable($observer);
-
         call_user_func($observer, $line);
     }
 
