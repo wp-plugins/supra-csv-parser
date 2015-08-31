@@ -9,6 +9,7 @@ require_once(dirname(__FILE__).'/SupraCsvPlugin.php');
 require_once(dirname(__FILE__).'/SupraCsvPostMeta.php');
 require_once(dirname(__FILE__).'/SupraCsvExtractor.php');
 require_once(dirname(__FILE__).'/CsvLib.php');
+require_once(dirname(__FILE__).'/SupraCsvLogs.php');
 
 class SupraCsvAjaxHandler extends SupraCsvPlugin {
 
@@ -21,6 +22,7 @@ class SupraCsvAjaxHandler extends SupraCsvPlugin {
         $uc = new UploadCsv();
         $xc = new ExtractCsv();
         $ic = new IngestCsv();
+        $sl = new SupraCsvLogs();
 
         $scp = new SupraCsvParser();
 
@@ -44,6 +46,15 @@ class SupraCsvAjaxHandler extends SupraCsvPlugin {
             break;
         case "download_file":
             $uc->downloadFile($request['args']);
+            break;
+        case "delete_log":
+            $sl->deleteFileByKey($request['args']);
+            break;
+        case "download_log":
+            $sl->downloadFile($request['args']);
+            break;
+        case "debug_file":
+            $uc->debugFile($request['args']);
             break;
         case "delete_extract_file":
             $xc->deleteFileByKey($request['args']);

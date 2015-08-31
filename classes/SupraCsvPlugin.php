@@ -211,7 +211,11 @@ class SupraCsvPlugin {
     }
 
     protected function getPluginLogsDir() {
-        return $this->getPluginBasePath() . self::$logs_dir;
+        return $this->getPluginBasePath() . self::$logs_dir . DIR_SEP;
+    }
+
+    protected function getPluginLogsDirUrl() {
+        return $this->getPluginDirUrl() . self::$logs_dir . DIR_SEP;
     }
 
     public function getPluginChunkDir() {

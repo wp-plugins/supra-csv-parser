@@ -74,7 +74,8 @@ class UploadCsv extends SupraCsvPlugin {
         foreach($files as $i=>$file) {
             $delete_button = '<button id="delete_upload" data-key="'.$i.'">Delete</button>';
             $download_button = '<button id="download_upload" data-file="'.$file.'">Preview / Download</button>';
-            $list .= '<li>'.$delete_button.$download_button.$file.'</li>';
+            $debug_button = '<button id="debug_upload" data-file="'.$file.'">Debug</button>';
+            $list .= '<li>'.$delete_button.$download_button.$debug_button.$file.'</li>';
         }
 
         return '<ul id="uploaded_files">'.$list.'</ul>'; 
@@ -102,6 +103,32 @@ class UploadCsv extends SupraCsvPlugin {
 
         $this->renderForms();
     }
+
+    function debugFile($file)
+    {
+        $debug['csv_filename_abs'] = $this->getCsvDir() . $file;
+        $debug['csv_filename_url'] = $this->getCsvDirUrl() . $file;
+
+
+        $csv_mapping_file = file_get_contents($this->getPluginChunkDir() . $file . ".mapping");
+
+        if(file_exists($csv_mapping_file)) {
+            $debug['csv_mapping_file_contents'] = file_get_contents($csv_mapping_file);
+        }
+
+        $debug['settings'] = $this->getSettings();
+
+        ob_start();
+        phpinfo();
+        $debug['phpinfo'] = strip_tags(ob_get_contents());
+        ob_end_clean();
+
+        $debug['phpinfo_cli'] = shell_exec("php --info");
+
+
+        echo json_encode($debug, true);
+    }
+
 
     function downloadFile($file) 
     {

@@ -263,8 +263,6 @@ class RemotePost
 
     private function debugAndReport($args, XMLRPC_Error $error) 
     {
-        throw new \Exception($error);
-
         if($this->debugging) 
         {
             $this->debug_output = $error . ' ' .  Debug::returnShow($args);
@@ -276,8 +274,6 @@ class RemotePost
                 $this->reportIssue();
             }
         }
-
-        throw new \Exception($error);
     }
 
     private function xmlencode($data) {

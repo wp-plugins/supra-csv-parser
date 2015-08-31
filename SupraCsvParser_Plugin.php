@@ -136,7 +136,7 @@ class SupraCsvParser_Plugin extends SupraCsvParser_LifeCycle {
     //page-factory
     public function __call($name, $arguments)
     {
-        $callable = array('home','admin','ingest','postmeta','upload','docs','export');
+        $callable = array('home','admin','ingest','postmeta','upload','docs','export','logs');
  
         foreach($callable as $called) {
             if( substr($name,0,5) == "scsv_" && strstr($name,$called)) {
@@ -153,6 +153,7 @@ class SupraCsvParser_Plugin extends SupraCsvParser_LifeCycle {
         add_submenu_page("supra_csv", "Post Info", "Post Info", "manage_options", "supra_csv_postmeta", array(&$this,"scsv_postmeta"));
         add_submenu_page("supra_csv", "Ingestion", "Ingestion", "manage_options", "supra_csv_ingest", array(&$this,"scsv_ingest"));
         add_submenu_page("supra_csv", "Extraction", "Extraction", "manage_options", "supra_csv_export", array(&$this,"scsv_export"));
+        add_submenu_page("supra_csv", "Logs", "Logs", "manage_options", "supra_csv_logs", array(&$this,"scsv_logs"));
     }
 
     public function supraCsvAjax() {
