@@ -171,14 +171,5 @@ if(!empty($_POST['scsv_submit'])) {
         </p>
 </form>
 </div>
-<h2>
-  <span id="pluginsettings_tt" class="tooltip"></span>
-  Plugin Settings
-</h2>
-<?php
-$settings = json_encode($scp->getSettings(), true);
-echo "<textarea>$settings</textarea>";
-?>
-
 
 

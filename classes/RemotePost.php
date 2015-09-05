@@ -242,7 +242,7 @@ class RemotePost
         $date_keys = array('post_date','post_date_key');
         foreach($date_keys as $date_key) { 
             if(!empty($content[$date_key])) {
-                $content[$date_key] = new IXR_Date($content[$date_key]);
+                $content[$date_key] = new \IXR_Date($content[$date_key]);
             }
         }
 

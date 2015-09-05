@@ -5,7 +5,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: csv,import,parse,ingest,custom post,extract,export,attachment,thumbnail
 Requires at least: 3.2.1
 Tested up to: 4.0
-Stable tag: 4.0.1
+Stable tag: 4.0.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -107,6 +107,10 @@ and make it as an available field to associate to a post.
 6. Easily debug issues
 
 == Changelog ==
+= 4.0.2 =
+* fixing a path resolver bug that prevented debug button from working
+* adding the post ID to the extraction page
+* fixed a bug that was throwing fatal error when attemtping to ingest a date value
 = 4.0.1 =
 * removed error throwing in remotePost class
 * adding the log management page

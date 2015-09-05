@@ -94,6 +94,7 @@ $xc->setSettingsResolver(function($setting_key) {
             <select id="post_fields" name="post_fields[]" multiple="multiple" style="height: 200px">
                 <?php
                 $postfields = array(
+                  'ID',
                   'post_author',
                   'post_date',
                   'post_date_gmt',
