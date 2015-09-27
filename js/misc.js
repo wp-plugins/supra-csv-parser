@@ -132,8 +132,8 @@ $(function() {
     $('#select_csv_file').live('change', function() {
         filename_key = $(this).val();
 
+        $('#ingestion_errors_wrapper').show();
         $('#supra_csv_ingestion_errors').html(null);
-
         $('#supra_csv_ingestion_log').html(null);
 
         if(filename_key) {
@@ -155,6 +155,8 @@ $(function() {
     $('#supra_csv_ingest_csv').live('click', function(e) {
         e.preventDefault();
 
+        $('#supra_csv_ingestion_errors').html(null);
+        $('#ingestion_errors_wrapper').hide();
         $('#supra_csv_ingestion_log').html(null);
         $('#patience').show();
 
@@ -168,7 +170,13 @@ $(function() {
           if(msg.result)
           {
               sMain.scrollToEl($('#supra_csv_ingestion_log'), function() {
-                $('#supra_csv_ingestion_log').html(msg.result);
+                if(msg.errors) {
+                  for(i in msg.errors) {
+                    error = '<span class="error">' + msg.errors[i] + '</span>';
+                    $('#supra_csv_ingestion_log').append(error);
+                  }
+                }
+                $('#supra_csv_ingestion_log').append(msg.result);
                 $('#patience').hide();
               });
           }
@@ -192,6 +200,13 @@ $(function() {
             
         if(msg.output)
         {
+          if(msg.errors) {
+            for(i in msg.errors) {
+              error = '<span class="error">' + msg.errors[i] + '</span>';
+              $('#supra_csv_ingestion_log').append(error);
+            }
+          }
+
           $('#supra_csv_ingestion_log').append(msg.output);
           $('#patience').hide();
         }

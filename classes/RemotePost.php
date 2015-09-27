@@ -72,9 +72,13 @@ class RemotePost
             {
                 $this->debugAndReport($args, $response);
             }
-            else if(!is_numeric($response))
+            else if(!$response)
             {
-                $this->debugAndReport($args, new XMLRPC_Error(500, _('Response did not return a postId')));
+                $this->debugAndReport($args, new XMLRPC_Error(500, _('There was an issue ingesting post of ID: ' . $this->scp->linkToPost($args['post_id']))));
+            }
+            else 
+            {
+                $response = $args['post_id'];
             }
         }
         else if($args['function'] == "wp.newPost") 

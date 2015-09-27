@@ -38,11 +38,21 @@ $scp->setMapping($mapping['mapping']);
 
 $scp->setColumns($mapping['columns']);
 
-$output = $scp->ingestContent();
+$ingest_output = $scp->ingestContent();
+
+$error_tips = $scp->getErrorTips();
+
+$error_output = "";
+
+foreach($error_tips as $error_tip)
+{
+    $error_output .= '<span class="error">'.$error_tip.'</span><br />';
+}
+
+$output = $error_output . $ingest_output;
 
 $scp->getLogger()->info($output);
 
 $fh = fopen($csvFile.'.ingest', 'w+');
 
 fwrite($fh, $output);
-

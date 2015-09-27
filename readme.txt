@@ -5,7 +5,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: csv,import,parse,ingest,custom post,extract,export,attachment,thumbnail
 Requires at least: 3.2.1
 Tested up to: 4.0
-Stable tag: 4.0.2
+Stable tag: 4.0.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -107,6 +107,9 @@ and make it as an available field to associate to a post.
 6. Easily debug issues
 
 == Changelog ==
+= 4.0.3 =
+* Fixing issues that prevented post editing. 
+* Added errors and tips for php max_exution time.
 = 4.0.2 =
 * fixing a path resolver bug that prevented debug button from working
 * adding the post ID to the extraction page

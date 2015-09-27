@@ -193,6 +193,12 @@ class SupraCsvParser extends SupraCsvPlugin {
     {
         $this->progressBuffer = '';
 
+        $max_exec_time = ini_get('max_execution_time');
+
+        if((int) $max_exec_time > 0) {
+            $this->error_tips[] = "Max execution time of your current php handler is not unlimtied but instead: " . $max_exec_time;
+        }
+
         if(!empty($mapping))
         {
             $this->setMapping($mapping);
@@ -249,14 +255,14 @@ class SupraCsvParser extends SupraCsvPlugin {
 
     private function rowIngestionSuccess($post_args, $rowCount, $rowId = 0)
     {
-        $msg = '<span class="success">Successfully ingested %s at line %d of %s with postId: %d</span><br />';
+        $msg = '<span class="success">Successfully ingested %s at line %d of %s with postId: %s</span><br />';
 
         $msg = sprintf(
             $msg, 
             $post_args['post_title'], 
             $rowCount, 
             $this->getFileName(), 
-            $rowId
+            $this->linkToPost($rowId)
         );
 
         return $msg;
@@ -274,6 +280,14 @@ class SupraCsvParser extends SupraCsvPlugin {
         );
 
         return $msg;
+    }
+
+    public function linkToPost($post_id) 
+    {
+        return sprintf('<a href="%s" target="_blank">%d (click to edit)</a>', 
+            get_admin_url( $this->_blog_id, "post.php?post=".$post_id."&action=edit"),
+            $post_id
+        );
     }
 
     private function getPostArgs($row) {
